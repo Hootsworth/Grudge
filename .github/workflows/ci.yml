@@ -35,14 +35,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
       - name: Install Node root dependencies
-        run: npm ci || npm install
+        run: npm install --no-audit
 
       - name: Install Kin dependencies
         working-directory: kin
-        run: npm ci || npm install
+        run: npm install --no-audit
 
       - name: Run Strata backend tests
         run: npm test
