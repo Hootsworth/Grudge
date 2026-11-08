@@ -1,6 +1,6 @@
-# Grudge — Daily Games Hub & Backends
+# <img src="logo.png" width="48" height="48" style="vertical-align: middle;" alt="Oddly Logo" /> Oddly — Daily Games Hub & Backends
 
-Welcome to **Grudge** — daily games that don’t like you. Single-player, one-shot daily puzzles served on **GitHub Pages**, backed by automated GitHub Actions and Cloudflare Workers + D1 databases.
+Welcome to **Oddly** (formerly Grudge) — daily games that keep you guessing. Single-player, one-shot daily puzzles served on **GitHub Pages**, backed by automated GitHub Actions and Cloudflare Workers + D1 databases.
 
 Target Repository: `https://github.com/Hootsworth/Grudge.git`  
 GitHub Pages: `https://hootsworth.github.io/Grudge/`

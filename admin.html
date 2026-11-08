@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Grudge Admin — Game Manager & AI Studio</title>
+<title>Oddly Admin — Game Manager & AI Studio</title>
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <style>
 :root {
@@ -342,9 +343,9 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
 <main>
   <header>
     <div class="brand">
-      <a href="index.html" class="back">← Grudge Hub</a>
+      <a href="index.html" class="back">← Oddly Hub</a>
       <div class="logo">
-        Grudge <span class="badge">Admin & AI Studio</span>
+        <img src="logo.png" alt="Oddly" style="width:34px;height:34px;border-radius:8px;vertical-align:middle;margin-right:2px"> Oddly <span class="badge">Admin & AI Studio</span>
       </div>
     </div>
     <div class="actions-top">
@@ -379,7 +380,8 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:24px">
         <div>
           <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">⏰ Midnight Automation & Health</h2>
-          <p style="color:var(--mute)">How Grudge games automatically rotate at 12:00, and how you double-check their health.</p>
+          <p style="color:var(--mute)">How Oddly games automatically rotate at 12:00, and how you double-check their health.</p>
+            <div class="mono" style="font-size:.82rem;opacity:.75">Epoch Day <b id="auto-epoch" style="color:#fff">--</b> · Oddly Puzzle <b id="auto-day-num" style="color:var(--c1)">#--</b></div>
         </div>
         <div style="text-align:right">
           <span class="status-badge live" id="system-health-badge">● Systems Active</span>
@@ -393,7 +395,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
           <div>
             <div class="mono" style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--c1)">Next Daily Drop (Midnight UTC)</div>
             <div style="font-size: clamp(2.4rem, 8vw, 3.8rem);font-weight:800;letter-spacing:-.06em;font-variant-numeric:tabular-nums;line-height:1;margin:8px 0" id="auto-cd">--:--:--</div>
-            <div class="mono" style="font-size:.82rem;opacity:.75">Epoch Day <b id="auto-epoch" style="color:#fff">--</b> · Grudge Puzzle <b id="auto-day-num" style="color:var(--c1)">#--</b></div>
+            <div class="mono" style="font-size:.82rem;opacity:.75">Epoch Day <b id="auto-epoch" style="color:#fff">--</b> · Oddly Puzzle <b id="auto-day-num" style="color:var(--c1)">#--</b></div>
           </div>
           <div style="text-align:right">
             <button class="btn btn-secondary btn-sm" id="btn-recheck-auto" style="color:#14131a;background:#fff;border:0">🔄 Re-check Status</button>
@@ -502,7 +504,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
   <section id="tab-add" class="tab-panel">
     <div style="max-width:760px;margin:0 auto">
       <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">Register a New Game</h2>
-      <p style="color:var(--mute);margin-bottom:24px">Define your game's identity. Once registered, it immediately appears on the Grudge hub and can be scaffolded by AI.</p>
+      <p style="color:var(--mute);margin-bottom:24px">Define your game's identity. Once registered, it immediately appears on the Oddly hub and can be scaffolded by AI.</p>
 
       <form id="form-add-game">
         <div class="form-row">
@@ -567,7 +569,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
 
         <!-- Live Preview -->
         <div class="preview-box">
-          <p class="preview-label">Live Grudge Hub Card Preview</p>
+          <p class="preview-label">Live Oddly Hub Card Preview</p>
           <div id="live-card-preview" style="max-width:360px;margin:0 auto"></div>
         </div>
 
@@ -1049,7 +1051,7 @@ document.getElementById("btn-gen-spec").addEventListener("click", () => {
   const spec = `Build the daily game and backend pipeline for "${concept}".
 
 GOAL
-A daily one-shot game for the Grudge platform (https://github.com/Hootsworth/Grudge.git) where players face a daily challenge judged with spite and snark.
+A daily one-shot game for the Oddly platform (https://github.com/Hootsworth/Grudge.git) where players face a daily challenge judged with spite and snark.
 
 REQUIREMENTS
 1. MECHANICS:
@@ -1059,8 +1061,8 @@ REQUIREMENTS
 
 2. TECH CONSTRAINTS:
    - Standalone single-page frontend (HTML5/CSS3/Vanilla JS) with zero dependencies.
-   - Styling must match Grudge aesthetic: "Bricolage Grotesque", bold borders, dark/light mode variables.
-   - Must include top back button: <a href="index.html" class="back">← Grudge</a>.
+   - Styling must match Oddly aesthetic: "Bricolage Grotesque", bold borders, dark/light mode variables.
+   - Must include top back button: <a href="index.html" class="back">← Oddly</a>.
    - Offline fallback: deterministically seeds daily puzzles from epoch date math so it runs 100% on GitHub Pages without external server dependencies.
 
 3. DELIVERABLES:
@@ -1102,7 +1104,7 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .btn{font:inherit;font-weight:800;border:0;border-radius:999px;background:var(--ink);color:var(--bg);padding:14px 28px;cursor:pointer}
 </style></head>
 <body><main>
-<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back">← Grudge</a><div class="logo">${gameName}</div></div><div id="meta" style="font-weight:700;color:var(--mute)">Daily #1</div></header>
+<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back">← Oddly</a><div class="logo">${gameName}</div></div><div id="meta" style="font-weight:700;color:var(--mute)">Daily #1</div></header>
 <div class="card">
   <h2>Today’s Challenge</h2>
   <p style="color:var(--mute)">Puzzles reload daily at midnight. Can you beat the host?</p>
@@ -1241,7 +1243,7 @@ document.getElementById("btn-gh-push").onclick = async () => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        message: "feat(admin): update games.json via Grudge Admin Studio",
+        message: "feat(admin): update games.json via Oddly Admin Studio",
         content,
         sha,
         branch
@@ -1378,7 +1380,7 @@ document.querySelectorAll(".sim-day-btn").forEach(btn => {
     const out = `=== SIMULATION: ${offset === 0 ? "TODAY" : offset === 1 ? "TOMORROW" : `IN ${offset} DAYS`} ===
 Date: ${isoDate} (UTC)
 Epoch Day Index (T): ${T}
-Daily Grudge Day Number: #${dayNum}
+Daily Oddly Day Number: #${dayNum}
 
 [Strata Historical Timeline]:
   Active Stack: ${strataPlate}

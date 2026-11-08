@@ -45,6 +45,7 @@ jobs:
           mkdir -p _site
           # Copy root HTML pages
           cp -f "index.html" _site/ 2>/dev/null || true
+          cp -f "Oddly — daily games that don’t like you.html" _site/ 2>/dev/null || true
           cp -f "Grudge — daily games that don’t like you.html" _site/ 2>/dev/null || true
           cp -f "fibber.html" _site/ 2>/dev/null || true
           cp -f "Fibber — daily fake headline game.html" _site/ 2>/dev/null || true
@@ -53,6 +54,10 @@ jobs:
           cp -f "kin.html" _site/ 2>/dev/null || true
           cp -f "Kin — daily odd relatives game.html" _site/ 2>/dev/null || true
           cp -f "admin.html" _site/ 2>/dev/null || true
+
+          # Copy images and assets
+          cp -f "logo.png" _site/ 2>/dev/null || true
+          cp -f "favicon.png" _site/ 2>/dev/null || true
 
           # Copy daily JSON data files
           cp -f "today.json" _site/ 2>/dev/null || true
