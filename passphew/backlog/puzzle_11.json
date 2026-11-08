@@ -1,0 +1,9 @@
+{
+  "id": "backlog_11",
+  "username": "shadow_broker",
+  "clue": "Secret agent inside capital city",
+  "answer": "paris",
+  "explanation": "PAR (standard) + IS = PARIS (container/charade for covert station).",
+  "type": "Container",
+  "difficulty": 4
+}

@@ -1,0 +1,9 @@
+{
+  "id": "backlog_06",
+  "username": "cipher_clerk",
+  "clue": "Coded, but not finished, is a secret system",
+  "answer": "code",
+  "explanation": "CODED cut short (last letter removed) is CODE.",
+  "type": "Cut short",
+  "difficulty": 1
+}

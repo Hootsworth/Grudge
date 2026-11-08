@@ -1,0 +1,9 @@
+{
+  "id": "backlog_08",
+  "username": "heist_lead",
+  "clue": "Container for stolen goods held by street",
+  "answer": "stash",
+  "explanation": "ST (street) + ASH = STASH (hidden reserve of loot).",
+  "type": "Two-part clue",
+  "difficulty": 3
+}

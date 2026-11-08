@@ -1,0 +1,21 @@
+{
+  "name": "passphew-backend",
+  "version": "1.0.0",
+  "description": "Daily backend for PassPhew - vault login cryptic password game on Cloudflare Workers + D1",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": ["passphew", "cryptic", "password", "vault", "cloudflare-workers", "d1"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.50.0"
+  }
+}

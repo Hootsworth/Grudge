@@ -1,0 +1,9 @@
+{
+  "id": "backlog_02",
+  "username": "root_admin",
+  "clue": "Opener of locks, then the error for a missing page",
+  "answer": "key404",
+  "explanation": "A KEY opens locks + HTTP error 404 (not found) = KEY404.",
+  "type": "Charade",
+  "difficulty": 2
+}

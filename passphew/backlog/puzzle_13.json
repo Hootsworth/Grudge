@@ -1,0 +1,9 @@
+{
+  "id": "backlog_13",
+  "username": "terminal_7",
+  "clue": "Reversed binary digit, then emergency call",
+  "answer": "0sos",
+  "explanation": "0 (zero) + SOS (distress signal) = 0SOS.",
+  "type": "Charade",
+  "difficulty": 5
+}
