@@ -356,6 +356,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
   <!-- Navigation Tabs -->
   <nav class="tabs" role="tablist">
     <button class="tab-btn active" data-tab="tab-games" role="tab">🎮 Live & Lab Games</button>
+    <button class="tab-btn" data-tab="tab-automation" role="tab">⏰ Midnight Automation</button>
     <button class="tab-btn" data-tab="tab-add" role="tab">➕ Add New Game</button>
     <button class="tab-btn" data-tab="tab-ai" role="tab">🤖 AI Game Studio</button>
     <button class="tab-btn" data-tab="tab-content" role="tab">🧩 Daily Content & Backlog</button>
@@ -370,6 +371,131 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
     </div>
 
     <div class="grid" id="games-container"></div>
+  </section>
+
+  <!-- TAB: Midnight Automation & Health -->
+  <section id="tab-automation" class="tab-panel">
+    <div style="max-width:860px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+        <div>
+          <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">⏰ Midnight Automation & Health</h2>
+          <p style="color:var(--mute)">How Grudge games automatically rotate at 12:00, and how you double-check their health.</p>
+        </div>
+        <div style="text-align:right">
+          <span class="status-badge live" id="system-health-badge">● Systems Active</span>
+          <div class="mono" style="font-size:.78rem;color:var(--mute);margin-top:4px" id="admin-utc-time">--:--:-- UTC</div>
+        </div>
+      </div>
+
+      <!-- Live Clock & Rollover Counter -->
+      <div class="card" style="background:var(--ink);color:var(--bg);margin-bottom:24px;border:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+          <div>
+            <div class="mono" style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--c1)">Next Daily Drop (Midnight UTC)</div>
+            <div style="font-size: clamp(2.4rem, 8vw, 3.8rem);font-weight:800;letter-spacing:-.06em;font-variant-numeric:tabular-nums;line-height:1;margin:8px 0" id="auto-cd">--:--:--</div>
+            <div class="mono" style="font-size:.82rem;opacity:.75">Epoch Day <b id="auto-epoch" style="color:#fff">--</b> · Grudge Puzzle <b id="auto-day-num" style="color:var(--c1)">#--</b></div>
+          </div>
+          <div style="text-align:right">
+            <button class="btn btn-secondary btn-sm" id="btn-recheck-auto" style="color:#14131a;background:#fff;border:0">🔄 Re-check Status</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Mechanisms Detailed Breakdown -->
+      <h3 style="font-size:1.3rem;font-weight:800;margin-bottom:14px">Active 12:00 Rollover Mechanisms</h3>
+      <div class="grid" style="margin-bottom:28px">
+
+        <!-- Mechanism 1: Fibber (GitHub Actions & Review Gate) -->
+        <div class="card" style="border-top:6px solid var(--c3)">
+          <div class="card-header">
+            <div class="card-pill"><span>News Fake · Python</span></div>
+            <span class="status-badge" id="fibber-freshness-badge">Checking...</span>
+          </div>
+          <div class="card-title" style="font-size:1.4rem">Fibber Daily Pipeline</div>
+          <p class="card-desc" style="font-size:.88rem">
+            <strong>The Automated Process:</strong><br>
+            • <code>03:00 UTC</code>: GitHub Actions runs <code>.github/workflows/daily.yml</code>. Scrapes weird news from Reddit/UPI, filters harmless absurdities with Claude Sonnet, generates 1 fake, verifies via search, and writes <code>pending/today.json</code>.<br>
+            • Opens a <strong>GitHub Review Issue</strong> for manual sign-off.<br>
+            • <code>06:00 UTC Deadline</code>: If unapproved, automatically deploys pre-approved fallback from <code>/backlog/</code> to <code>today.json</code>.<br>
+            • GitHub Pages automatically rebuilds on commit.
+          </p>
+          <div class="card-meta" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;justify-content:space-between;font-size:.82rem">
+              <span style="color:var(--mute)">Active File:</span>
+              <span class="mono" id="fibber-file-status">Checking today.json...</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <a href="https://github.com/Hootsworth/Grudge/actions/workflows/daily.yml" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="flex:1;justify-content:center;text-decoration:none">View Runs ↗</a>
+              <a href="https://github.com/Hootsworth/Grudge/issues?q=label%3Aneeds-approval" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="flex:1;justify-content:center;text-decoration:none">Review Issues ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mechanism 2: Strata (Epoch Rotation) -->
+        <div class="card" style="border-top:6px solid var(--c1)">
+          <div class="card-header">
+            <div class="card-pill"><span>Timeline · Deterministic</span></div>
+            <span class="status-badge live">Automatic 00:00 UTC</span>
+          </div>
+          <div class="card-title" style="font-size:1.4rem">Strata Epoch Engine</div>
+          <p class="card-desc" style="font-size:.88rem">
+            <strong>The Automated Process:</strong><br>
+            • <code>00:00 UTC</code>: Local/UTC day math increments <code>T = Math.floor(Date.UTC(...) / 864e5)</code>.<br>
+            • The puzzle rotates deterministically to <code>P[((T % 3) + 3) % 3]</code>. No server call required for players to get a brand new chronological stack at midnight.<br>
+            • Storage resets on <code>strata:T</code>, wiping previous day’s locks and attempts cleanly.<br>
+            • Cloudflare Worker (optional) runs <code>05:00 UTC</code> cron for D1 storage.
+          </p>
+          <div class="card-meta" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;justify-content:space-between;font-size:.82rem">
+              <span style="color:var(--mute)">Today's Stack:</span>
+              <span class="mono" id="strata-today-preview">Loading...</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="previewGameTomorrow('strata')">Preview Tomorrow's Stack (+1 Day)</button>
+          </div>
+        </div>
+
+        <!-- Mechanism 3: Kin (Evolutionary Triplet Rotation) -->
+        <div class="card" style="border-top:6px solid var(--c4)">
+          <div class="card-header">
+            <div class="card-pill"><span>Evolution · Deterministic</span></div>
+            <span class="status-badge live">Automatic 00:00 UTC</span>
+          </div>
+          <div class="card-title" style="font-size:1.4rem">Kin Deep-Time Engine</div>
+          <p class="card-desc" style="font-size:.88rem">
+            <strong>The Automated Process:</strong><br>
+            • <code>00:00 UTC</code>: Rollover updates plate index to <code>PZ[((T % 2) + 2) % 2]</code>.<br>
+            • Serves 5 verified phylogenetic triplets based on real TimeTree divergence ages.<br>
+            • Storage resets on <code>kin:T</code> so player scores and streaks reset at midnight.<br>
+            • Cloudflare Worker (optional) runs <code>05:00 UTC</code> cron for D1 storage.
+          </p>
+          <div class="card-meta" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;justify-content:space-between;font-size:.82rem">
+              <span style="color:var(--mute)">Today's Triplets:</span>
+              <span class="mono" id="kin-today-preview">Loading...</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="previewGameTomorrow('kin')">Preview Tomorrow's Triplets (+1 Day)</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rollover Simulator & Health Verification Checklist -->
+      <div class="card">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:10px">Double-Check & Rollover Simulator</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:16px">Simulate how puzzles shift into the future without modifying your browser's clock or local save data:</p>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="0">Today (Normal)</button>
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="1">Tomorrow (+1 Day)</button>
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="2">In 2 Days (+2 Days)</button>
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="3">In 3 Days (+3 Days)</button>
+        </div>
+
+        <div class="prompt-box" style="margin-top:0">
+          <pre id="sim-output" style="max-height:220px">// Select a day above to inspect simulated puzzle rotation</pre>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- TAB 2: Add New Game -->
@@ -1133,6 +1259,142 @@ document.getElementById("btn-gh-push").onclick = async () => {
     alert("Network Error: " + err.message);
   }
 };
+
+// --- Midnight Automation & Rollover Health Monitor ---
+const STRATA_PLATES = [
+  "Plate 1: Gutenberg to WWW (1440 - 1991)",
+  "Plate 2: Great Fire of London to Penicillin (1666 - 1928)",
+  "Plate 3: Great Pyramid to Modern Olympics (-2560 - 1896)"
+];
+const KIN_PLATES = [
+  "Plate 1: Afrotheria, Archosaurs & Fungi (65 - 1550 Mya)",
+  "Plate 2: Glires, Flightless Birds & Deuterostomes (70 - 700 Mya)"
+];
+
+function updateAutomationClock() {
+  const now = new Date();
+  const utcYear = now.getUTCFullYear();
+  const utcMonth = now.getUTCMonth();
+  const utcDate = now.getUTCDate();
+
+  const nextMidnightUtc = new Date(Date.UTC(utcYear, utcMonth, utcDate + 1));
+  const diff = nextMidnightUtc - now;
+
+  const pad = n => String(n).padStart(2, "0");
+  const hours = Math.floor(diff / 36e5);
+  const mins = Math.floor((diff % 36e5) / 6e4);
+  const secs = Math.floor((diff % 6e4) / 1e3);
+
+  const cdEl = document.getElementById("auto-cd");
+  if (cdEl) cdEl.textContent = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+
+  const utcTimeEl = document.getElementById("admin-utc-time");
+  if (utcTimeEl) utcTimeEl.textContent = now.toUTCString().replace("GMT", "UTC");
+
+  const T = Math.floor(Date.UTC(utcYear, utcMonth, utcDate) / 864e5);
+  const dayNum = T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1;
+
+  const epochEl = document.getElementById("auto-epoch");
+  if (epochEl) epochEl.textContent = T;
+
+  const dayNumEl = document.getElementById("auto-day-num");
+  if (dayNumEl) dayNumEl.textContent = `#${dayNum}`;
+
+  const strataPreview = document.getElementById("strata-today-preview");
+  if (strataPreview) strataPreview.textContent = STRATA_PLATES[((T % 3) + 3) % 3];
+
+  const kinPreview = document.getElementById("kin-today-preview");
+  if (kinPreview) kinPreview.textContent = KIN_PLATES[((T % 2) + 2) % 2];
+}
+
+setInterval(updateAutomationClock, 1000);
+updateAutomationClock();
+
+// Check Fibber today.json health
+function checkFibberFreshness() {
+  const badge = document.getElementById("fibber-freshness-badge");
+  const statusText = document.getElementById("fibber-file-status");
+  if (!badge || !statusText) return;
+
+  const todayUtcStr = new Date().toISOString().split("T")[0];
+
+  fetch("today.json")
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data) throw new Error("today.json not reachable");
+      const fileDate = data.date || "Unknown";
+      const isToday = fileDate === todayUtcStr;
+      const roundCount = (data.rounds || []).length;
+
+      statusText.textContent = `Date: ${fileDate} (${roundCount} rounds)`;
+      if (isToday) {
+        badge.className = "status-badge live";
+        badge.textContent = "🟢 Live & Current";
+      } else {
+        badge.className = "status-badge lab";
+        badge.textContent = `🟡 Date: ${fileDate}`;
+      }
+    })
+    .catch(() => {
+      statusText.textContent = "Offline / Using Fallback";
+      badge.className = "status-badge draft";
+      badge.textContent = "Offline Fallback";
+    });
+}
+
+checkFibberFreshness();
+const btnRecheck = document.getElementById("btn-recheck-auto");
+if (btnRecheck) {
+  btnRecheck.onclick = () => {
+    checkFibberFreshness();
+    showToast("Re-checked automated systems");
+  };
+}
+
+// Preview Game Tomorrow
+window.previewGameTomorrow = function(game) {
+  const now = new Date();
+  const T = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1) / 864e5);
+  if (game === "strata") {
+    alert(`Tomorrow at 00:00 UTC (T=${T}):\nStrata will automatically load:\n${STRATA_PLATES[((T % 3) + 3) % 3]}`);
+  } else {
+    alert(`Tomorrow at 00:00 UTC (T=${T}):\nKin will automatically load:\n${KIN_PLATES[((T % 2) + 2) % 2]}`);
+  }
+};
+
+// Rollover Simulation
+document.querySelectorAll(".sim-day-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const offset = parseInt(btn.dataset.offset, 10);
+    const now = new Date();
+    const simDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + offset));
+    const isoDate = simDate.toISOString().split("T")[0];
+    const T = Math.floor(Date.UTC(simDate.getUTCFullYear(), simDate.getUTCMonth(), simDate.getUTCDate()) / 864e5);
+    const dayNum = T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1;
+
+    const strataPlate = STRATA_PLATES[((T % 3) + 3) % 3];
+    const kinPlate = KIN_PLATES[((T % 2) + 2) % 2];
+
+    const out = `=== SIMULATION: ${offset === 0 ? "TODAY" : offset === 1 ? "TOMORROW" : `IN ${offset} DAYS`} ===
+Date: ${isoDate} (UTC)
+Epoch Day Index (T): ${T}
+Daily Grudge Day Number: #${dayNum}
+
+[Strata Historical Timeline]:
+  Active Stack: ${strataPlate}
+  Lock key: strata:${T}
+
+[Kin Evolutionary Kinship]:
+  Active Plate: ${kinPlate}
+  Streak key: kin:${T}
+
+[Fibber Headlines]:
+  GitHub Actions Cron: Runs at 03:00 UTC & 06:00 UTC
+  Target Date in today.json: ${isoDate}`;
+
+    document.getElementById("sim-output").textContent = out;
+  });
+});
 
 // Initial run
 renderGamesList();
