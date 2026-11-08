@@ -139,7 +139,7 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <div class="row"><div class="n" style="background:var(--c2)">02</div><div><h3>Rank It Rage</h3><p>Sort five things by a hidden number in three guesses.</p></div><span class="st">Soon</span></div>
 <div class="row"><div class="n" style="background:var(--c3)">03</div><div><h3>Petty</h3><p>A daily game of trivial grievances and minor vendettas.</p></div><span class="st">Soon</span></div>
 </section>
-<footer><span>Fresh puzzles at midnight, local time.</span><span><a href="admin.html" style="color:inherit;text-decoration:none;opacity:.65;margin-right:14px;font-weight:700">Oddly Studio</a>Made with spite.</span></footer>
+<footer><span>Fresh puzzles at midnight, local time.</span><span id="footer-secret" style="cursor:default;user-select:none">Made with spite.</span></footer>
 </main>
 <script>
 const $=id=>document.getElementById(id),q=["Wrong. Again.","You already tried that","One away. Pity.","Fooled by a goose","Fine. Correct.","Don’t get cocky","Reality is rude","That was a choice"];
@@ -182,4 +182,30 @@ const loadGames=()=>{
   fetch("games.json").then(r=>r.ok?r.json():fetch("public/games.json").then(r2=>r2.ok?r2.json():null)).then(m=>{if(m)apply(m)}).catch(()=>{});
 };
 loadGames();
+
+// Secret Entrance to Admin Studio:
+// 1. Keyboard Shortcut: Ctrl+Shift+A or Cmd+Shift+A
+window.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "A" || e.key === "a")) {
+    e.preventDefault();
+    window.location.href = "admin.html";
+  }
+});
+
+// 2. Secret Logo / Footer 5-Click Trigger (within 3 seconds)
+let secretClicks = 0;
+let secretTimer = null;
+const triggerSecret = () => {
+  secretClicks++;
+  clearTimeout(secretTimer);
+  secretTimer = setTimeout(() => { secretClicks = 0; }, 3000);
+  if (secretClicks >= 5) {
+    secretClicks = 0;
+    window.location.href = "admin.html";
+  }
+};
+const logoEl = document.querySelector(".brand") || document.querySelector(".logo");
+if (logoEl) logoEl.addEventListener("click", triggerSecret);
+const secretEl = document.getElementById("footer-secret");
+if (secretEl) secretEl.addEventListener("click", triggerSecret);
 </script></body></html>

@@ -337,10 +337,74 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
 #toast.show { transform: translateY(0); opacity: 1; }
 
 @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Auth Gate */
+#auth-gate {
+  display: flex;
+  min-height: 85vh;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 28px;
+  padding: 38px 32px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+  text-align: center;
+  animation: rise .4s both;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.shake { animation: shake .4s cubic-bezier(.36,.07,.19,.97) both; }
 </style>
 </head>
 <body>
-<main>
+
+<div id="auth-gate">
+  <div class="auth-card">
+    <div style="display:flex;justify-content:center;align-items:center;margin-bottom:18px">
+      <img src="logo.png" alt="Oddly" style="width:58px;height:58px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.15)">
+    </div>
+    <div class="mono" style="font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:6px">Restricted Access</div>
+    <h1 style="font-size:1.85rem;font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:8px">Oddly Studio</h1>
+    <p style="color:var(--mute);font-size:.9rem;line-height:1.45;margin-bottom:24px">Passphrase protected. Enter your passphrase to manage daily games and AI generators.</p>
+    
+    <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+      <div class="form-group" style="text-align:left;margin-bottom:14px">
+        <label for="admin-pass" class="form-label">Studio Passphrase</label>
+        <div style="position:relative">
+          <input type="password" id="admin-pass" class="form-control mono" placeholder="Enter passphrase..." style="padding-right:44px;font-size:1rem;height:46px" autofocus required autocomplete="current-password">
+          <button type="button" id="btn-toggle-pass" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mute);padding:6px;font-size:1.1rem;line-height:1" title="Show/Hide Passphrase">👁️</button>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:.84rem">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--mute);user-select:none">
+          <input type="checkbox" id="auth-remember" style="accent-color:var(--ink);width:16px;height:16px">
+          <span>Remember on this browser</span>
+        </label>
+      </div>
+
+      <div id="auth-error" class="mono" style="display:none;color:var(--danger);background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);padding:10px 14px;border-radius:10px;font-size:.8rem;margin-bottom:16px;line-height:1.4;text-align:left"></div>
+
+      <button type="submit" id="btn-auth-unlock" class="btn btn-primary" style="width:100%;height:48px;font-size:1rem;font-weight:800;justify-content:center">Unlock Studio →</button>
+      
+      <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--mute)">
+        <a href="index.html" class="mono" style="color:var(--mute);text-decoration:none;font-weight:700">← Back to Oddly</a>
+        <span class="mono" id="lockout-timer" style="display:none;color:var(--danger);font-weight:700"></span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<main id="admin-main" style="display:none">
   <header>
     <div class="brand">
       <a href="index.html" class="back">← Oddly Hub</a>
@@ -351,6 +415,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
     <div class="actions-top">
       <button class="btn btn-secondary btn-sm" id="btn-export-quick">Export games.json</button>
       <button class="btn btn-primary btn-sm" id="btn-sync-git">Sync with GitHub</button>
+      <button class="btn btn-secondary btn-sm" id="btn-lock-studio" title="Lock Admin Studio">🔒 Lock</button>
     </div>
   </header>
 
@@ -707,6 +772,27 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
           <button class="btn btn-secondary" id="btn-download-manifest">Download games.json</button>
           <button class="btn btn-secondary" id="btn-copy-manifest">Copy JSON</button>
           <button class="btn btn-danger btn-sm" id="btn-reset-defaults" style="margin-left:auto">Reset to Defaults</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:10px">🔐 Studio Passphrase & Access Control</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:16px">Change your Studio access passphrase. Verified using cryptographic SHA-256 hashing. Default is <code>oddly-admin</code>.</p>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="current-pass">Current Passphrase</label>
+            <input type="password" id="current-pass" class="form-control mono" placeholder="Current passphrase">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-pass">New Passphrase</label>
+            <input type="password" id="new-pass" class="form-control mono" placeholder="New strong passphrase">
+          </div>
+        </div>
+        
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="btn-change-pass">Update Passphrase</button>
+          <button class="btn btn-secondary btn-sm" id="btn-reset-pass">Reset to Default (oddly-admin)</button>
         </div>
       </div>
     </div>
@@ -1423,9 +1509,206 @@ Daily Oddly Day Number: #${dayNum}
   });
 });
 
-// Initial run
-renderGamesList();
-updateLivePreview();
+// --- Passphrase Security & Auth Gate ---
+const DEFAULT_PASS_HASH = "3708dd0974dcd4a1356102d2c5efd42ff36304d01cfdb4bd32785567b088c1d8"; // SHA-256('oddly-admin')
+const HASH_STORAGE_KEY = "oddly_admin_pass_hash";
+const AUTH_TOKEN_KEY = "oddly_admin_auth_token";
+const FAILED_ATTEMPTS_KEY = "oddly_failed_attempts";
+const LOCKOUT_KEY = "oddly_lockout_until";
+
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function getExpectedHash() {
+  return localStorage.getItem(HASH_STORAGE_KEY) || DEFAULT_PASS_HASH;
+}
+
+let lockoutInterval = null;
+function checkLockout() {
+  const lockoutUntil = parseInt(sessionStorage.getItem(LOCKOUT_KEY) || "0", 10);
+  const now = Date.now();
+  const btnUnlock = document.getElementById("btn-auth-unlock");
+  const lockoutTimerEl = document.getElementById("lockout-timer");
+  const passInput = document.getElementById("admin-pass");
+
+  if (lockoutUntil > now) {
+    const remainingSecs = Math.ceil((lockoutUntil - now) / 1000);
+    if (btnUnlock) btnUnlock.disabled = true;
+    if (passInput) passInput.disabled = true;
+    if (lockoutTimerEl) {
+      lockoutTimerEl.style.display = "inline";
+      lockoutTimerEl.textContent = `Locked (${remainingSecs}s)`;
+    }
+    if (!lockoutInterval) {
+      lockoutInterval = setInterval(checkLockout, 1000);
+    }
+    return true;
+  } else {
+    if (lockoutInterval) {
+      clearInterval(lockoutInterval);
+      lockoutInterval = null;
+    }
+    if (btnUnlock) btnUnlock.disabled = false;
+    if (passInput) passInput.disabled = false;
+    if (lockoutTimerEl) lockoutTimerEl.style.display = "none";
+    sessionStorage.removeItem(LOCKOUT_KEY);
+    return false;
+  }
+}
+
+function showAuthError(msg) {
+  const errEl = document.getElementById("auth-error");
+  if (errEl) {
+    errEl.textContent = msg;
+    errEl.style.display = "block";
+  }
+  const authCard = document.querySelector(".auth-card");
+  if (authCard) {
+    authCard.classList.remove("shake");
+    void authCard.offsetWidth;
+    authCard.classList.add("shake");
+  }
+}
+
+window.handleAuthSubmit = async function(e) {
+  if (e) e.preventDefault();
+  if (checkLockout()) return;
+
+  const passInput = document.getElementById("admin-pass");
+  const val = (passInput ? passInput.value : "").trim();
+  const remember = document.getElementById("auth-remember")?.checked;
+  if (!val) return;
+
+  const inputHash = await sha256(val);
+  const expectedHash = getExpectedHash();
+
+  if (inputHash === expectedHash) {
+    const sessionToken = await sha256(expectedHash + "_oddly_session_key");
+    sessionStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    if (remember) {
+      localStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    }
+    sessionStorage.removeItem(FAILED_ATTEMPTS_KEY);
+    sessionStorage.removeItem(LOCKOUT_KEY);
+    const errEl = document.getElementById("auth-error");
+    if (errEl) errEl.style.display = "none";
+    revealStudio();
+    showToast("Admin Studio Unlocked 🔓");
+  } else {
+    let failed = parseInt(sessionStorage.getItem(FAILED_ATTEMPTS_KEY) || "0", 10) + 1;
+    sessionStorage.setItem(FAILED_ATTEMPTS_KEY, failed);
+    if (failed >= 5) {
+      sessionStorage.setItem(LOCKOUT_KEY, Date.now() + 30000);
+      sessionStorage.setItem(FAILED_ATTEMPTS_KEY, "0");
+      checkLockout();
+      showAuthError("Too many failed attempts. Locked for 30 seconds.");
+    } else {
+      showAuthError(`Incorrect passphrase. (${5 - failed} attempts remaining)`);
+    }
+  }
+};
+
+function lockStudio(showToastMsg = true) {
+  sessionStorage.removeItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  const mainEl = document.getElementById("admin-main");
+  const gateEl = document.getElementById("auth-gate");
+  if (mainEl) mainEl.style.display = "none";
+  if (gateEl) gateEl.style.display = "flex";
+  const passInput = document.getElementById("admin-pass");
+  if (passInput) {
+    passInput.value = "";
+    passInput.focus();
+  }
+  checkLockout();
+  if (showToastMsg) showToast("Admin Studio Locked 🔒");
+}
+
+function revealStudio() {
+  const gateEl = document.getElementById("auth-gate");
+  const mainEl = document.getElementById("admin-main");
+  if (gateEl) gateEl.style.display = "none";
+  if (mainEl) {
+    mainEl.style.display = "block";
+    renderGamesList();
+    updateLivePreview();
+    updateAutomationClock();
+    checkFibberFreshness();
+  }
+}
+
+async function checkAuth() {
+  const expectedToken = await sha256(getExpectedHash() + "_oddly_session_key");
+  const currentToken = sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+  if (currentToken && currentToken === expectedToken) {
+    revealStudio();
+  } else {
+    lockStudio(false);
+  }
+}
+
+// Wire Lock button in header
+document.getElementById("btn-lock-studio")?.addEventListener("click", () => lockStudio(true));
+
+// Password reveal toggle
+const toggleBtn = document.getElementById("btn-toggle-pass");
+if (toggleBtn) {
+  toggleBtn.onclick = () => {
+    const input = document.getElementById("admin-pass");
+    if (!input) return;
+    const isPass = input.type === "password";
+    input.type = isPass ? "text" : "password";
+    toggleBtn.textContent = isPass ? "🙈" : "👁️";
+  };
+}
+
+// Change Passphrase handlers
+document.getElementById("btn-change-pass")?.addEventListener("click", async () => {
+  const curVal = (document.getElementById("current-pass")?.value || "").trim();
+  const newVal = (document.getElementById("new-pass")?.value || "").trim();
+  if (!curVal || !newVal) {
+    showToast("Please enter current and new passphrase");
+    return;
+  }
+  const curHash = await sha256(curVal);
+  if (curHash !== getExpectedHash()) {
+    showToast("Current passphrase incorrect ❌");
+    return;
+  }
+  if (newVal.length < 6) {
+    showToast("New passphrase must be at least 6 characters");
+    return;
+  }
+  const newHash = await sha256(newVal);
+  localStorage.setItem(HASH_STORAGE_KEY, newHash);
+  // Re-issue session token
+  const sessionToken = await sha256(newHash + "_oddly_session_key");
+  sessionStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+  if (localStorage.getItem(AUTH_TOKEN_KEY)) {
+    localStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+  }
+  document.getElementById("current-pass").value = "";
+  document.getElementById("new-pass").value = "";
+  showToast("Passphrase updated successfully! 🔐");
+});
+
+document.getElementById("btn-reset-pass")?.addEventListener("click", async () => {
+  if (confirm("Reset admin passphrase back to default ('oddly-admin')?")) {
+    localStorage.removeItem(HASH_STORAGE_KEY);
+    const sessionToken = await sha256(DEFAULT_PASS_HASH + "_oddly_session_key");
+    sessionStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    if (localStorage.getItem(AUTH_TOKEN_KEY)) {
+      localStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    }
+    showToast("Passphrase reset to default ('oddly-admin')");
+  }
+});
+
+// Run auth check on page boot
+checkAuth();
 </script>
 </body>
 </html>

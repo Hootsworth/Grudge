@@ -22,7 +22,7 @@ GitHub Pages: `https://hootsworth.github.io/Grudge/`
 
 ## 🛠️ Admin Studio & AI Game Generator (`admin.html`)
 
-Access the Admin Studio directly at [`admin.html`](admin.html) (or via the footer link on the home page).
+Access the Admin Studio directly at [`admin.html`](admin.html) or via secret shortcut (`Ctrl+Shift+A` / `Cmd+Shift+A`, or clicking the 4-pebble logo 5 times on the homepage). Protected with an SHA-256 passphrase gate (default: `oddly-admin`, customizable in Settings).
 
 ### Features:
 1. **Games Manifest Manager**:
