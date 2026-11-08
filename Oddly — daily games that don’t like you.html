@@ -33,9 +33,11 @@ animation:rise .8s cubic-bezier(.2,.8,.2,1) both;transition:transform .35s cubic
 .g:nth-child(1){--bgc:var(--c3);animation-delay:0s}
 .g:nth-child(2){--bgc:var(--c1);animation-delay:.12s}
 .g:nth-child(3){--bgc:var(--c4);animation-delay:.24s}
+.g:nth-child(4){--bgc:#f2b134;animation-delay:.36s}
 .g:nth-child(1):hover{transform:translateY(-8px) rotate(-.6deg)}
 .g:nth-child(2):hover{transform:translateY(-8px) rotate(.6deg)}
 .g:nth-child(3):hover{transform:translateY(-8px) rotate(-.5deg)}
+.g:nth-child(4):hover{transform:translateY(-8px) rotate(.5deg)}
 .art{flex:1;display:grid;place-items:center;min-height:180px;margin-bottom:12px}
 .tag{display:flex;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
 .tag span{border:2px solid #14131a;border-radius:999px;padding:3px 10px}
@@ -70,6 +72,11 @@ animation:rise .8s cubic-bezier(.2,.8,.2,1) both;transition:transform .35s cubic
 .k-discs .kd.c{background:var(--c2);animation-delay:.3s}
 .k-discs .out{position:absolute;top:-6px;right:-2px;font-style:normal;font-size:.58rem;letter-spacing:.08em;font-weight:800;background:#14131a;color:var(--c0);padding:1px 5px;border-radius:6px}
 .k-tree svg{width:160px;height:28px}
+
+/* PassPhew Vault Art */
+.vault-art{position:relative;display:grid;place-items:center;filter:drop-shadow(0 6px 14px rgba(0,0,0,.15))}
+.vault-art svg{transform-origin:center;transition:transform .6s cubic-bezier(.2,1.4,.4,1)}
+.g:hover .vault-art svg{transform:rotate(45deg)}
 
 .soon{margin-top:52px}
 .row{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:16px;padding:20px 0;border-top:2px solid var(--line);transition:padding .3s,background .3s}
@@ -131,6 +138,31 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <div class="tag"><span>Evolution</span><span>5 rounds</span></div>
 <h2>Kin</h2><p>Three living things. Pick the two most closely related. Evolutionary deep time decoded.</p>
 <div class="play">Check kinship<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
+
+<!-- Game 4: PassPhew -->
+<a class="g" href="passphew.html" style="--bgc:#f2b134">
+<div class="art"><div class="vault-art">
+<svg viewBox="0 0 140 140" width="130" height="130">
+  <circle cx="70" cy="70" r="64" fill="#1f6f5c" stroke="#14131a" stroke-width="4"/>
+  <circle cx="70" cy="70" r="48" fill="#185c4c" stroke="#14131a" stroke-width="3"/>
+  <circle cx="70" cy="70" r="32" fill="#fffaf0" stroke="#14131a" stroke-width="3"/>
+  <g stroke="#14131a" stroke-width="2">
+    <line x1="70" y1="40" x2="70" y2="44"/>
+    <line x1="70" y1="96" x2="70" y2="100"/>
+    <line x1="40" y1="70" x2="44" y2="70"/>
+    <line x1="96" y1="70" x2="100" y2="70"/>
+  </g>
+  <g fill="#f2b134" stroke="#14131a" stroke-width="2">
+    <rect x="66" y="44" width="8" height="26" rx="4"/>
+    <rect x="66" y="44" width="8" height="26" rx="4" transform="rotate(120 70 70)"/>
+    <rect x="66" y="44" width="8" height="26" rx="4" transform="rotate(240 70 70)"/>
+  </g>
+  <circle cx="70" cy="70" r="7" fill="#14131a"/>
+</svg>
+</div></div>
+<div class="tag"><span>Cryptic</span><span>Unlimited</span></div>
+<h2>PassPhew</h2><p>One username. One cryptic clue. Unlimited password guesses. Crack the daily vault.</p>
+<div class="play">Crack the vault<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
 </section>
 
 <section class="soon">
@@ -153,7 +185,7 @@ const loadGames=()=>{
     if(!manifest||!manifest.live)return;
     const liveSec=document.querySelector(".live");
     if(!liveSec)return;
-    const known={"fibber":1,"strata":1,"kin":1};
+    const known={"fibber":1,"strata":1,"kin":1,"passphew":1};
     const custom=manifest.live.filter(g=>!known[g.id]&&!rendered[g.id]);
     custom.forEach((g,idx)=>{
       rendered[g.id]=true;

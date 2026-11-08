@@ -40,6 +40,19 @@
       "artType": "kin",
       "backend": "worker-d1",
       "status": "live"
+    },
+    {
+      "id": "passphew",
+      "title": "PassPhew",
+      "url": "passphew.html",
+      "tags": ["Cryptic", "Unlimited"],
+      "desc": "One username. One cryptic clue. Unlimited password guesses. Crack the vault.",
+      "cta": "Crack the vault",
+      "color": "var(--c2)",
+      "bgHex": "#d98f10",
+      "artType": "passphew",
+      "backend": "worker-d1",
+      "status": "live"
     }
   ],
   "lab": [
