@@ -1,4 +1,4 @@
-name: Deploy Cloudflare Workers (Strata & Kin)
+name: Deploy Cloudflare Workers (Strata, Kin & PassPhew)
 
 on:
   workflow_dispatch:
@@ -7,8 +7,10 @@ on:
     paths:
       - 'src/**'
       - 'kin/src/**'
+      - 'passphew/src/**'
       - 'wrangler.toml'
       - 'kin/wrangler.toml'
+      - 'passphew/wrangler.toml'
 
 jobs:
   deploy-workers:
@@ -36,6 +38,17 @@ jobs:
             echo "::notice::CLOUDFLARE_API_TOKEN secret not set. Skipping Cloudflare Workers deployment."
           fi
 
+      - name: Provision D1 Databases & Resolve IDs
+        if: steps.check_cf.outputs.has_token == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          STRATA_DATABASE_ID: ${{ secrets.STRATA_DATABASE_ID }}
+          KIN_DATABASE_ID: ${{ secrets.KIN_DATABASE_ID }}
+          PASSPHEW_DATABASE_ID: ${{ secrets.PASSPHEW_DATABASE_ID }}
+        run: |
+          node scripts/setup_cf_d1.js
+
       - name: Deploy Strata Worker
         if: steps.check_cf.outputs.has_token == 'true'
         uses: cloudflare/wrangler-action@v3
@@ -51,4 +64,13 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'kin'
+          command: deploy
+
+      - name: Deploy PassPhew Worker
+        if: steps.check_cf.outputs.has_token == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'passphew'
           command: deploy
