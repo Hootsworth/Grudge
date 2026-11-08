@@ -70,6 +70,10 @@ header{display:flex;justify-content:space-between;align-items:center}
 <div id="end"></div>
 </main>
 <script>
+const API_BASE = window.location.hostname.includes("workers.dev")
+  ? ""
+  : "https://passphew-backend.adityapdixit.workers.dev";
+
 const P=[
 {u:"night_owl",c:"Silent, shuffled, means to hear",a:"listen",e:"SILENT, shuffled, is LISTEN. The definition is “to hear”."},
 {u:"root_admin",c:"Opener of locks, then the error for a missing page",a:"key404",e:"A KEY opens locks. HTTP error 404 means “page not found”."},
@@ -116,7 +120,7 @@ async function submit(){
   
   // Check API first if available, with instantaneous fallback
   try {
-    const res = await fetch('/api/guess', {
+    const res = await fetch(`${API_BASE}/api/guess`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ session: sessionId, guess: v })
@@ -133,8 +137,8 @@ async function submit(){
       const data = await res.json();
       if (data.correct) {
         S.over=true;
-        if(data.answer) Z.a = data.answer;
-        if(data.explanation) Z.e = data.explanation;
+        if(data.answer) { Z.a = data.answer; S.ans = data.answer; }
+        if(data.explanation) { Z.e = data.explanation; S.exp = data.explanation; }
         bump();save();win();
         return;
       } else {
@@ -147,8 +151,8 @@ async function submit(){
   } catch(e) {}
 
   // Local mechanical check (offline / fallback)
-  if(v===Z.a){
-    S.over=true;bump();save();win();
+  if(Z.a && v===Z.a){
+    S.over=true;S.ans=Z.a;S.exp=Z.e;bump();save();win();
   } else {
     S.n++;save();
     triggerDenied();
@@ -160,22 +164,32 @@ function triggerDenied(){
 }
 
 function win(){
-  head();buf=Z.a;$("led").className="led ok";msg("ACCESS GRANTED","ok");$("cn").classList.add("off");$("st").classList.add("open");
+  head();const ans=S.ans||Z.a||"";const exp=S.exp||Z.e||"";buf=ans;$("led").className="led ok";msg("ACCESS GRANTED","ok");$("cn").classList.add("off");$("st").classList.add("open");
   const sh="PassPhew #"+num+"  cracked after "+(S.n+1)+(S.n?" attempts":" attempt");
-  $("end").innerHTML=`<div class="end"><h2>Cracked.</h2><p>Password: <b>${Z.a.toUpperCase()}</b>. ${S.n?S.n+" failed "+(S.n===1?"attempt":"attempts")+" before it opened.":"First try."}<br>${Z.e}</p><button class="cp" id="cp">Copy result</button><p class="cd mono" id="cd"></p></div>`;
+  $("end").innerHTML=`<div class="end"><h2>Cracked.</h2><p>Password: <b>${ans.toUpperCase()}</b>. ${S.n?S.n+" failed "+(S.n===1?"attempt":"attempts")+" before it opened.":"First try."}<br>${exp}</p><button class="cp" id="cp">Copy result</button><p class="cd mono" id="cd"></p></div>`;
   $("cp").onclick=()=>{try{navigator.clipboard.writeText(sh).then(()=>$("cp").textContent="Copied",()=>prompt("Copy:",sh))}catch(e){prompt("Copy:",sh)}};
   const tick=()=>{const a=new Date(),r=new Date(a.getFullYear(),a.getMonth(),a.getDate()+1)-a,q=x=>String(x).padStart(2,"0");$("cd").textContent="Next vault in "+q(Math.floor(r/36e5))+":"+q(Math.floor(r/6e4)%60)+":"+q(Math.floor(r/1e3)%60)};tick();setInterval(tick,1000);
 }
 
-// Fetch live puzzle if available
-fetch('/api/today').then(r=>r.ok?r.json():null).then(data=>{
+// Load live puzzle from Cloudflare Worker backend with static JSON fallback
+function applyLivePuzzle(data){
   if(data && data.clue){
     Z.c = data.clue;
     if(data.username) Z.u = data.username;
     if(data.plate) num = data.plate;
     $("ht").textContent=Z.c;$("us").textContent=Z.u;head();
   }
-}).catch(()=>{});
+}
+
+fetch(`${API_BASE}/api/today`)
+  .then(r=>r.ok?r.json():null)
+  .then(data=>{
+    if(data) applyLivePuzzle(data);
+    else fetch('passphew_today.json').then(r=>r.ok?r.json():null).then(applyLivePuzzle).catch(()=>{});
+  })
+  .catch(()=>{
+    fetch('passphew_today.json').then(r=>r.ok?r.json():null).then(applyLivePuzzle).catch(()=>{});
+  });
 
 $("kb").onclick=e=>{const b=e.target.closest(".k");if(b)press(b.dataset.k)};
 document.addEventListener("keydown",e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;let k=null;if(/^[a-zA-Z0-9]$/.test(e.key))k=e.key.toUpperCase();else if(e.key==="Backspace")k="DEL";else if(e.key==="Enter")k="ENTER";if(!k)return;e.preventDefault();
