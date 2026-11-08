@@ -17,7 +17,10 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .logo{font-weight:800;font-size:1.7rem;letter-spacing:-.04em;display:flex;align-items:center;gap:10px}
 .logo i{display:flex;flex-direction:column;gap:2px}.logo i b{display:block;height:5px;border-radius:2px;width:22px}
 .logo i b:nth-child(1){background:#6bbf59}.logo i b:nth-child(2){background:#e8a94a}.logo i b:nth-child(3){background:#c4603f}.logo i b:nth-child(4){background:#7a5a8c}
-.pips{display:flex;gap:6px;align-items:center;color:var(--mute)}.pips span{width:12px;height:12px;border-radius:50%;border:2px solid var(--mute);transition:background .3s}.pips span.u{background:var(--ink);border-color:var(--ink)}
+.digs-counter{display:flex;gap:8px;align-items:center;color:var(--mute);font-family:"DM Mono",ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+.pips{display:flex;gap:6px;align-items:center}
+.pips span{width:12px;height:12px;border-radius:50%;border:2px solid var(--mute);transition:background .3s;box-sizing:border-box;display:inline-block;flex-shrink:0}
+.pips span.u{background:var(--ink);border-color:var(--ink)}
 .back{display:inline-flex;align-items:center;color:var(--mute);text-decoration:none;font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border:2px solid var(--line);border-radius:999px;transition:color .2s,border-color .2s}
 .back:hover{color:var(--ink);border-color:var(--ink)}
 h1{font-size:clamp(1.9rem,8vw,2.6rem);letter-spacing:-.045em;line-height:1;margin:0 0 8px;font-weight:800;animation:rise .7s both}
@@ -53,7 +56,7 @@ h1{font-size:clamp(1.9rem,8vw,2.6rem);letter-spacing:-.045em;line-height:1;margi
 @keyframes no{20%{transform:translateX(-9px) rotate(-1.4deg)}45%{transform:translateX(9px) rotate(1.4deg)}70%{transform:translateX(-5px)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><main>
-<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back" title="Back to Oddly">← Oddly</a><div class="logo"><i><b></b><b></b><b></b><b></b></i>Strata</div></div><div class="pips mono"><span class="mono" id="al">Digs</span><span id="p0"></span><span id="p1"></span><span id="p2"></span><span id="p3"></span></div></header>
+<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back" title="Back to Oddly">← Oddly</a><div class="logo"><i><b></b><b></b><b></b><b></b></i>Strata</div></div><div class="digs-counter"><span id="al">Digs</span><div class="pips"><span id="p0"></span><span id="p1"></span><span id="p2"></span><span id="p3"></span></div></div></header>
 <h1>Stack history in order.</h1>
 <p class="sub">Drag the grip. Newest on the surface, oldest on the bedrock. Correct layers lock in place after each dig.</p>
 <div class="lab mono"><span>Surface · newest</span><span id="n"></span></div>
