@@ -14,8 +14,6 @@ binding = "DB"
 database_name = "strata-db"
 database_id = "local-strata-db-id"
 
-# Cron Triggers:
-# 05:00 UTC - Daily puzzle generation & verification pass
-# 06:00 UTC - Auto-publish check & backlog fallback
+# Cron Trigger (combined 05:00 UTC generation and 06:00 UTC fallback/publish)
 [triggers]
-crons = ["0 5 * * *", "0 6 * * *"]
+crons = ["0 5,6 * * *"]

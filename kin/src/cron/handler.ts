@@ -20,14 +20,15 @@ import {
 
 export async function handleScheduledEvent(event: ScheduledEvent, env: Env): Promise<void> {
   const cron = event.cron;
-  const now = new Date();
+  const now = new Date(event.scheduledTime || Date.now());
   const dateStr = now.toISOString().split('T')[0];
+  const hour = now.getUTCHours();
 
-  console.log(`[Kin Cron] Trigger '${cron}' running for ${dateStr}...`);
+  console.log(`[Kin Cron] Trigger '${cron}' (hour: ${hour}) running for ${dateStr}...`);
 
-  if (cron === '0 5 * * *') {
+  if (cron === '0 5 * * *' || hour === 5) {
     await run0500Selection(env, dateStr);
-  } else if (cron === '0 6 * * *') {
+  } else if (cron === '0 6 * * *' || hour === 6) {
     await run0600PublishAndFallback(env, dateStr);
     await compileYesterdayStats(env, now);
   } else {

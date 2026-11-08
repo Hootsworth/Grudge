@@ -12,15 +12,16 @@ import { findHardestPair, calculateAvgAttempts } from '../scoring/stats.ts';
 
 export async function handleScheduledEvent(event: ScheduledEvent, env: Env): Promise<void> {
   const cron = event.cron;
-  const now = new Date();
+  const now = new Date(event.scheduledTime || Date.now());
   const dateStr = now.toISOString().split('T')[0];
+  const hour = now.getUTCHours();
 
-  console.log(`[Strata Cron] Running cron trigger '${cron}' for date ${dateStr}...`);
+  console.log(`[Strata Cron] Running cron trigger '${cron}' (hour: ${hour}) for date ${dateStr}...`);
 
-  if (cron === '0 5 * * *') {
+  if (cron === '0 5 * * *' || hour === 5) {
     // 05:00 UTC: Generate pending puzzle & send review preview
     await run0500Generation(env, dateStr);
-  } else if (cron === '0 6 * * *') {
+  } else if (cron === '0 6 * * *' || hour === 6) {
     // 06:00 UTC: Auto-publish gate or fallback, and compile yesterday stats
     await run0600PublishAndFallback(env, dateStr);
     await compileYesterdayStats(env, now);
