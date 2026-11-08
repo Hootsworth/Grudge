@@ -1,0 +1,43 @@
+{
+  "plate": "From Stars to Atoms",
+  "theme": "science",
+  "spread_type": "millennia",
+  "events": [
+    {
+      "text": "Aristotle writes natural philosophy treatise Physics",
+      "year": -330,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Physics_(Aristotle)"
+    },
+    {
+      "text": "Archimedes formulates law of buoyancy in Syracuse",
+      "year": -250,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Archimedes"
+    },
+    {
+      "text": "Copernicus publishes heliocentric astronomical model",
+      "year": 1543,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Nicolaus_Copernicus"
+    },
+    {
+      "text": "Newton publishes mathematical principles of gravity",
+      "year": 1687,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Philosophi%C3%A6_Naturalis_Principia_Mathematica"
+    },
+    {
+      "text": "Darwin publishes theory of evolution in Origin of Species",
+      "year": 1859,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/On_the_Origin_of_Species"
+    },
+    {
+      "text": "Einstein publishes theory of General Relativity",
+      "year": 1915,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/General_relativity"
+    }
+  ]
+}

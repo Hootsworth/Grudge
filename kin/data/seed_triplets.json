@@ -1,0 +1,192 @@
+[
+  {
+    "a": "org_elephant",
+    "b": "org_manatee",
+    "c": "org_rhino",
+    "t1": 65.0,
+    "t2": 100.0,
+    "ci1": [
+      58.0,
+      72.0
+    ],
+    "ci2": [
+      94.0,
+      108.0
+    ],
+    "counterintuitive": 4.5,
+    "depth": 100.0,
+    "fact": "Elephants and manatees are both Afrotherians, a group that evolved in Africa, while rhinos belong to Perissodactyla.",
+    "difficulty": "easy"
+  },
+  {
+    "a": "org_crocodile",
+    "b": "org_chicken",
+    "c": "org_lizard",
+    "t1": 240.0,
+    "t2": 280.0,
+    "ci1": [
+      232.0,
+      248.0
+    ],
+    "ci2": [
+      272.0,
+      290.0
+    ],
+    "counterintuitive": 4.8,
+    "depth": 280.0,
+    "fact": "Crocodiles are archosaurs, making them more closely related to birds like chickens than to lizards or snakes.",
+    "difficulty": "medium"
+  },
+  {
+    "a": "org_hippo",
+    "b": "org_blue_whale",
+    "c": "org_cow",
+    "t1": 55.0,
+    "t2": 65.0,
+    "ci1": [
+      52.0,
+      58.0
+    ],
+    "ci2": [
+      62.0,
+      68.0
+    ],
+    "counterintuitive": 4.9,
+    "depth": 65.0,
+    "fact": "Hippos are the closest living relatives of whales and dolphins, having diverged after ruminants like cows branched off.",
+    "difficulty": "medium"
+  },
+  {
+    "a": "org_lungfish",
+    "b": "org_cow",
+    "c": "org_salmon",
+    "t1": 415.0,
+    "t2": 435.0,
+    "ci1": [
+      405.0,
+      425.0
+    ],
+    "ci2": [
+      428.0,
+      445.0
+    ],
+    "counterintuitive": 4.7,
+    "depth": 435.0,
+    "fact": "Lungfish belong to the lobe-finned fishes, placing them genealogically closer to terrestrial tetrapods like cows than to ray-finned fish like salmon.",
+    "difficulty": "medium"
+  },
+  {
+    "a": "org_human",
+    "b": "org_mushroom",
+    "c": "org_oak",
+    "t1": 1350.0,
+    "t2": 1550.0,
+    "ci1": [
+      1250.0,
+      1420.0
+    ],
+    "ci2": [
+      1480.0,
+      1630.0
+    ],
+    "counterintuitive": 5.0,
+    "depth": 1550.0,
+    "fact": "Animals and fungi share the evolutionary clade Opisthokonta, diverging more recently from each other than either did from green plants.",
+    "difficulty": "hard"
+  },
+  {
+    "a": "org_mouse",
+    "b": "org_rabbit",
+    "c": "org_hedgehog",
+    "t1": 82.0,
+    "t2": 95.0,
+    "ci1": [
+      77.0,
+      87.0
+    ],
+    "ci2": [
+      91.0,
+      102.0
+    ],
+    "counterintuitive": 3.8,
+    "depth": 95.0,
+    "fact": "Rabbits and rodents form the clade Glires, while hedgehogs belong to the distantly related Laurasiatherian lineage.",
+    "difficulty": "medium"
+  },
+  {
+    "a": "org_penguin",
+    "b": "org_eagle",
+    "c": "org_ostrich",
+    "t1": 70.0,
+    "t2": 100.0,
+    "ci1": [
+      64.0,
+      76.0
+    ],
+    "ci2": [
+      92.0,
+      108.0
+    ],
+    "counterintuitive": 4.2,
+    "depth": 100.0,
+    "fact": "Despite both being flightless, penguins are modern Neognath birds closely allied with flying birds like eagles, rather than with ancient ratites like ostriches.",
+    "difficulty": "easy"
+  },
+  {
+    "a": "org_giraffe",
+    "b": "org_blue_whale",
+    "c": "org_horse",
+    "t1": 63.0,
+    "t2": 80.0,
+    "ci1": [
+      58.0,
+      67.0
+    ],
+    "ci2": [
+      75.0,
+      86.0
+    ],
+    "counterintuitive": 4.4,
+    "depth": 80.0,
+    "fact": "Giraffes and cetaceans are even-toed ungulates inside Artiodactyla, whereas horses belong to the odd-toed ungulates.",
+    "difficulty": "medium"
+  },
+  {
+    "a": "org_tuna",
+    "b": "org_human",
+    "c": "org_shark",
+    "t1": 430.0,
+    "t2": 465.0,
+    "ci1": [
+      420.0,
+      440.0
+    ],
+    "ci2": [
+      452.0,
+      480.0
+    ],
+    "counterintuitive": 4.6,
+    "depth": 465.0,
+    "fact": "Tuna and humans both possess internal bony skeletons as osteichthyans, while cartilaginous sharks branched off before bone evolved.",
+    "difficulty": "easy"
+  },
+  {
+    "a": "org_human",
+    "b": "org_starfish",
+    "c": "org_octopus",
+    "t1": 650.0,
+    "t2": 700.0,
+    "ci1": [
+      630.0,
+      670.0
+    ],
+    "ci2": [
+      680.0,
+      730.0
+    ],
+    "counterintuitive": 4.7,
+    "depth": 700.0,
+    "fact": "Starfish and humans are deuterostomes sharing an embryonic blastopore pattern, whereas octopuses are protostomes.",
+    "difficulty": "hard"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "plate": "Modernist Shocks",
+  "theme": "culture",
+  "spread_type": "century",
+  "events": [
+    {
+      "text": "Van Gogh paints The Starry Night at Saint-Remy",
+      "year": 1889,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/The_Starry_Night"
+    },
+    {
+      "text": "Picasso paints proto-Cubist canvas Les Demoiselles d’Avignon",
+      "year": 1907,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Les_Demoiselles_d%27Avignon"
+    },
+    {
+      "text": "Stravinsky’s Rite of Spring ballet causes Paris riot",
+      "year": 1913,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/The_Rite_of_Spring"
+    },
+    {
+      "text": "James Joyce publishes modernist novel Ulysses in Paris",
+      "year": 1922,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Ulysses_(novel)"
+    },
+    {
+      "text": "George Orwell publishes dystopian novel Nineteen Eighty-Four",
+      "year": 1949,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four"
+    },
+    {
+      "text": "Beatles hold final public concert on Abbey Road rooftop",
+      "year": 1969,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/The_Beatles%27_rooftop_concert"
+    }
+  ]
+}

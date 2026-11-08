@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fibber — spot the headline that never happened</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f6f3ec;--ink:#14131a;--mute:#76706a;--line:#e4dfd3;--mint:#2ec4a0;--coral:#ff5d4e;
+--c0:#ff7a6b;--c1:#ffc933;--c2:#4d8dff;--c3:#a98bff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15141a;--ink:#f6f3ec;--mute:#9a94a3;--line:#2a2833}}
+:root[data-theme="dark"]{--bg:#15141a;--ink:#f6f3ec;--mute:#9a94a3;--line:#2a2833}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+main{max-width:640px;margin:0 auto;padding:20px 18px 48px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.logo{font-weight:800;font-size:1.5rem;letter-spacing:-.04em;display:flex;align-items:center;gap:8px}
+.dots{display:flex;gap:4px}.dots i{width:9px;height:9px;border-radius:50%;display:block}
+.dots i:nth-child(1){background:var(--c0)}.dots i:nth-child(2){background:var(--c1)}.dots i:nth-child(3){background:var(--c2)}.dots i:nth-child(4){background:var(--c3)}
+.meta{font-size:.82rem;font-weight:600;color:var(--mute);text-align:right}.meta b{color:var(--ink)}
+.back{display:inline-flex;align-items:center;color:var(--mute);text-decoration:none;font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border:2px solid var(--line);border-radius:999px;transition:color .2s,border-color .2s}
+.back:hover{color:var(--ink);border-color:var(--ink)}
+.prog{display:flex;gap:6px;margin-bottom:28px}
+.prog span{flex:1;height:6px;border-radius:3px;background:var(--line);position:relative;overflow:hidden}
+.prog span::after{content:"";position:absolute;inset:0;transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.prog .w::after{background:var(--mint);transform:scaleX(1)}.prog .l::after{background:var(--coral);transform:scaleX(1)}
+.prog .cur{background:var(--mute);opacity:.5}
+.kick{font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 8px}
+h2{font-size:clamp(1.9rem,7vw,2.7rem);line-height:1.02;letter-spacing:-.04em;margin:0 0 24px;font-weight:800}
+.cards{display:grid;gap:12px}
+.card{--c:var(--c0);font:inherit;text-align:left;color:#14131a;background:var(--c);border:0;border-radius:20px;padding:18px;display:grid;grid-template-columns:44px 1fr;gap:14px;cursor:pointer;position:relative;overflow:hidden;
+animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d)*80ms);transition:transform .25s cubic-bezier(.2,.8,.2,1),opacity .4s,background .5s,color .5s}
+.card:nth-child(2){--c:var(--c1)}.card:nth-child(3){--c:var(--c2)}.card:nth-child(4){--c:var(--c3)}
+.card .ltr{width:44px;height:44px;border-radius:14px;background:#14131a;color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.15rem;transition:background .3s}
+.card .t{font-weight:600;font-size:1.06rem;line-height:1.3;padding-top:2px}
+.card .m{grid-column:2;max-height:0;opacity:0;overflow:hidden;font-size:.86rem;font-weight:600;line-height:1.35;transition:max-height .5s ease,opacity .5s ease .15s}
+.card .m em{display:block;font-style:normal;font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-size:.7rem;margin-bottom:3px}
+.pick .card:not(.on):hover{transform:translateX(6px)}
+.card.on{transform:scale(1.02);box-shadow:inset 0 0 0 4px #14131a}
+.card.on .ltr{background:#fff;color:#14131a}
+.rev .card{cursor:default;pointer-events:none}
+.rev .card .m{max-height:120px;opacity:1;margin-top:2px}
+.rev .card.real:not(.on){opacity:.55}
+.rev .card.liar{background:var(--ink);color:var(--bg);animation:shake .5s both}
+.rev .card.liar .ltr{background:var(--bg);color:var(--ink)}
+.stamp{position:absolute;right:14px;top:12px;border:3px solid var(--coral);color:var(--coral);border-radius:8px;font-weight:800;font-size:.8rem;letter-spacing:.12em;padding:2px 8px;transform:rotate(-9deg);opacity:0}
+.rev .liar .stamp{animation:stamp .45s .25s cubic-bezier(.2,1.6,.4,1) forwards}
+.foot{margin-top:22px;display:flex;align-items:center;gap:16px;min-height:56px}
+.btn{font:inherit;font-weight:800;font-size:1rem;border:0;border-radius:999px;background:var(--ink);color:var(--bg);padding:15px 28px;cursor:pointer;transition:transform .15s,opacity .2s}
+.btn:active{transform:scale(.96)}.btn:disabled{opacity:.25;cursor:not-allowed}
+.say{font-weight:600;font-size:.95rem;color:var(--mute);flex:1;animation:fade .5s both}
+.say.win{color:var(--mint)}.say.lose{color:var(--coral)}
+.out{animation:out .35s ease forwards}
+.end{text-align:center;padding-top:14px}
+.score{font-size:clamp(6rem,30vw,10rem);font-weight:800;letter-spacing:-.07em;line-height:.9;margin:6px 0 10px}
+.score span{color:var(--mute);font-size:.45em;letter-spacing:-.04em}
+.sq{display:flex;gap:8px;justify-content:center;margin:18px 0 24px}
+.sq i{width:44px;height:44px;border-radius:12px;animation:pop .5s both}
+.sq .w{background:var(--mint)}.sq .l{background:var(--coral)}
+.cd{margin-top:18px;font-size:.85rem;font-weight:600;color:var(--mute)}
+.note{margin-top:34px;font-size:.74rem;color:var(--mute);text-align:center}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+@keyframes out{to{opacity:0;transform:translateX(-30px)}}
+@keyframes shake{0%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}100%{transform:none}}
+@keyframes stamp{from{opacity:0;transform:rotate(-9deg) scale(2.4)}to{opacity:1;transform:rotate(-9deg) scale(1)}}
+@keyframes pop{from{opacity:0;transform:scale(.3) rotate(-20deg)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.stamp{opacity:1!important}}
+</style></head><body><main>
+<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back" title="Back to Grudge">← Grudge</a><div class="logo">Fibber<span class="dots"><i></i><i></i><i></i><i></i></span></div></div><div class="meta" id="meta"></div></header>
+<div class="prog" id="prog"></div>
+<section id="stage"></section>
+<p class="note">Demo puzzle. In production, today’s rounds load from today.json.</p>
+</main>
+<script>
+// DATA SHAPE: array of 3 rounds; each round has 4 items; exactly one has real:false.
+const DEMO=[
+[{t:"Florida man hurls a live alligator through a Wendy’s drive-thru window",real:true,s:"Lake City, Florida, 2016. Widely reported."},
+{t:"Australia sends soldiers with machine guns to fight emus, and loses",real:true,s:"The Great Emu War, Western Australia, 1932."},
+{t:"Vermont town fines residents who fail to wave at snowplow drivers",real:false,s:"Invented for this puzzle. No such ordinance exists."},
+{t:"A Minnesota town elects a dog as its mayor",real:true,s:"Cormorant, Minnesota elected Duke the dog in 2014."}],
+[{t:"Dutch railway offers free tickets to passengers who bring a sourdough starter",real:false,s:"Invented for this puzzle. The railway has no such offer."},
+{t:"A penguin is knighted by the Norwegian King’s Guard",real:true,s:"Sir Nils Olav, Edinburgh Zoo’s king penguin, holds the rank of brigadier."},
+{t:"Thieves steal millions of dollars of maple syrup from a Quebec reserve",real:true,s:"The Great Canadian Maple Syrup Heist, 2011 to 2012."},
+{t:"A laughter epidemic closes schools across a region of Tanzania",real:true,s:"The 1962 Tanganyika laughter epidemic."}],
+[{t:"Ohio library begins lending out retired librarians as in-person search engines",real:false,s:"Invented for this puzzle."},
+{t:"Alaska town keeps a cat as honorary mayor for two decades",real:true,s:"Stubbs of Talkeetna, Alaska."},
+{t:"A 130-tonne fatberg clogs a London sewer, and gets put in a museum",real:true,s:"Whitechapel, 2017. A chunk went to the Museum of London."},
+{t:"Hundreds of people dance for days in a French city and cannot stop",real:true,s:"The Dancing Plague of 1518, Strasbourg."}]];
+const OK=["Caught it. Annoying.","Correct. Don’t let it go to your head.","Sharp. Suspiciously sharp.","Right again. Fine."];
+const NO=["Fooled. It happens to the best of us.","That one was real. Reality is rude.","Wrong. The fake was smug about it.","Not this time."];
+const $=id=>document.getElementById(id),pick=a=>a[Math.floor(Math.random()*a.length)],L="ABCD";
+const d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1;
+const KEY="fibber:"+T;let R=DEMO,S={res:[]},sel=-1,phase="pick";
+try{const x=localStorage.getItem(KEY);if(x)S=JSON.parse(x)}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function stk(){try{return JSON.parse(localStorage.getItem("fibber:streak")||"{}")}catch(e){return{}}}
+function bump(){const s=stk();if(s.t===T)return;s.n=s.last===T-1?(s.n||0)+1:1;s.last=T;s.t=T;try{localStorage.setItem("fibber:streak",JSON.stringify(s))}catch(e){}}
+function head(){$("meta").innerHTML="No. <b>"+num+"</b><br>Streak <b>"+(stk().n||0)+"</b>";
+$("prog").innerHTML=[0,1,2].map(i=>`<span class="${S.res[i]===1?"w":S.res[i]===0?"l":i===S.res.length?"cur":""}"></span>`).join("")}
+function round(){
+const i=S.res.length;if(i>=3)return end();sel=-1;phase="pick";head();
+$("stage").innerHTML=`<p class="kick">Round ${i+1} of 3</p><h2>One of these never happened.</h2>
+<div class="cards pick" id="cards">${R[i].map((x,k)=>`<button class="card ${x.real?"real":"liar"}" data-k="${k}" style="--d:${k}"><span class="ltr">${L[k]}</span><span class="t">${x.t}</span><span class="m"><em>${x.real?"Real":"Made up"}</em>${x.s}</span><span class="stamp">FAKE</span></button>`).join("")}</div>
+<div class="foot"><button class="btn" id="go" disabled>Lock it in</button><div class="say" id="say">Pick the fake.</div></div>`;
+$("cards").onclick=e=>{const c=e.target.closest(".card");if(!c||phase!=="pick")return;sel=+c.dataset.k;
+document.querySelectorAll(".card").forEach(n=>n.classList.toggle("on",n===c));$("go").disabled=false;$("say").textContent="Headline "+L[sel]+". Sure?"};
+$("go").onclick=()=>{if(phase==="pick"){if(sel<0)return;phase="rev";const ok=!R[S.res.length][sel].real;S.res.push(ok?1:0);save();
+$("cards").className="cards rev";$("cards").children[sel].classList.add("on");
+$("say").className="say "+(ok?"win":"lose");$("say").textContent=pick(ok?OK:NO);
+$("go").textContent=S.res.length>=3?"See score":"Next round";head();if(S.res.length>=3)bump()}
+else{$("stage").classList.add("out");setTimeout(()=>{$("stage").classList.remove("out");round()},330)}}}
+function end(){head();const w=S.res.reduce((a,b)=>a+b,0),
+msg=["The fakes got you today.","One out of three. Room to grow.","Two for three. Respectable.","Perfect. Nobody fools you."][w];
+const sh="Fibber #"+num+"  "+w+"/3\n"+S.res.map(x=>x?"■":"□").join("");
+$("stage").innerHTML=`<div class="end"><p class="kick">Today’s score</p><div class="score" id="sc">0<span>/3</span></div><h2 style="font-size:1.4rem;margin:0">${msg}</h2>
+<div class="sq">${S.res.map((x,i)=>`<i class="${x?"w":"l"}" style="animation-delay:${i*120}ms"></i>`).join("")}</div>
+<button class="btn" id="cp">Copy result</button><p class="cd" id="cd"></p></div>`;
+let n=0;const t=setInterval(()=>{n++;$("sc").firstChild.nodeValue=Math.min(n,w);if(n>=w)clearInterval(t)},260);
+$("cp").onclick=()=>{try{navigator.clipboard.writeText(sh).then(()=>$("cp").textContent="Copied",()=>prompt("Copy:",sh))}catch(e){prompt("Copy:",sh)}};
+const tick=()=>{const n=new Date(),r=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1)-n,p=x=>String(x).padStart(2,"0");$("cd").textContent="Next puzzle in "+p(Math.floor(r/36e5))+":"+p(Math.floor(r/6e4)%60)+":"+p(Math.floor(r/1e3)%60)};tick();setInterval(tick,1000)}
+const loadToday=()=>fetch("today.json").then(r=>r.ok?r.json():fetch("public/today.json").then(r2=>r2.ok?r2.json():null)).catch(()=>fetch("public/today.json").then(r=>r.ok?r.json():null)).then(j=>{if(j&&j.rounds)R=j.rounds}).catch(()=>{}).finally(round);loadToday();
+</script></body></html>

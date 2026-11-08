@@ -1,0 +1,43 @@
+{
+  "plate": "Renaissance to Modernity",
+  "theme": "culture",
+  "spread_type": "era",
+  "events": [
+    {
+      "text": "Gutenberg press produces copies of the Latin Bible",
+      "year": 1455,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Gutenberg_Bible"
+    },
+    {
+      "text": "Shakespeare’s Globe Theatre opens in London",
+      "year": 1599,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Globe_Theatre"
+    },
+    {
+      "text": "Diderot and d’Alembert publish the Encyclopedie",
+      "year": 1751,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Encyclop%C3%A9die"
+    },
+    {
+      "text": "Beethoven conducts premiere of the Ninth Symphony",
+      "year": 1824,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Symphony_No._9_(Beethoven)"
+    },
+    {
+      "text": "The Eiffel Tower opens for the Paris Exposition",
+      "year": 1889,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Eiffel_Tower"
+    },
+    {
+      "text": "The Louvre Museum officially opens to the public",
+      "year": 1793,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Louvre"
+    }
+  ]
+}

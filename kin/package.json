@@ -1,0 +1,23 @@
+{
+  "name": "kin-backend",
+  "version": "1.0.0",
+  "description": "Daily backend for Kin - evolutionary kinship and divergence time puzzle game on Cloudflare Workers + D1",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "seed": "node --experimental-strip-types scripts/seed.ts",
+    "prep": "python3 data/prep_data.py",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": ["kin", "cloudflare-workers", "d1", "evolution", "timetree"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.50.0"
+  }
+}

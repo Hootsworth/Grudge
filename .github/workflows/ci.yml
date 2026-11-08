@@ -1,0 +1,54 @@
+name: CI Test Suite
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run All Tests (Strata, Kin, Fibber)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Node root dependencies
+        run: npm ci || npm install
+
+      - name: Install Kin dependencies
+        working-directory: kin
+        run: npm ci || npm install
+
+      - name: Run Strata backend tests
+        run: npm test
+
+      - name: Run Kin backend tests
+        run: npm run test:kin
+
+      - name: Run Fibber Python unit tests
+        run: python3 -m unittest discover -s tests -p "test_*.py"

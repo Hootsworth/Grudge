@@ -1,0 +1,43 @@
+{
+  "plate": "The Polar & Space Race",
+  "theme": "exploration",
+  "spread_type": "century",
+  "events": [
+    {
+      "text": "Nansen’s ship Fram reaches far northern Arctic waters",
+      "year": 1895,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Nansen%27s_Fram_expedition"
+    },
+    {
+      "text": "Robert Peary expedition claims reaching North Pole",
+      "year": 1909,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Robert_Peary"
+    },
+    {
+      "text": "Charles Lindbergh flies solo across Atlantic Ocean",
+      "year": 1927,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Charles_Lindbergh"
+    },
+    {
+      "text": "Edmund Hillary and Tenzing Norgay summit Mount Everest",
+      "year": 1953,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/1953_British_Mount_Everest_expedition"
+    },
+    {
+      "text": "Bathyscaphe Trieste dives to Challenger Deep ocean floor",
+      "year": 1960,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Bathyscaphe_Trieste"
+    },
+    {
+      "text": "Apollo 11 mission lands astronauts on the lunar surface",
+      "year": 1969,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Apollo_11"
+    }
+  ]
+}

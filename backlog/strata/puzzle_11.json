@@ -1,0 +1,43 @@
+{
+  "plate": "Steam to Electricity",
+  "theme": "technology",
+  "spread_type": "era",
+  "events": [
+    {
+      "text": "Newcomen constructs atmospheric steam engine for mines",
+      "year": 1712,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Newcomen_atmospheric_engine"
+    },
+    {
+      "text": "James Watt patents condenser improving steam efficiency",
+      "year": 1769,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/James_Watt"
+    },
+    {
+      "text": "Alessandro Volta invents the electrochemical electric battery",
+      "year": 1800,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Voltaic_pile"
+    },
+    {
+      "text": "Morse and Vail demonstrate the electromagnetic telegraph",
+      "year": 1844,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Electrical_telegraph"
+    },
+    {
+      "text": "Alexander Graham Bell patents the speaking telephone",
+      "year": 1876,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Telephone"
+    },
+    {
+      "text": "Guglielmo Marconi sends transatlantic wireless radio signal",
+      "year": 1901,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Guglielmo_Marconi"
+    }
+  ]
+}

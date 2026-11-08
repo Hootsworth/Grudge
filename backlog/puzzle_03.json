@@ -1,0 +1,71 @@
+{
+  "date": "2026-01-03",
+  "rounds": [
+    [
+      {
+        "t": "Bavarian village stages annual competition where men pull sleds using teeth",
+        "real": false,
+        "s": "Invented for this puzzle."
+      },
+      {
+        "t": "Japanese railway company issues official apology because train departed 20 seconds early",
+        "real": true,
+        "s": "Tsukuba Express, Tokyo, 2017."
+      },
+      {
+        "t": "Man builds fully functional rowboat out of fifty hollowed giant pumpkins",
+        "real": true,
+        "s": "Missouri River, 2022. Guinness World Records."
+      },
+      {
+        "t": "Zoo gorilla learns to walk strictly upright to avoid getting mud on his knuckles",
+        "real": true,
+        "s": "Port Lympne Reserve, England, 2011."
+      }
+    ],
+    [
+      {
+        "t": "Pigeon detained by police on suspicion of espionage released after eight months",
+        "real": true,
+        "s": "Mumbai, India, 2024. Times of India."
+      },
+      {
+        "t": "Finnish postal service replaces delivery vans with cross-country skiers for week",
+        "real": false,
+        "s": "Invented for this puzzle."
+      },
+      {
+        "t": "Town installs heated underground pipes beneath sidewalk solely to keep stray cats warm",
+        "real": true,
+        "s": "Hunchun, Jilin Province, China, 2020."
+      },
+      {
+        "t": "Police called to disperse crowd of fifty rowdy peacocks blocking suburban driveway",
+        "real": true,
+        "s": "Surrey, British Columbia, 2018."
+      }
+    ],
+    [
+      {
+        "t": "Man attempts to rob convenience store while wearing hollowed-out watermelon on head",
+        "real": true,
+        "s": "Louisa County, Virginia, 2020."
+      },
+      {
+        "t": "Australian town holds memorial ceremony for traffic cone named Colin after ten years",
+        "real": false,
+        "s": "Invented for this puzzle."
+      },
+      {
+        "t": "Scientists discover wild cockatoos teach each other how to systematically open garbage bins",
+        "real": true,
+        "s": "Sydney, Australia, 2021. Current Biology."
+      },
+      {
+        "t": "Man mistakes plastic decoy goose for rare bird and watches it through binoculars for hour",
+        "real": true,
+        "s": "Norfolk, England, 2019."
+      }
+    ]
+  ]
+}

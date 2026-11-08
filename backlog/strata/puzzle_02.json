@@ -1,0 +1,43 @@
+{
+  "plate": "Across Oceans & Orbits",
+  "theme": "exploration",
+  "spread_type": "millennia",
+  "events": [
+    {
+      "text": "Phoenician circumnavigation of Africa under Necho II",
+      "year": -600,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Phoenicia"
+    },
+    {
+      "text": "Vikings establish settlement at L’Anse aux Meadows",
+      "year": 1000,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/L%27Anse_aux_Meadows"
+    },
+    {
+      "text": "Magellan’s expedition completes global circumnavigation",
+      "year": 1522,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Ferdinand_Magellan"
+    },
+    {
+      "text": "Amundsen leads expedition reaching the South Pole",
+      "year": 1911,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Roald_Amundsen"
+    },
+    {
+      "text": "Yuri Gagarin completes orbital flight around Earth",
+      "year": 1961,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Yuri_Gagarin"
+    },
+    {
+      "text": "Voyager 1 enters interstellar space",
+      "year": 2012,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Voyager_1"
+    }
+  ]
+}

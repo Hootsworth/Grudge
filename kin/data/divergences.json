@@ -1,0 +1,394 @@
+[
+  {
+    "org_a": "org_elephant",
+    "org_b": "org_manatee",
+    "median_mya": 65.0,
+    "ci_low": 58.0,
+    "ci_high": 72.0,
+    "source": "TimeTree (Afrotheria split)"
+  },
+  {
+    "org_a": "org_elephant",
+    "org_b": "org_rhino",
+    "median_mya": 100.0,
+    "ci_low": 94.0,
+    "ci_high": 108.0,
+    "source": "TimeTree (Boreoeutheria vs Afrotheria)"
+  },
+  {
+    "org_a": "org_manatee",
+    "org_b": "org_rhino",
+    "median_mya": 100.0,
+    "ci_low": 94.0,
+    "ci_high": 108.0,
+    "source": "TimeTree (Boreoeutheria vs Afrotheria)"
+  },
+  {
+    "org_a": "org_elephant",
+    "org_b": "org_hyrax",
+    "median_mya": 60.0,
+    "ci_low": 54.0,
+    "ci_high": 66.0,
+    "source": "TimeTree (Paenungulata)"
+  },
+  {
+    "org_a": "org_crocodile",
+    "org_b": "org_chicken",
+    "median_mya": 240.0,
+    "ci_low": 232.0,
+    "ci_high": 248.0,
+    "source": "TimeTree (Archosauria root)"
+  },
+  {
+    "org_a": "org_crocodile",
+    "org_b": "org_lizard",
+    "median_mya": 280.0,
+    "ci_low": 272.0,
+    "ci_high": 290.0,
+    "source": "TimeTree (Sauria: Archosauromorpha vs Lepidosauromorpha)"
+  },
+  {
+    "org_a": "org_chicken",
+    "org_b": "org_lizard",
+    "median_mya": 280.0,
+    "ci_low": 272.0,
+    "ci_high": 290.0,
+    "source": "TimeTree (Sauria: Archosauromorpha vs Lepidosauromorpha)"
+  },
+  {
+    "org_a": "org_crocodile",
+    "org_b": "org_eagle",
+    "median_mya": 240.0,
+    "ci_low": 232.0,
+    "ci_high": 248.0,
+    "source": "TimeTree (Archosauria root)"
+  },
+  {
+    "org_a": "org_hippo",
+    "org_b": "org_blue_whale",
+    "median_mya": 55.0,
+    "ci_low": 52.0,
+    "ci_high": 58.0,
+    "source": "TimeTree (Whippomorpha split)"
+  },
+  {
+    "org_a": "org_hippo",
+    "org_b": "org_cow",
+    "median_mya": 65.0,
+    "ci_low": 62.0,
+    "ci_high": 68.0,
+    "source": "TimeTree (Ruminantia vs Whippomorpha)"
+  },
+  {
+    "org_a": "org_blue_whale",
+    "org_b": "org_cow",
+    "median_mya": 65.0,
+    "ci_low": 62.0,
+    "ci_high": 68.0,
+    "source": "TimeTree (Ruminantia vs Whippomorpha)"
+  },
+  {
+    "org_a": "org_dolphin",
+    "org_b": "org_blue_whale",
+    "median_mya": 35.0,
+    "ci_low": 31.0,
+    "ci_high": 39.0,
+    "source": "TimeTree (Odontoceti vs Mysticeti)"
+  },
+  {
+    "org_a": "org_lungfish",
+    "org_b": "org_cow",
+    "median_mya": 415.0,
+    "ci_low": 405.0,
+    "ci_high": 425.0,
+    "source": "TimeTree (Dipnoi vs Tetrapoda)"
+  },
+  {
+    "org_a": "org_lungfish",
+    "org_b": "org_salmon",
+    "median_mya": 435.0,
+    "ci_low": 428.0,
+    "ci_high": 445.0,
+    "source": "TimeTree (Osteichthyes root: Sarcopterygii vs Actinopterygii)"
+  },
+  {
+    "org_a": "org_cow",
+    "org_b": "org_salmon",
+    "median_mya": 435.0,
+    "ci_low": 428.0,
+    "ci_high": 445.0,
+    "source": "TimeTree (Osteichthyes root: Sarcopterygii vs Actinopterygii)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_salmon",
+    "median_mya": 435.0,
+    "ci_low": 428.0,
+    "ci_high": 445.0,
+    "source": "TimeTree (Osteichthyes root)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_mushroom",
+    "median_mya": 1350.0,
+    "ci_low": 1250.0,
+    "ci_high": 1420.0,
+    "source": "TimeTree (Opisthokonta split: Metazoa vs Fungi)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_oak",
+    "median_mya": 1550.0,
+    "ci_low": 1480.0,
+    "ci_high": 1630.0,
+    "source": "TimeTree (Eukaryota: Opisthokonta vs Archaeplastida)"
+  },
+  {
+    "org_a": "org_mushroom",
+    "org_b": "org_oak",
+    "median_mya": 1550.0,
+    "ci_low": 1480.0,
+    "ci_high": 1630.0,
+    "source": "TimeTree (Eukaryota: Opisthokonta vs Archaeplastida)"
+  },
+  {
+    "org_a": "org_mouse",
+    "org_b": "org_rabbit",
+    "median_mya": 82.0,
+    "ci_low": 77.0,
+    "ci_high": 87.0,
+    "source": "TimeTree (Glires: Rodentia vs Lagomorpha)"
+  },
+  {
+    "org_a": "org_mouse",
+    "org_b": "org_hedgehog",
+    "median_mya": 95.0,
+    "ci_low": 91.0,
+    "ci_high": 102.0,
+    "source": "TimeTree (Euarchontoglires vs Laurasiatheria)"
+  },
+  {
+    "org_a": "org_rabbit",
+    "org_b": "org_hedgehog",
+    "median_mya": 95.0,
+    "ci_low": 91.0,
+    "ci_high": 102.0,
+    "source": "TimeTree (Euarchontoglires vs Laurasiatheria)"
+  },
+  {
+    "org_a": "org_penguin",
+    "org_b": "org_eagle",
+    "median_mya": 70.0,
+    "ci_low": 64.0,
+    "ci_high": 76.0,
+    "source": "TimeTree (Neoaves internal)"
+  },
+  {
+    "org_a": "org_penguin",
+    "org_b": "org_ostrich",
+    "median_mya": 100.0,
+    "ci_low": 92.0,
+    "ci_high": 108.0,
+    "source": "TimeTree (Neognathae vs Palaeognathae)"
+  },
+  {
+    "org_a": "org_eagle",
+    "org_b": "org_ostrich",
+    "median_mya": 100.0,
+    "ci_low": 92.0,
+    "ci_high": 108.0,
+    "source": "TimeTree (Neognathae vs Palaeognathae)"
+  },
+  {
+    "org_a": "org_giraffe",
+    "org_b": "org_blue_whale",
+    "median_mya": 63.0,
+    "ci_low": 58.0,
+    "ci_high": 67.0,
+    "source": "TimeTree (Cetartiodactyla crown)"
+  },
+  {
+    "org_a": "org_giraffe",
+    "org_b": "org_horse",
+    "median_mya": 80.0,
+    "ci_low": 75.0,
+    "ci_high": 86.0,
+    "source": "TimeTree (Artiodactyla vs Perissodactyla)"
+  },
+  {
+    "org_a": "org_blue_whale",
+    "org_b": "org_horse",
+    "median_mya": 80.0,
+    "ci_low": 75.0,
+    "ci_high": 86.0,
+    "source": "TimeTree (Artiodactyla vs Perissodactyla)"
+  },
+  {
+    "org_a": "org_tuna",
+    "org_b": "org_human",
+    "median_mya": 430.0,
+    "ci_low": 420.0,
+    "ci_high": 440.0,
+    "source": "TimeTree (Sarcopterygii vs Actinopterygii)"
+  },
+  {
+    "org_a": "org_tuna",
+    "org_b": "org_shark",
+    "median_mya": 465.0,
+    "ci_low": 452.0,
+    "ci_high": 480.0,
+    "source": "TimeTree (Euteleostomi vs Chondrichthyes)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_shark",
+    "median_mya": 465.0,
+    "ci_low": 452.0,
+    "ci_high": 480.0,
+    "source": "TimeTree (Euteleostomi vs Chondrichthyes)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_starfish",
+    "median_mya": 650.0,
+    "ci_low": 630.0,
+    "ci_high": 670.0,
+    "source": "TimeTree (Deuterostomia: Chordata vs Ambulacraria)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_octopus",
+    "median_mya": 700.0,
+    "ci_low": 680.0,
+    "ci_high": 730.0,
+    "source": "TimeTree (Bilateria: Deuterostomia vs Protostomia)"
+  },
+  {
+    "org_a": "org_starfish",
+    "org_b": "org_octopus",
+    "median_mya": 700.0,
+    "ci_low": 680.0,
+    "ci_high": 730.0,
+    "source": "TimeTree (Bilateria: Deuterostomia vs Protostomia)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_chimpanzee",
+    "median_mya": 6.5,
+    "ci_low": 5.8,
+    "ci_high": 7.2,
+    "source": "TimeTree (Hominini: Homo vs Pan)"
+  },
+  {
+    "org_a": "org_human",
+    "org_b": "org_gorilla",
+    "median_mya": 9.0,
+    "ci_low": 8.2,
+    "ci_high": 10.1,
+    "source": "TimeTree (Homininae: Hominini vs Gorillini)"
+  },
+  {
+    "org_a": "org_chimpanzee",
+    "org_b": "org_gorilla",
+    "median_mya": 9.0,
+    "ci_low": 8.2,
+    "ci_high": 10.1,
+    "source": "TimeTree (Homininae: Hominini vs Gorillini)"
+  },
+  {
+    "org_a": "org_dog",
+    "org_b": "org_cat",
+    "median_mya": 55.0,
+    "ci_low": 50.0,
+    "ci_high": 60.0,
+    "source": "TimeTree (Caniformia vs Feliformia)"
+  },
+  {
+    "org_a": "org_dog",
+    "org_b": "org_bear",
+    "median_mya": 46.0,
+    "ci_low": 42.0,
+    "ci_high": 50.0,
+    "source": "TimeTree (Canoidea)"
+  },
+  {
+    "org_a": "org_dog",
+    "org_b": "org_seal",
+    "median_mya": 48.0,
+    "ci_low": 44.0,
+    "ci_high": 52.0,
+    "source": "TimeTree (Caniformia: Canoidea vs Pinnipedia)"
+  },
+  {
+    "org_a": "org_kangaroo",
+    "org_b": "org_koala",
+    "median_mya": 52.0,
+    "ci_low": 46.0,
+    "ci_high": 58.0,
+    "source": "TimeTree (Diprotodontia)"
+  },
+  {
+    "org_a": "org_kangaroo",
+    "org_b": "org_human",
+    "median_mya": 160.0,
+    "ci_low": 150.0,
+    "ci_high": 172.0,
+    "source": "TimeTree (Metatheria vs Eutheria)"
+  },
+  {
+    "org_a": "org_koala",
+    "org_b": "org_human",
+    "median_mya": 160.0,
+    "ci_low": 150.0,
+    "ci_high": 172.0,
+    "source": "TimeTree (Metatheria vs Eutheria)"
+  },
+  {
+    "org_a": "org_bee",
+    "org_b": "org_lobster",
+    "median_mya": 510.0,
+    "ci_low": 485.0,
+    "ci_high": 530.0,
+    "source": "TimeTree (Pancrustacea: Hexapoda vs Decapoda)"
+  },
+  {
+    "org_a": "org_bee",
+    "org_b": "org_spider",
+    "median_mya": 560.0,
+    "ci_low": 540.0,
+    "ci_high": 585.0,
+    "source": "TimeTree (Mandibulata vs Chelicerata)"
+  },
+  {
+    "org_a": "org_lobster",
+    "org_b": "org_spider",
+    "median_mya": 560.0,
+    "ci_low": 540.0,
+    "ci_high": 585.0,
+    "source": "TimeTree (Mandibulata vs Chelicerata)"
+  },
+  {
+    "org_a": "org_rose",
+    "org_b": "org_oak",
+    "median_mya": 115.0,
+    "ci_low": 105.0,
+    "ci_high": 125.0,
+    "source": "TimeTree (Rosids diversification)"
+  },
+  {
+    "org_a": "org_rose",
+    "org_b": "org_pine",
+    "median_mya": 320.0,
+    "ci_low": 305.0,
+    "ci_high": 340.0,
+    "source": "TimeTree (Acrogymnospermae vs Angiospermae)"
+  },
+  {
+    "org_a": "org_oak",
+    "org_b": "org_pine",
+    "median_mya": 320.0,
+    "ci_low": 305.0,
+    "ci_high": 340.0,
+    "source": "TimeTree (Acrogymnospermae vs Angiospermae)"
+  }
+]

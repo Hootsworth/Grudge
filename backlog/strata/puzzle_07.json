@@ -1,0 +1,43 @@
+{
+  "plate": "Dawn of Civilization",
+  "theme": "ancient world",
+  "spread_type": "millennia",
+  "events": [
+    {
+      "text": "Construction of the Great Pyramid of Giza finishes",
+      "year": -2560,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Great_Pyramid_of_Giza"
+    },
+    {
+      "text": "Babylonian king Hammurabi codifies laws on stone stele",
+      "year": -1750,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Code_of_Hammurabi"
+    },
+    {
+      "text": "Inaugural ancient Olympic festival recorded at Olympia",
+      "year": -776,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Ancient_Olympic_Games"
+    },
+    {
+      "text": "Construction begins on the Parthenon in Athens",
+      "year": -447,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Parthenon"
+    },
+    {
+      "text": "Julius Caesar assassinated on the Ides of March",
+      "year": -44,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Assassination_of_Julius_Caesar"
+    },
+    {
+      "text": "Fall of the Western Roman Empire with Romulus Augustulus",
+      "year": 476,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire"
+    }
+  ]
+}

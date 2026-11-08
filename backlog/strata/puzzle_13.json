@@ -1,0 +1,43 @@
+{
+  "plate": "Iron & Classical Age",
+  "theme": "ancient world",
+  "spread_type": "era",
+  "events": [
+    {
+      "text": "Late Bronze Age collapse strikes eastern Mediterranean kingdoms",
+      "year": -1177,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Late_Bronze_Age_collapse"
+    },
+    {
+      "text": "Assyrian king Ashurbanipal establishes royal library at Nineveh",
+      "year": -650,
+      "precision": "approximate",
+      "source": "https://en.wikipedia.org/wiki/Library_of_Ashurbanipal"
+    },
+    {
+      "text": "Cyrus the Great issues declaration freeing Babylonian captives",
+      "year": -539,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Cyrus_Cylinder"
+    },
+    {
+      "text": "Battle of Marathon repels Persian invasion forces",
+      "year": -490,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Battle_of_Marathon"
+    },
+    {
+      "text": "Alexander the Great defeats Persian forces at Gaugamela",
+      "year": -331,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Battle_of_Gaugamela"
+    },
+    {
+      "text": "Qin Shi Huang unifies warring states and founds Qin dynasty",
+      "year": -221,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Qin_Shi_Huang"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "plate": "Crowns to Republics",
+  "theme": "politics",
+  "spread_type": "era",
+  "events": [
+    {
+      "text": "Peace of Westphalia ends the Thirty Years’ War",
+      "year": 1648,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Peace_of_Westphalia"
+    },
+    {
+      "text": "English Parliament passes the Bill of Rights",
+      "year": 1689,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Bill_of_Rights_1689"
+    },
+    {
+      "text": "Continental Congress adopts Declaration of Independence",
+      "year": 1776,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/United_States_Declaration_of_Independence"
+    },
+    {
+      "text": "Storming of the Bastille sparks revolutionary change",
+      "year": 1789,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Storming_of_the_Bastille"
+    },
+    {
+      "text": "Congress of Vienna establishes European borders",
+      "year": 1815,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Congress_of_Vienna"
+    },
+    {
+      "text": "United Nations Charter signed in San Francisco",
+      "year": 1945,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/United_Nations"
+    }
+  ]
+}

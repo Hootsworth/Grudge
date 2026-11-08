@@ -1,0 +1,19 @@
+name = "kin-backend"
+main = "src/index.ts"
+compatibility_date = "2024-04-05"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "production"
+
+# Cloudflare D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "kin-db"
+database_id = "local-kin-db-id"
+
+# Cron Triggers:
+# 05:00 UTC - Daily triplet selection & fact generation
+# 06:00 UTC - Auto-publish check & backlog fallback
+[triggers]
+crons = ["0 5 * * *", "0 6 * * *"]

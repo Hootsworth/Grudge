@@ -1,0 +1,43 @@
+{
+  "plate": "The Olympic Revival",
+  "theme": "sport",
+  "spread_type": "century",
+  "events": [
+    {
+      "text": "First modern Olympic Games held in Athens",
+      "year": 1896,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/1896_Summer_Olympics"
+    },
+    {
+      "text": "Tour de France bicycle race stages inaugural edition",
+      "year": 1903,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Tour_de_France"
+    },
+    {
+      "text": "Inaugural FIFA World Cup tournament held in Uruguay",
+      "year": 1930,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/1930_FIFA_World_Cup"
+    },
+    {
+      "text": "Roger Bannister breaks the four-minute mile barrier",
+      "year": 1954,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Four-minute_mile"
+    },
+    {
+      "text": "Pele wins three World Cup titles with Brazil",
+      "year": 1970,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Pel%C3%A9"
+    },
+    {
+      "text": "Miracle on Ice hockey match at Lake Placid",
+      "year": 1980,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Miracle_on_Ice"
+    }
+  ]
+}

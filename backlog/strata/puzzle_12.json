@@ -1,0 +1,43 @@
+{
+  "plate": "Cold War & Treaties",
+  "theme": "politics",
+  "spread_type": "century",
+  "events": [
+    {
+      "text": "Treaty of Versailles ends World War I fighting",
+      "year": 1919,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Treaty_of_Versailles"
+    },
+    {
+      "text": "Twelve Western nations sign North Atlantic Treaty (NATO)",
+      "year": 1949,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/NATO"
+    },
+    {
+      "text": "East Germany erects concrete wall dividing Berlin",
+      "year": 1961,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Berlin_Wall"
+    },
+    {
+      "text": "Peace accords signed ending American role in Vietnam",
+      "year": 1973,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Paris_Peace_Accords"
+    },
+    {
+      "text": "Berlin Wall opened as crowds celebrate across border",
+      "year": 1989,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Fall_of_the_Berlin_Wall"
+    },
+    {
+      "text": "Maastricht Treaty formally establishes European Union",
+      "year": 1993,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Maastricht_Treaty"
+    }
+  ]
+}

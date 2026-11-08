@@ -1,0 +1,43 @@
+{
+  "plate": "The Quantum Century",
+  "theme": "science",
+  "spread_type": "century",
+  "events": [
+    {
+      "text": "Hubble discovers galaxies beyond the Milky Way",
+      "year": 1924,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Edwin_Hubble"
+    },
+    {
+      "text": "Penicillin is discovered in Alexander Fleming’s lab",
+      "year": 1928,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Penicillin"
+    },
+    {
+      "text": "Watson and Crick determine DNA double helix structure",
+      "year": 1953,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/DNA"
+    },
+    {
+      "text": "Cosmic microwave background radiation detected",
+      "year": 1964,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Cosmic_microwave_background"
+    },
+    {
+      "text": "The first cloned mammal Dolly the sheep is born",
+      "year": 1996,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Dolly_(sheep)"
+    },
+    {
+      "text": "Planck introduces quantum theory of black-body radiation",
+      "year": 1900,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Max_Planck"
+    }
+  ]
+}

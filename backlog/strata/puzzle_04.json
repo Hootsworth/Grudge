@@ -1,0 +1,43 @@
+{
+  "plate": "Silicon & Microchips",
+  "theme": "technology",
+  "spread_type": "century",
+  "events": [
+    {
+      "text": "Wright brothers conduct sustained powered airplane flight",
+      "year": 1903,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Wright_brothers"
+    },
+    {
+      "text": "Bell Labs engineers invent the point-contact transistor",
+      "year": 1947,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Transistor"
+    },
+    {
+      "text": "First message transmitted over ARPANET network",
+      "year": 1969,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/ARPANET"
+    },
+    {
+      "text": "Intel releases the commercial 4004 microprocessor",
+      "year": 1971,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Intel_4004"
+    },
+    {
+      "text": "Tim Berners-Lee publishes proposal for the World Wide Web",
+      "year": 1989,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/World_Wide_Web"
+    },
+    {
+      "text": "Edison demonstrates commercial incandescent electric lamp",
+      "year": 1879,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Incandescent_light_bulb"
+    }
+  ]
+}

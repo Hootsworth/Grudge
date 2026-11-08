@@ -1,0 +1,43 @@
+{
+  "plate": "Pioneering Games",
+  "theme": "sport",
+  "spread_type": "era",
+  "events": [
+    {
+      "text": "America wins inaugural yacht race around Isle of Wight",
+      "year": 1851,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/America%27s_Cup"
+    },
+    {
+      "text": "England and Scotland play first official international soccer match",
+      "year": 1872,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/1872_Scotland_v_England_football_match"
+    },
+    {
+      "text": "Inaugural Wimbledon lawn tennis championships staged",
+      "year": 1877,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/1877_Wimbledon_Championship"
+    },
+    {
+      "text": "First running of the modern Boston Marathon",
+      "year": 1897,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Boston_Marathon"
+    },
+    {
+      "text": "Inaugural Indianapolis 500 automobile race takes place",
+      "year": 1911,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/1911_Indianapolis_500"
+    },
+    {
+      "text": "Jesse Owens wins four gold medals at Berlin stadium",
+      "year": 1936,
+      "precision": "exact",
+      "source": "https://en.wikipedia.org/wiki/Jesse_Owens"
+    }
+  ]
+}
