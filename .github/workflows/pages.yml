@@ -43,25 +43,16 @@ jobs:
       - name: Prepare Pages Artifact Directory
         run: |
           mkdir -p _site
-          # Copy root HTML pages
-          cp -f "index.html" _site/ 2>/dev/null || true
-          cp -f "Oddly — daily games that don’t like you.html" _site/ 2>/dev/null || true
-          cp -f "Grudge — daily games that don’t like you.html" _site/ 2>/dev/null || true
-          cp -f "fibber.html" _site/ 2>/dev/null || true
-          cp -f "Fibber — daily fake headline game.html" _site/ 2>/dev/null || true
-          cp -f "strata.html" _site/ 2>/dev/null || true
-          cp -f "Strata — daily timeline game.html" _site/ 2>/dev/null || true
-          cp -f "kin.html" _site/ 2>/dev/null || true
-          cp -f "Kin — daily odd relatives game.html" _site/ 2>/dev/null || true
-          cp -f "admin.html" _site/ 2>/dev/null || true
+          # Copy all root HTML pages (index, fibber, strata, kin, passphew, admin, etc.)
+          cp -f *.html _site/ 2>/dev/null || true
 
-          # Copy images and assets
-          cp -f "logo.png" _site/ 2>/dev/null || true
-          cp -f "favicon.png" _site/ 2>/dev/null || true
+          # Copy images, icons, and static assets
+          cp -f *.png _site/ 2>/dev/null || true
+          cp -f *.ico _site/ 2>/dev/null || true
+          cp -f *.svg _site/ 2>/dev/null || true
 
           # Copy daily JSON data files
-          cp -f "today.json" _site/ 2>/dev/null || true
-          cp -f "games.json" _site/ 2>/dev/null || true
+          cp -f *.json _site/ 2>/dev/null || true
           if [ -d "public" ]; then
             cp -rf public/* _site/ 2>/dev/null || true
           fi
