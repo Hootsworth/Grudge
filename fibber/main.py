@@ -105,6 +105,8 @@ def run_pipeline(
     anthropic_api_key: Optional[str] = None,
     search_api_key: Optional[str] = None,
     search_provider: Optional[str] = None,
+    ai_provider: Optional[str] = None,
+    ai_model: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Execute the full 6-step generation pipeline and save to pending."""
     logger.info("Starting Fibber generation pipeline for date: %s (dry_run=%s)", date_str, dry_run)
@@ -118,6 +120,7 @@ def run_pipeline(
         candidates,
         dry_run=dry_run,
         api_key=anthropic_api_key,
+        model=ai_model,
     )
     logger.info("Selected and rewritten %d real stories.", len(real_stories))
 
@@ -140,6 +143,7 @@ def run_pipeline(
             anthropic_api_key=anthropic_api_key,
             search_api_key=search_api_key,
             search_provider=search_provider,
+            model=ai_model,
         )
         round_items = assemble_round(round_real, fake_story, shuffle=True)
         puzzle_rounds.append(round_items)
@@ -245,6 +249,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--approve", action="store_true", help="Approve pending/today.json and copy to public/today.json")
     parser.add_argument("--fallback", action="store_true", help="Deploy pre-approved backlog puzzle to public/today.json")
     parser.add_argument("--format-preview", action="store_true", help="Print Markdown preview of pending puzzle")
+    parser.add_argument("--provider", type=str, default=None, help="AI Provider: gemini, openai, anthropic, meta, groq, together")
+    parser.add_argument("--model", type=str, default=None, help="AI Model override (e.g. gemini-2.0-flash, gpt-4o)")
     return parser
 
 
@@ -281,6 +287,8 @@ def main() -> None:
             pending_path=args.pending_path,
             archive_dir=args.archive_dir,
             used_file=args.used_file,
+            ai_provider=args.provider,
+            ai_model=args.model,
         )
 
         print("\n" + "=" * 60)

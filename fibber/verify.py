@@ -122,25 +122,16 @@ def check_fake_against_search_results(
     headline: str,
     search_results: List[Dict[str, str]],
     api_key: Optional[str] = None,
-    model: str = DEFAULT_ANTHROPIC_MODEL,
+    model: Optional[str] = None,
 ) -> Tuple[bool, str]:
     """
-    Use Anthropic model to check whether search results confirm this headline is real.
+    Use configured AI model (Gemini, OpenAI, Anthropic, Meta) to check whether search results confirm this headline is real.
     Returns (matches_real_story, reason).
     """
     if not search_results:
         return False, "No search results found to contradict fake status."
 
-    if not api_key:
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-
-    if not api_key:
-        return False, "Anthropic API key not provided; assuming fake is valid."
-
-    try:
-        import anthropic
-    except ImportError:
-        return False, "anthropic package not installed."
+    from fibber.ai import generate_completion, clean_json_response
 
     snippets_text = "\n\n".join(
         f"Result {i+1}:\nTitle: {r['title']}\nSnippet: {r['snippet']}\nURL: {r['url']}"
@@ -153,27 +144,23 @@ def check_fake_against_search_results(
         "Does a real news story matching this specific headline premise exist? Return JSON."
     )
 
-    client = anthropic.Anthropic(api_key=api_key)
-    response = client.messages.create(
-        model=model,
-        max_tokens=256,
-        temperature=0.0,
-        system=VERIFY_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_prompt}],
-    )
-
-    content_text = ""
-    for block in response.content:
-        if getattr(block, "type", "") == "text":
-            content_text += block.text
-
-    cleaned_json = re.sub(r"^```(?:json)?\s*", "", content_text.strip(), flags=re.MULTILINE)
-    cleaned_json = re.sub(r"\s*```$", "", cleaned_json, flags=re.MULTILINE)
-
-    data = json.loads(cleaned_json)
-    matches = bool(data.get("matches_real_story", False))
-    reason = str(data.get("reason", ""))
-    return matches, reason
+    try:
+        content_text = generate_completion(
+            system_prompt=VERIFY_SYSTEM_PROMPT,
+            user_prompt=user_prompt,
+            temperature=0.0,
+            max_tokens=256,
+            model=model,
+            api_key=api_key,
+        )
+        cleaned_json = clean_json_response(content_text)
+        data = json.loads(cleaned_json)
+        matches = bool(data.get("matches_real_story", False))
+        reason = str(data.get("reason", ""))
+        return matches, reason
+    except Exception as e:
+        logger.warning("AI verification call failed (%s); assuming fake is valid.", e)
+        return False, str(e)
 
 
 def verify_and_ensure_fake(
@@ -191,7 +178,17 @@ def verify_and_ensure_fake(
     """
     from fibber.generate import generate_fake_for_round
 
-    if dry_run or not (anthropic_api_key or os.getenv("ANTHROPIC_API_KEY")):
+    has_key = bool(
+        anthropic_api_key
+        or os.getenv("AI_API_KEY")
+        or os.getenv("GEMINI_API_KEY")
+        or os.getenv("GOOGLE_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+        or os.getenv("ANTHROPIC_API_KEY")
+        or os.getenv("META_API_KEY")
+        or os.getenv("GROQ_API_KEY")
+    )
+    if dry_run or not has_key:
         logger.info("Dry-run / offline: generating fixture fake without live search verification.")
         return generate_fake_for_round(round_real_stories, round_number=round_number, dry_run=True)
 

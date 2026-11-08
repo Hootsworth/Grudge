@@ -67,13 +67,22 @@ jobs:
 
       - name: Execute generation pipeline
         env:
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER }}
+          AI_MODEL: ${{ secrets.AI_MODEL }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          META_API_KEY: ${{ secrets.META_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           SEARCH_API_KEY: ${{ secrets.SEARCH_API_KEY }}
           SEARCH_PROVIDER: ${{ secrets.SEARCH_PROVIDER }}
         run: |
           DRY_RUN_FLAG=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ] || [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "Running in dry-run mode..."
+          HAS_KEY="${{ secrets.AI_API_KEY || secrets.GEMINI_API_KEY || secrets.GOOGLE_API_KEY || secrets.OPENAI_API_KEY || secrets.ANTHROPIC_API_KEY || secrets.META_API_KEY || secrets.GROQ_API_KEY }}"
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ] || [ -z "$HAS_KEY" ]; then
+            echo "Running in dry-run mode (no AI key found or dry_run=true)..."
             DRY_RUN_FLAG="--dry-run"
           fi
           python -m fibber.main $DRY_RUN_FLAG

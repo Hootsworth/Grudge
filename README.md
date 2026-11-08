@@ -63,13 +63,26 @@ The repository is configured for automated, zero-config deployment to **GitHub P
 ### 3. GitHub Secrets Configuration (Optional)
 Under **Settings** > **Secrets and variables** > **Actions**:
 
-| Secret Name | Purpose | Required For |
+#### AI Provider & Model Selection (Choose Any Provider!):
+You can use **any** major AI provider by setting `AI_PROVIDER` and the matching key:
+
+| Secret Name | Options / Example Values | Notes |
 | :--- | :--- | :--- |
-| `ANTHROPIC_API_KEY` | Daily LLM puzzle generation & verification | Fibber & Strata cron |
-| `SEARCH_API_KEY` | Tavily or Brave web search verification | Fibber fake headline verification |
-| `SEARCH_PROVIDER` | `tavily` or `brave` (default: `tavily`) | Fibber |
-| `CLOUDFLARE_API_TOKEN` | Cloudflare Worker deployment token | Strata & Kin Workers |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Account ID | Strata & Kin Workers |
+| `AI_PROVIDER` | `gemini` \| `openai` \| `anthropic` \| `meta` \| `groq` | Auto-detects if omitted based on which key you provide |
+| `AI_MODEL` | `gemini-2.0-flash`, `gpt-4o`, `claude-3-5-sonnet-20241022`, `llama-3.3-70b-versatile` | Optional; defaults to best model per provider |
+| `AI_API_KEY` | *(Universal Key for chosen provider)* | Works with any chosen provider |
+| `GEMINI_API_KEY` | *(Google AI Studio Key)* | Auto-selects Gemini (`gemini-2.0-flash`) |
+| `OPENAI_API_KEY` | `sk-...` | Auto-selects OpenAI (`gpt-4o`) |
+| `ANTHROPIC_API_KEY` | `sk-ant-...` | Auto-selects Claude (`claude-3-5-sonnet`) |
+| `META_API_KEY` / `GROQ_API_KEY` | `gsk_...` | Auto-selects Meta Llama 3.3 (`llama-3.3-70b`) |
+
+#### Web Search & Cloudflare Secrets:
+| Secret Name | Purpose | Notes |
+| :--- | :--- | :--- |
+| `SEARCH_API_KEY` | Tavily or Brave web search verification | Fact-checks fake headlines |
+| `SEARCH_PROVIDER` | `tavily` or `brave` (default: `tavily`) | Optional search provider |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare Worker deployment token | Strata & Kin Workers CI/CD |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare Account ID | Strata & Kin Workers CI/CD |
 
 ---
 

@@ -601,6 +601,22 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
           <input type="text" id="ai-concept" class="form-control" placeholder="e.g. A game where players guess the absurd cause of historic flight delays">
         </div>
 
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="ai-provider-select">Target AI Provider</label>
+            <select id="ai-provider-select" class="form-control">
+              <option value="gemini">Google Gemini (gemini-2.0-flash / 1.5-pro)</option>
+              <option value="openai">OpenAI (gpt-4o / gpt-4o-mini)</option>
+              <option value="anthropic">Anthropic Claude (Claude 3.5 Sonnet)</option>
+              <option value="meta">Meta Llama (Llama 3.3 70B via Groq/Together)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="ai-model-select">Model Override</label>
+            <input type="text" id="ai-model-select" class="form-control" placeholder="e.g. gemini-2.0-flash, gpt-4o">
+          </div>
+        </div>
+
         <div style="display:flex;gap:10px">
           <button class="btn btn-primary" id="btn-gen-spec">Generate Complete AI Implementation Spec</button>
           <button class="btn btn-secondary" id="btn-gen-html">Generate Frontend HTML Template</button>
@@ -1048,10 +1064,19 @@ document.getElementById("btn-seed-ai").onclick = () => {
 // Generate Spec Prompt
 document.getElementById("btn-gen-spec").addEventListener("click", () => {
   const concept = document.getElementById("ai-concept").value.trim() || "Petty: Guess which trivial neighborhood complaint escalated to police";
+  const provider = document.getElementById("ai-provider-select").value || "gemini";
+  const modelOverride = document.getElementById("ai-model-select").value.trim();
+  const modelName = modelOverride || (provider === "gemini" ? "gemini-2.0-flash" : provider === "openai" ? "gpt-4o" : provider === "meta" ? "llama-3.3-70b-versatile" : "claude-3-5-sonnet");
+
   const spec = `Build the daily game and backend pipeline for "${concept}".
 
 GOAL
 A daily one-shot game for the Oddly platform (https://github.com/Hootsworth/Grudge.git) where players face a daily challenge judged with spite and snark.
+
+AI PROVIDER & MODEL
+- Provider: ${provider.toUpperCase()}
+- Model: ${modelName}
+- Secret / Env Var: AI_PROVIDER="${provider}", AI_MODEL="${modelName}", AI_API_KEY / ${provider.toUpperCase()}_API_KEY
 
 REQUIREMENTS
 1. MECHANICS:
@@ -1068,7 +1093,7 @@ REQUIREMENTS
 3. DELIVERABLES:
    - Single HTML file (e.g. petty.html)
    - Daily puzzle JSON schema definition
-   - Unit tests and README integration`;
+   - Integration into Oddly games.json manifest`;
 
   document.getElementById("ai-output-title").textContent = "AI Prompt Specification (Copy to Gemini / Claude / Antigravity)";
   document.getElementById("ai-output-text").textContent = spec;

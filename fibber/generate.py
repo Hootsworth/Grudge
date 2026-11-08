@@ -28,25 +28,17 @@ STRICT RULES FOR THE FAKE:
 6. FORMAT: Return ONLY a JSON object: {"t": "The fake headline under 110 chars"}"""
 
 
+from fibber.ai import generate_completion, clean_json_response, resolve_provider_and_key
+
+
 def call_anthropic_generate_fake(
     round_real_stories: List[Dict[str, Any]],
     round_number: int = 1,
     exclude: Optional[List[str]] = None,
     api_key: Optional[str] = None,
-    model: str = DEFAULT_ANTHROPIC_MODEL,
+    model: Optional[str] = None,
 ) -> str:
-    """Call Anthropic API to generate a convincing fake headline for a round."""
-    if not api_key:
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-
-    if not api_key:
-        raise ValueError("ANTHROPIC_API_KEY is not set.")
-
-    try:
-        import anthropic
-    except ImportError as e:
-        raise ImportError("anthropic package required. Run: pip install anthropic") from e
-
+    """Call configured AI provider (Gemini, OpenAI, Anthropic, Meta) to generate a convincing fake headline."""
     real_headlines = [story["t"] for story in round_real_stories]
     exclude_text = ""
     if exclude:
@@ -59,25 +51,16 @@ def call_anthropic_generate_fake(
         + "\n\nInvent 1 single fake headline matching this style. Return JSON: {\"t\": \"...\"}"
     )
 
-    client = anthropic.Anthropic(api_key=api_key)
-    logger.info("Calling Anthropic API to generate fake headline for Round %d...", round_number)
-
-    response = client.messages.create(
-        model=model,
-        max_tokens=256,
+    content_text = generate_completion(
+        system_prompt=GENERATE_FAKE_SYSTEM_PROMPT,
+        user_prompt=user_prompt,
         temperature=0.8,
-        system=GENERATE_FAKE_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_prompt}],
+        max_tokens=256,
+        model=model,
+        api_key=api_key,
     )
 
-    content_text = ""
-    for block in response.content:
-        if getattr(block, "type", "") == "text":
-            content_text += block.text
-
-    cleaned_json = re.sub(r"^```(?:json)?\s*", "", content_text.strip(), flags=re.MULTILINE)
-    cleaned_json = re.sub(r"\s*```$", "", cleaned_json, flags=re.MULTILINE)
-
+    cleaned_json = clean_json_response(content_text)
     data = json.loads(cleaned_json)
     fake_headline = data.get("t", "").strip()
 
@@ -106,7 +89,17 @@ def generate_fake_for_round(
     model: str = DEFAULT_ANTHROPIC_MODEL,
 ) -> Dict[str, Any]:
     """Generate a validated fake headline item for a given round."""
-    if dry_run or not (api_key or os.getenv("ANTHROPIC_API_KEY")):
+    has_key = bool(
+        api_key
+        or os.getenv("AI_API_KEY")
+        or os.getenv("GEMINI_API_KEY")
+        or os.getenv("GOOGLE_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+        or os.getenv("ANTHROPIC_API_KEY")
+        or os.getenv("META_API_KEY")
+        or os.getenv("GROQ_API_KEY")
+    )
+    if dry_run or not has_key:
         # Pick from fixture fakes
         avail = [f for f in FIXTURE_FAKES if not exclude or f not in exclude]
         if not avail:

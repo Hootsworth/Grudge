@@ -156,30 +156,17 @@ Return ONLY a strict JSON object mapping event id to integer year:
 }`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: 500,
-        temperature: 0.0,
-        messages: [{ role: 'user', content: prompt }],
-      }),
+    const { callAiCompletion, cleanJson } = await import('./ai.ts');
+    const rawContent = await callAiCompletion({
+      userPrompt: prompt,
+      temperature: 0.0,
+      maxTokens: 500,
+      model,
+      apiKey: anthropicApiKey,
     });
 
-    if (!response.ok) {
-      const errText = await response.text();
-      return { valid: false, errors: [`Anthropic verifier call returned HTTP ${response.status}: ${errText}`] };
-    }
-
-    const data: any = await response.json();
-    const rawContent = data.content?.[0]?.text || '';
-    const cleanJson = rawContent.replace(/```(?:json)?\s*/g, '').replace(/```\s*$/g, '').trim();
-    const estimates = JSON.parse(cleanJson);
+    const clean = cleanJson(rawContent);
+    const estimates = JSON.parse(clean);
 
     const check = verifyEstimatedYears(events, estimates);
     return {

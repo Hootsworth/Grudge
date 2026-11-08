@@ -48,6 +48,8 @@ Return ONLY a strict JSON object:
   ]
 }`;
 
+import { callAiCompletion, cleanJson } from './ai.ts';
+
 export async function callAnthropicGeneratePuzzle(
   theme: ThemeType,
   spread: SpreadType,
@@ -69,31 +71,16 @@ ${excludeWarning}
 
 Ensure descriptions are concise (<= 70 chars) and contain NO dates or "first/last" cues. Return JSON.`;
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model,
-      max_tokens: 800,
-      temperature: 0.7,
-      system: GENERATE_SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userPrompt }],
-    }),
+  const rawContent = await callAiCompletion({
+    systemPrompt: GENERATE_SYSTEM_PROMPT,
+    userPrompt,
+    temperature: 0.7,
+    maxTokens: 800,
+    model,
+    apiKey,
   });
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Anthropic generator API returned HTTP ${response.status}: ${errText}`);
-  }
-
-  const data: any = await response.json();
-  const rawContent = data.content?.[0]?.text || '';
-  const cleanJson = rawContent.replace(/```(?:json)?\s*/g, '').replace(/```\s*$/g, '').trim();
-  const parsed = JSON.parse(cleanJson);
+  const parsed = JSON.parse(cleanJson(rawContent));
 
   if (!parsed.events || !Array.isArray(parsed.events) || parsed.events.length !== 6) {
     throw new Error('Model did not return exactly 6 events in JSON.');

@@ -41,23 +41,15 @@ Return ONLY a valid JSON array containing exactly 9 objects. No markdown formatt
 ]"""
 
 
+from fibber.ai import generate_completion, clean_json_response, resolve_provider_and_key
+
+
 def call_anthropic_filter(
     candidates: List[CandidateStory],
     api_key: Optional[str] = None,
-    model: str = DEFAULT_ANTHROPIC_MODEL,
+    model: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
-    """Send candidates to Anthropic API to select and rewrite 9 stories."""
-    if not api_key:
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-
-    if not api_key:
-        raise ValueError("ANTHROPIC_API_KEY is not set.")
-
-    try:
-        import anthropic
-    except ImportError as e:
-        raise ImportError("anthropic package is required for live filtering. Run: pip install anthropic") from e
-
+    """Send candidates to configured AI API (Gemini, OpenAI, Anthropic, Meta) to select and rewrite 9 stories."""
     # Format candidates list for prompt
     candidates_data = [
         {
@@ -78,26 +70,16 @@ def call_anthropic_filter(
         "Return the 9 selected stories as a JSON array matching the specified format."
     )
 
-    client = anthropic.Anthropic(api_key=api_key)
-    logger.info("Calling Anthropic API (%s) to filter and rewrite %d candidates...", model, len(candidates_data))
-
-    response = client.messages.create(
-        model=model,
-        max_tokens=2048,
+    content_text = generate_completion(
+        system_prompt=FILTER_SYSTEM_PROMPT,
+        user_prompt=user_prompt,
         temperature=0.3,
-        system=FILTER_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_prompt}],
+        max_tokens=2048,
+        model=model,
+        api_key=api_key,
     )
 
-    # Extract JSON text
-    content_text = ""
-    for block in response.content:
-        if getattr(block, "type", "") == "text":
-            content_text += block.text
-
-    # Strip code block wrappers if any
-    cleaned_json = re.sub(r"^```(?:json)?\s*", "", content_text.strip(), flags=re.MULTILINE)
-    cleaned_json = re.sub(r"\s*```$", "", cleaned_json, flags=re.MULTILINE)
+    cleaned_json = clean_json_response(content_text)
 
     parsed = json.loads(cleaned_json)
     if not isinstance(parsed, list):
@@ -176,8 +158,18 @@ def filter_and_rewrite_stories(
     model: str = DEFAULT_ANTHROPIC_MODEL,
 ) -> List[Dict[str, Any]]:
     """Filter candidates and return 9 rewritten real stories."""
-    if dry_run or not (api_key or os.getenv("ANTHROPIC_API_KEY")):
-        logger.info("Using mock/fixture filtered stories (dry-run or no Anthropic key).")
+    has_key = bool(
+        api_key
+        or os.getenv("AI_API_KEY")
+        or os.getenv("GEMINI_API_KEY")
+        or os.getenv("GOOGLE_API_KEY")
+        or os.getenv("OPENAI_API_KEY")
+        or os.getenv("ANTHROPIC_API_KEY")
+        or os.getenv("META_API_KEY")
+        or os.getenv("GROQ_API_KEY")
+    )
+    if dry_run or not has_key:
+        logger.info("Using mock/fixture filtered stories (dry-run or no AI API key set).")
         return get_mock_filtered_stories()
 
     try:
