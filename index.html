@@ -74,9 +74,10 @@ animation:rise .8s cubic-bezier(.2,.8,.2,1) both;transition:transform .35s cubic
 .k-tree svg{width:160px;height:28px}
 
 /* PassPhew Vault Art */
-.vault-art{position:relative;display:grid;place-items:center;filter:drop-shadow(0 6px 14px rgba(0,0,0,.15))}
-.vault-art svg{transform-origin:center;transition:transform .6s cubic-bezier(.2,1.4,.4,1)}
-.g:hover .vault-art svg{transform:rotate(45deg)}
+.vault-art{position:relative;width:150px;height:150px;display:grid;place-items:center;filter:drop-shadow(0 6px 14px rgba(0,0,0,.15))}
+.vault-art svg{width:100%;height:100%;display:block}
+.vault-art .card-dial{transform-origin:120px 120px;transition:transform .5s cubic-bezier(.3,1.4,.5,1)}
+.g:hover .vault-art .card-dial{transform:rotate(60deg)}
 
 .soon{margin-top:52px}
 .row{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:16px;padding:20px 0;border-top:2px solid var(--line);transition:padding .3s,background .3s}
@@ -142,22 +143,47 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <!-- Game 4: PassPhew -->
 <a class="g" href="passphew.html" style="--bgc:#f2b134">
 <div class="art"><div class="vault-art">
-<svg viewBox="0 0 140 140" width="130" height="130">
-  <circle cx="70" cy="70" r="64" fill="#1f6f5c" stroke="#14131a" stroke-width="4"/>
-  <circle cx="70" cy="70" r="48" fill="#185c4c" stroke="#14131a" stroke-width="3"/>
-  <circle cx="70" cy="70" r="32" fill="#fffaf0" stroke="#14131a" stroke-width="3"/>
-  <g stroke="#14131a" stroke-width="2">
-    <line x1="70" y1="40" x2="70" y2="44"/>
-    <line x1="70" y1="96" x2="70" y2="100"/>
-    <line x1="40" y1="70" x2="44" y2="70"/>
-    <line x1="96" y1="70" x2="100" y2="70"/>
+<svg viewBox="0 0 240 240">
+  <circle cx="120" cy="120" r="112" fill="#1f6f5c" stroke="#14131a" stroke-width="6"/>
+  <!-- 8 Vault Locking Bolts -->
+  <g fill="#f2b134" stroke="#14131a" stroke-width="3">
+    <rect x="110" y="2" width="20" height="18" rx="4"/>
+    <rect x="110" y="2" width="20" height="18" rx="4" transform="rotate(45 120 120)"/>
+    <rect x="110" y="2" width="20" height="18" rx="4" transform="rotate(90 120 120)"/>
+    <rect x="110" y="2" width="20" height="18" rx="4" transform="rotate(135 120 120)"/>
+    <rect x="110" y="2" width="20" height="18" rx="4" transform="rotate(180 120 120)"/>
+    <rect x="110" y="2" width="20" height="18" rx="4" transform="rotate(225 120 120)"/>
+    <rect x="110" y="2" width="20" height="18" rx="4" transform="rotate(270 120 120)"/>
+    <rect x="110" y="2" width="20" height="18" rx="4" transform="rotate(315 120 120)"/>
   </g>
-  <g fill="#f2b134" stroke="#14131a" stroke-width="2">
-    <rect x="66" y="44" width="8" height="26" rx="4"/>
-    <rect x="66" y="44" width="8" height="26" rx="4" transform="rotate(120 70 70)"/>
-    <rect x="66" y="44" width="8" height="26" rx="4" transform="rotate(240 70 70)"/>
+  <!-- Vault Rim Rivets -->
+  <g fill="#fffaf0" opacity=".7">
+    <circle cx="120" cy="23" r="3"/><circle cx="120" cy="217" r="3"/><circle cx="23" cy="120" r="3"/><circle cx="217" cy="120" r="3"/>
+    <circle cx="120" cy="23" r="3" transform="rotate(30 120 120)"/><circle cx="120" cy="23" r="3" transform="rotate(60 120 120)"/>
+    <circle cx="120" cy="23" r="3" transform="rotate(120 120 120)"/><circle cx="120" cy="23" r="3" transform="rotate(150 120 120)"/>
+    <circle cx="120" cy="23" r="3" transform="rotate(210 120 120)"/><circle cx="120" cy="23" r="3" transform="rotate(240 120 120)"/>
+    <circle cx="120" cy="23" r="3" transform="rotate(300 120 120)"/><circle cx="120" cy="23" r="3" transform="rotate(330 120 120)"/>
   </g>
-  <circle cx="70" cy="70" r="7" fill="#14131a"/>
+  <circle cx="120" cy="120" r="84" fill="#185c4c" stroke="#14131a" stroke-width="4"/>
+  <g class="card-dial">
+    <circle cx="120" cy="120" r="56" fill="#fffaf0" stroke="#14131a" stroke-width="5"/>
+    <!-- Ticks -->
+    <g fill="#14131a">
+      <rect x="119" y="68" width="2" height="9"/>
+      <rect x="119" y="68" width="2" height="9" transform="rotate(60 120 120)"/>
+      <rect x="119" y="68" width="2" height="9" transform="rotate(120 120 120)"/>
+      <rect x="119" y="68" width="2" height="9" transform="rotate(180 120 120)"/>
+      <rect x="119" y="68" width="2" height="9" transform="rotate(240 120 120)"/>
+      <rect x="119" y="68" width="2" height="9" transform="rotate(300 120 120)"/>
+    </g>
+    <!-- 3 Vault Spokes -->
+    <g fill="#f2b134" stroke="#14131a" stroke-width="3">
+      <rect x="114" y="74" width="12" height="46" rx="6"/>
+      <rect x="114" y="74" width="12" height="46" rx="6" transform="rotate(120 120 120)"/>
+      <rect x="114" y="74" width="12" height="46" rx="6" transform="rotate(240 120 120)"/>
+    </g>
+    <circle cx="120" cy="120" r="12" fill="#14131a"/>
+  </g>
 </svg>
 </div></div>
 <div class="tag"><span>Cryptic</span><span>Unlimited</span></div>
