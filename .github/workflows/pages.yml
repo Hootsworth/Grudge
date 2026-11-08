@@ -52,9 +52,11 @@ jobs:
           cp -f "Strata — daily timeline game.html" _site/ 2>/dev/null || true
           cp -f "kin.html" _site/ 2>/dev/null || true
           cp -f "Kin — daily odd relatives game.html" _site/ 2>/dev/null || true
+          cp -f "admin.html" _site/ 2>/dev/null || true
 
           # Copy daily JSON data files
           cp -f "today.json" _site/ 2>/dev/null || true
+          cp -f "games.json" _site/ 2>/dev/null || true
           if [ -d "public" ]; then
             cp -rf public/* _site/ 2>/dev/null || true
           fi

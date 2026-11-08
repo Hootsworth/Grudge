@@ -14,8 +14,32 @@ GitHub Pages: `https://hootsworth.github.io/Grudge/`
 | **Fibber** | News / Fake Headlines | [`fibber.html`](fibber.html) | Python 3.11 + GitHub Actions daily cron (`0 3 * * *`) |
 | **Strata** | Historical Timeline Sorting | [`strata.html`](strata.html) | Cloudflare Workers + D1 (SQLite) + TypeScript |
 | **Kin** | Evolutionary Kinship | [`kin.html`](kin.html) | Cloudflare Workers + D1 + TimeTree & OpenTree data |
+| **Admin Studio** | Game Manager & AI Generator | [`admin.html`](admin.html) | Client-side studio + GitHub REST API integration |
 
 > All games are 100% playable out-of-the-box as static client applications on **GitHub Pages**, with seamless optional connectivity to Cloudflare Worker APIs (`/api/today`, `/api/guess`, `/api/answer`).
+
+---
+
+## 🛠️ Admin Studio & AI Game Generator (`admin.html`)
+
+Access the Admin Studio directly at [`admin.html`](admin.html) (or via the footer link on the home page).
+
+### Features:
+1. **Games Manifest Manager**:
+   - Manage all live and in-lab games (Fibber, Strata, Kin, Petty, Wordy Golf, etc.).
+   - Toggle status between `Live` and `In Lab` with 1 click.
+   - Built-in **Playtest Simulator** to test games right inside an admin iframe.
+2. **Add New Games**:
+   - Register games with custom slugs, colors, spiteful descriptions, and card art styles.
+   - Real-time card preview matches the exact Grudge frontpage layout.
+3. **🤖 AI Game Studio**:
+   - Generate complete AI prompts & specifications to feed to Claude, Gemini, or Antigravity to build new daily games.
+   - Generate standalone, production-ready frontend HTML templates (`[slug].html`) with Grudge styling, daily calendar math, and shareable scoreboards.
+4. **Daily Content & Backlog Manager**:
+   - Inspect, edit, and validate daily puzzle JSON (`today.json`).
+   - Quick-switch between emergency pre-approved backlog puzzles.
+5. **Zero-Terminal GitHub Sync**:
+   - Optional Personal Access Token (PAT) integration to commit updated `games.json` directly to the `main` branch from the browser, triggering automatic GitHub Pages re-deployment.
 
 ---
 

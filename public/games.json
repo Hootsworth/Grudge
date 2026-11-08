@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-11-08",
+  "live": [
+    {
+      "id": "fibber",
+      "title": "Fibber",
+      "url": "fibber.html",
+      "tags": ["News", "3 rounds"],
+      "desc": "Three strange-but-true headlines and one invention. Spot the fake before it fools you.",
+      "cta": "Play today’s rounds",
+      "color": "var(--c3)",
+      "bgHex": "#a98bff",
+      "artType": "fibber",
+      "backend": "python-cron",
+      "status": "live"
+    },
+    {
+      "id": "strata",
+      "title": "Strata",
+      "url": "strata.html",
+      "tags": ["History", "4 digs"],
+      "desc": "Drag six historical events into chronological order. Newest on surface, oldest on bedrock.",
+      "cta": "Dig today’s layers",
+      "color": "var(--c1)",
+      "bgHex": "#ffc933",
+      "artType": "strata",
+      "backend": "worker-d1",
+      "status": "live"
+    },
+    {
+      "id": "kin",
+      "title": "Kin",
+      "url": "kin.html",
+      "tags": ["Evolution", "5 rounds"],
+      "desc": "Three living things. Pick the two most closely related. Evolutionary deep time decoded.",
+      "cta": "Check kinship",
+      "color": "var(--c4)",
+      "bgHex": "#2ec4a0",
+      "artType": "kin",
+      "backend": "worker-d1",
+      "status": "live"
+    }
+  ],
+  "lab": [
+    {
+      "id": "wordy-golf",
+      "num": "01",
+      "title": "Wordy Golf",
+      "desc": "Change one letter at a time. Beat the daily par.",
+      "color": "var(--c0)",
+      "bgHex": "#ff7a6b",
+      "status": "Soon",
+      "url": ""
+    },
+    {
+      "id": "rank-it-rage",
+      "num": "02",
+      "title": "Rank It Rage",
+      "desc": "Sort five things by a hidden number in three guesses.",
+      "color": "var(--c2)",
+      "bgHex": "#4d8dff",
+      "status": "Soon",
+      "url": ""
+    },
+    {
+      "id": "petty",
+      "num": "03",
+      "title": "Petty",
+      "desc": "A daily game of trivial grievances and minor vendettas.",
+      "color": "var(--c3)",
+      "bgHex": "#a98bff",
+      "status": "Soon",
+      "url": ""
+    }
+  ]
+}
