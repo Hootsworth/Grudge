@@ -65,73 +65,10 @@ jobs:
         run: |
           node scripts/setup_cf_d1.js
 
-      - name: Deploy Strata Worker
+      - name: Deploy All 8 Cloudflare Workers with Auto-Retry
         if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
-
-      - name: Deploy Kin Worker
-        if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'kin'
-          command: deploy
-
-      - name: Deploy PassPhew Worker
-        if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'passphew'
-          command: deploy
-
-      - name: Deploy Pinpoint Worker
-        if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'pinpoint'
-          command: deploy
-
-      - name: Deploy Ballpark Worker
-        if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'ballpark'
-          command: deploy
-
-      - name: Deploy Rungs Worker
-        if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'rungs'
-          command: deploy
-
-      - name: Deploy Sprint Worker
-        if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'sprint'
-          command: deploy
-
-      - name: Deploy Blackout Worker
-        if: steps.check_cf.outputs.has_token == 'true'
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: 'blackout'
-          command: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          node scripts/deploy_workers.mjs
