@@ -14,6 +14,7 @@ import {
 import { detectBruteForcePattern } from '../security/pattern_detector.ts';
 import {
   getLivePuzzleForDate,
+  ensureTodayPuzzle,
   createOrGetSession,
   getGuessesForSession,
   isDuplicateWrongGuess,
@@ -68,23 +69,8 @@ export async function handleGuessRoute(
 
   const todayStr = new Date().toISOString().split('T')[0];
 
-  // 2. Fetch today's live puzzle
-  let puzzle = await getLivePuzzleForDate(env.DB, todayStr);
-  if (!puzzle) {
-    // If not in DB, use default fixture
-    puzzle = {
-      id: `passphew_${todayStr}`,
-      date: todayStr,
-      plate: 1,
-      username: 'root_admin',
-      clue: 'Opener of locks, then the error for a missing page',
-      answer: 'key404',
-      explanation: 'A KEY opens locks + HTTP 404 = KEY404.',
-      type: 'Charade',
-      difficulty: 2,
-      status: 'live',
-    };
-  }
+  // 2. Fetch or ensure today's live puzzle in DB
+  const puzzle = await ensureTodayPuzzle(env.DB, todayStr);
 
   // 3. Create or retrieve session record
   const session = await createOrGetSession(env.DB, sessionId, todayStr, puzzle.id, ipHash, now);

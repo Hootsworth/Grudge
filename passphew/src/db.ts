@@ -8,6 +8,7 @@ import type {
   DailyStatsRecord,
 } from './types.ts';
 import { normalizeGuess } from './security/normalization.ts';
+import { BACKLOG_PUZZLES } from './backlog/index.ts';
 
 /**
  * Retrieves the active live puzzle for a given ISO date.
@@ -461,4 +462,61 @@ export async function getPuzzlesForDate(
     .all<Puzzle>();
   return results || [];
 }
+
+/**
+ * Ensures a live puzzle exists in D1 for the given date.
+ * If not found, deploys an unused puzzle from BACKLOG_PUZZLES automatically.
+ */
+export async function ensureTodayPuzzle(
+  db: D1Database,
+  dateStr: string
+): Promise<Puzzle> {
+  const existing = await getLivePuzzleForDate(db, dateStr);
+  if (existing) {
+    return existing;
+  }
+
+  // Find used answers or used IDs
+  let usedAnswers = new Set<string>();
+  let usedIds = new Set<string>();
+  try {
+    const used = (
+      await db.prepare('SELECT id, answer FROM puzzles').all<{ id: string; answer: string }>()
+    ).results || [];
+    usedAnswers = new Set(used.map((p) => p.answer.toLowerCase()));
+    usedIds = new Set(used.map((p) => p.id));
+  } catch (e) {}
+
+  const candidate =
+    BACKLOG_PUZZLES.find(
+      (bp) => !usedIds.has(bp.id) && !usedAnswers.has(bp.answer.toLowerCase())
+    ) || BACKLOG_PUZZLES[0];
+
+  let nextPlate = 1;
+  try {
+    nextPlate = await getNextPlateNumber(db);
+  } catch (e) {}
+
+  const newPuzzle: Puzzle = {
+    id: `passphew_${dateStr}`,
+    date: dateStr,
+    plate: nextPlate,
+    username: candidate.username,
+    clue: candidate.clue,
+    answer: candidate.answer,
+    explanation: candidate.explanation,
+    type: candidate.type,
+    difficulty: candidate.difficulty,
+    status: 'live',
+  };
+
+  try {
+    await insertPuzzle(db, newPuzzle);
+  } catch (e) {
+    console.warn('[ENSURE PUZZLE DB ERROR]', e);
+  }
+
+  return newPuzzle;
+}
+
 
