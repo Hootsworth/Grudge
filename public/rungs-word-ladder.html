@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Rungs — word ladder</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"><style>
+:root{--ink:#10142b;--card:#fff8ea;--mute:#7a7d92;--line:#e6dec9;--g:#2ec4a0;--r:#ff5d4e;--y:#ffc933;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Space Grotesk",system-ui,sans-serif;color:var(--ink);min-height:100vh;background:#8fd3ff;transition:background-color 1.6s;overflow-x:hidden}
+#st{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity 2s}#st i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:tw 3s ease-in-out infinite}
+main{position:relative;max-width:540px;margin:0 auto;padding:16px 16px 56px}
+.pill{background:var(--card);border-radius:999px;padding:8px 8px 8px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;font-weight:700}.pill b{letter-spacing:-.03em;font-size:1.25rem}.pill span{background:var(--ink);color:var(--card);border-radius:999px;padding:6px 14px;font-size:.82rem}
+.card{background:var(--card);border-radius:28px;padding:24px 20px;position:relative;overflow:hidden;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}
+.kick{font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 10px}.top{display:flex;justify-content:space-between;align-items:baseline}
+h1,h2{margin:0;font-weight:700;letter-spacing:-.045em;line-height:.98}h1{font-size:clamp(2.3rem,10.5vw,3.5rem)}h1 em{font-style:normal;color:var(--r)}
+.lede{color:var(--mute);line-height:1.5;margin:14px 0 20px}
+.btn{font:700 1rem "Space Grotesk",sans-serif;border:2px solid var(--ink);border-radius:999px;background:var(--ink);color:var(--card);padding:12px 22px;cursor:pointer;transition:transform .15s,background .2s}.btn:hover{background:var(--r);border-color:var(--r)}.btn:active{transform:scale(.95)}.btn.ghost{background:transparent;color:var(--ink)}.btn.ghost:hover{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+input{width:100%;font:500 1.6rem "Space Grotesk",sans-serif;color:var(--ink);background:transparent;border:0;border-bottom:3px solid var(--ink);padding:8px 0;outline:0;border-radius:0;text-transform:uppercase;letter-spacing:.12em}input:focus{border-color:var(--r)}input::placeholder{color:#cfc6b0;text-transform:none;letter-spacing:0}
+.tl{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.t{width:54px;height:62px;border-radius:16px;background:#fff;display:grid;place-items:center;font:700 2rem "Space Grotesk",sans-serif;text-transform:uppercase;box-shadow:0 4px 0 var(--line);border:0;color:var(--ink);padding:0;cursor:default;transition:opacity .2s,transform .15s}
+.t.a{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(var(--i)*70ms)}.t.f{animation:flip .55s ease both;animation-delay:calc(var(--i)*70ms)}
+.t.on{background:var(--ink);color:var(--card)}.t.win{background:var(--g);color:var(--ink);animation:hop .5s ease both;animation-delay:calc(var(--i)*90ms)}
+.msg{min-height:1.4em;text-align:center;font-weight:700;color:var(--r);margin:8px 0}
+.st{display:grid;gap:8px}.st div{display:grid;grid-template-columns:1fr auto;gap:12px;background:#fff;border-radius:14px;padding:12px 16px;font-weight:500;animation:slide .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*90ms)}
+.big{font-size:clamp(4rem,20vw,6.5rem);font-weight:700;letter-spacing:-.07em;line-height:.9;margin:4px 0 8px}.big small{font-size:.28em;letter-spacing:-.02em;color:var(--mute)}
+.no{animation:nope .4s}.fr::after{content:"";position:absolute;inset:0;background:var(--r);opacity:0;pointer-events:none;animation:fr .4s}
+.timer{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:0 0 14px}.timer i{display:block;height:100%;width:100%;background:var(--ink);border-radius:4px}.timer i.low{background:var(--r);animation:pu .5s linear infinite}
+.ch{display:inline-block;margin:4px 4px 0 0;padding:6px 12px;border-radius:999px;font-weight:700;font-size:.9rem;background:#fff;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}.l4{background:#c5f1e5}.l5{background:#cfe0ff}.l6{background:var(--y)}.miss{opacity:.6;font-weight:500;animation:rise .4s both;animation-delay:calc(var(--i)*25ms)}
+.spk{position:absolute;left:50%;top:35%;width:9px;height:9px;border-radius:2px;background:var(--sc);opacity:0;animation:spk 1.4s ease-out var(--dl) forwards;z-index:3}
+.ban{position:absolute;left:0;right:0;top:32%;text-align:center;z-index:4;pointer-events:none;animation:ban 1.8s ease-out forwards}.ban span{display:inline-block;background:var(--ink);color:var(--c);font-weight:700;letter-spacing:.25em;text-transform:uppercase;font-size:.9rem;padding:9px 20px;border-radius:999px}
+.fl{position:absolute;left:50%;top:38%;font-weight:700;font-size:1.7rem;color:var(--g);animation:flt .9s ease-out forwards;z-index:3;pointer-events:none}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}}@keyframes pop{from{opacity:0;transform:scale(.6) translateY(10px)}}
+@keyframes flip{from{opacity:0;transform:perspective(300px) rotateX(-90deg)}}@keyframes hop{40%{transform:translateY(-14px)}}
+@keyframes nope{20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}@keyframes slide{from{opacity:0;transform:translateX(-20px)}}
+@keyframes spk{0%{opacity:0;transform:scale(0) rotate(45deg)}25%{opacity:1}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.4) rotate(225deg)}}
+@keyframes ban{0%{opacity:0;transform:scale(.5)}15%{opacity:1;transform:scale(1.1)}25%{transform:scale(1)}80%{opacity:1}to{opacity:0}}
+@keyframes flt{to{opacity:0;transform:translate(-50%,-70px)}}@keyframes fr{30%{opacity:.18}}@keyframes pu{50%{opacity:.35}}@keyframes tw{50%{opacity:.25}}
+.fl{transform:translateX(-50%)}
+#lad{display:flex;flex-direction:column-reverse;gap:6px;margin:6px auto;max-width:300px;padding:8px 14px;border-left:5px solid var(--ink);border-right:5px solid var(--ink);border-radius:8px}
+#lad .tl{margin:0;animation:rise .45s cubic-bezier(.2,.8,.2,1) both;flex-wrap:nowrap}.s .t{width:44px;height:50px;font-size:1.5rem;border-radius:12px}
+.g .t{background:transparent;border:2px dashed var(--mute);color:var(--mute);box-shadow:none}
+#lt .t{cursor:pointer}#lt .t:active{transform:scale(.9)}#lt .t.u{opacity:.25}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+#lad{flex-direction:column}#lad .tl{animation:none}#lad .tl.s.a{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+.ph{height:50px;border:2px dashed var(--mute);border-radius:12px;display:grid;place-items:center;color:var(--mute);font-size:.8rem;letter-spacing:.3em;font-weight:700}
+.tl.s.ov .t{color:var(--r);box-shadow:0 4px 0 var(--r)}.tl.s.ov .t.on{background:var(--r);color:#fff}.tl.s.win .t{background:var(--g);color:var(--ink)}
+.st small{display:block;color:var(--mute);font-size:.72rem;margin-top:2px;font-weight:400;line-height:1.4}
+.top small{display:block;font-size:.62rem;letter-spacing:.16em;color:var(--mute)}.top b{font-size:1.8rem;letter-spacing:-.04em;display:block}
+.mx{font-size:2.3rem;font-weight:700;color:var(--r);letter-spacing:-.05em}
+.heat{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin:8px 0}.heat i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g),var(--y),var(--r))}
+.pp{animation:pp .35s cubic-bezier(.2,1.6,.4,1)}.bp{animation:bp .25s}body.fever .card{animation:fev .7s ease-in-out infinite alternate}
+@keyframes pp{40%{transform:scale(1.4)}}@keyframes bp{30%{transform:scale(1.025) rotate(.5deg)}}@keyframes fev{to{box-shadow:0 0 0 4px var(--y),0 0 44px 8px rgba(255,201,51,.75)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div id="st"></div><main><div class="pill"><b>Rungs</b><span id="hd">Daily</span></div><div id="v"></div></main><script>
+const WORDS="ale ant ape apt arm art ate cat cot ear eat era fin fir fig gin lap lea let lit net nap one opt ore owe own pal pan pat pea pen pet per pot rag ran rat red rep rig rot row run sat sea set sin sit tan tap tar tea ten tie tin toe top won woe now nor rod ode don doe end den and age are gad nag orc ram mat sac leap lane lean lent neat pale pane pant pate peat pelt pent plan plea tale teal late seam same mate meat team tame tear tare rate rest star tars arts rats ears eats east seat teas sear mast mart tram term arms rams stem mare dare dear read rend nerd gear rage rang aged dean near earn darn case cast cats lace last sale salt slat lest lets acts line lint list lens nest nets sent tens site sine tile tine silt slit tins lies ties isle lien gone gore ogre roan fire fine fern ring grin rein rife rock core cork coke cote rote tore opts pest pore port post pots rope rots sort spot step stop tops pose rose sore down done node word wore wend wren redo rode owed bake bale bare base bone bore bold bolt bond bell belt bill ball bull burn cage cake came cane care cart cave cold cord corn cone dame date dime dine dire dome dove fade fake fame fate file fill film five flat gale game gate gave hale hare hate have hole home hope hose hide hike hire kite lake lame lore lose love mile mine mole more mule nine none note pile pine pipe poke pole rice ride rile rise rule safe sage sake sole some tube tune vale vane vile wade wage wake wane ware wave wide wine wire wise back bank band bark barn bend bent best bird bite boat boil book boom boss call calm camp card cash chat chop clap clay coal coat cook cool cost dark dash deal deck deep desk dish dock doll door dust fall farm fast feel fell felt fish fist foot fork form gift girl glad goal gold golf good hall hand hang hard harm head heal heap hear heat help hill hold hood hook hurt jump keep kick king lamp land lock look loop luck mask mind mist moon mild mill milk nail neck need pack page pain pair park pass past path pick pink plot plug pull push race rack rail rain rank rent roll room root sack sand seed sell ship shop sick sing sink skin slip snap soap sock soft soil sold soul tail talk tall tank task test tent tick toll tool town trip walk wall warm wash weed well went wild will wind wing wolf wood wool work yard plane plant plate panel petal pleat leapt steam mates meats tames teams smart marts trams terms tears rates stare aster tares anger range grand scale laces least steal slate stale tales teals cleat caste inlet islet stile stein lines tiles organ groan argon goner finer reign store poets prose spore ports sport strop drone owner planet stream master garden danger gander ranged castle cleats silent listen tinsel enlist inlets orange finger fringe poster presto repost tropes wonder downer",NAME="rungs";
+
+const $=id=>document.getElementById(id),R=Math.random,d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1,KEY=NAME+":"+T;
+const mb=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},vib=v=>{try{navigator.vibrate&&navigator.vibrate(v)}catch(e){}};
+const ST=[[0,"#8fd3ff"],[.2,"#4a95ee"],[.4,"#2f55bd"],[.6,"#1b2a73"],[.8,"#0b1033"],[1,"#04050d"]],hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function sky(t){t=Math.max(0,Math.min(1,t));let i=0;while(i<ST.length-2&&t>ST[i+1][0])i++;const a=ST[i],b=ST[i+1],k=(t-a[0])/(b[0]-a[0]),x=hx(a[1]),y=hx(b[1]);document.body.style.backgroundColor="rgb("+x.map((v,j)=>Math.round(v+(y[j]-v)*k)).join(",")+")";$("st").style.opacity=Math.max(0,Math.min(1,(t-.45)*2.2))}
+$("st").innerHTML=Array.from({length:70},()=>`<i style="left:${R()*100}%;top:${R()*100}%;animation-delay:${R()*3}s"></i>`).join("");
+const shake=e=>{e.classList.remove("no");void e.offsetWidth;e.classList.add("no")},fr=e=>{e.classList.remove("fr");void e.offsetWidth;e.classList.add("fr")};
+function burst(el,cols,n=30){for(let j=0;j<n;j++){const e=document.createElement("i");e.className="spk";e.style.cssText=`--dx:${(R()-.5)*440}px;--dy:${(R()-.4)*320}px;--dl:${R()*.3}s;--sc:${cols[j%cols.length]}`;el.appendChild(e);setTimeout(()=>e.remove(),2000)}}
+function ban(el,t,c){const e=document.createElement("div");e.className="ban";e.innerHTML=`<span style="--c:${c}">${t}</span>`;el.appendChild(e);setTimeout(()=>e.remove(),1900)}
+const save=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}},load=()=>{try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},
+cp=(t,b)=>{try{navigator.clipboard.writeText(t).then(()=>b.textContent="Copied",()=>prompt("Copy:",t))}catch(e){prompt("Copy:",t)}};
+function cdown(el){const f=()=>{const x=new Date(),r=new Date(x.getFullYear(),x.getMonth(),x.getDate()+1)-x,q=y=>String(y).padStart(2,"0");el.textContent="Next one in "+q(Math.floor(r/36e5))+":"+q(Math.floor(r/6e4)%60)+":"+q(Math.floor(r/1e3)%60)};f();setInterval(f,1000)}
+const W=[...new Set(WORDS.split(" "))],CK=["#2ec4a0","#ffc933","#fff","#4d8dff","#ff6fb0"];
+
+const L4=W.filter(w=>w.length==4),df=(a,b)=>[...a].filter((c,i)=>c!=b[i]).length,G={};
+L4.forEach(w=>G[w]=L4.filter(x=>df(w,x)==1));
+function bfs(s){const d={[s]:0},p={},q=[s];for(const u of q)for(const v of G[u])if(!(v in d)){d[v]=d[u]+1;p[v]=u;q.push(v)}return{d,p}}
+function route(s,t){const{p}=bfs(t),r=[s];while(r[r.length-1]!==t)r.push(p[r[r.length-1]]);return r}
+const rg=mb(T*7+1),PZ=[],us=new Set();
+for(const want of [3,3,4,4,5])for(let n=0;n<300;n++){const s=L4[Math.floor(rg()*L4.length)];if(us.has(s))continue;const{d}=bfs(s),c=Object.keys(d).filter(k=>d[k]<=want&&d[k]>=(n<100?want:3));if(c.length){const t=c[Math.floor(rg()*c.length)];us.add(s);PZ.push({s,t,par:d[t]});break}}
+const tl=(w,p,a)=>[...w].map((c,i)=>`<div class="t${p&&p[i]!=c?" on"+(a?" f":""):""}" style="--i:${i}">${c}</div>`).join("");
+let pi=0,path=[],str=0,lock=0,res=load()||[];pi=res.length;
+const msg=(m,s=1)=>{const e=$("msg");e.textContent=m;if(s)shake(e)};
+function lad(){const P=PZ[pi],n=path.length-1,ph=Math.max(0,P.par-n-1);
+$("lad").innerHTML=`<div class="tl g">${tl(P.t)}</div>`+Array.from({length:ph},()=>`<div class="ph">? ? ?</div>`).join("")+path.map((w,i)=>`<div class="tl s${i>P.par?" ov":""}${i&&i==n?" a":""}${w===P.t?" win":""}">${tl(w,i?path[i-1]:"",i&&i==n)}</div>`).reverse().join("");
+$("sc").textContent="STROKES "+str+" / PAR "+P.par}
+function intro(){$("v").innerHTML=`<div class="card"><p class="kick">Ladder ${String(num).padStart(3,"0")}</p><h1>Change one letter.<br>Climb to <em>the top</em>.</h1><p class="lede">Turn the start word into the target, changing exactly one letter at a time. Every rung must be a real word. The dashed boxes show how many rungs the shortest route needs. Five ladders a day.</p><button class="btn" id="b">Start climbing</button></div>`;$("b").onclick=play}
+function play(){if(pi>=5)return end();const P=PZ[pi];path=[P.s];str=0;lock=0;$("hd").textContent="Ladder "+(pi+1)+" of 5";sky(pi/5*.85);
+$("v").innerHTML=`<div class="card"><div class="top kick"><span>${P.s} → ${P.t}</span><span id="sc"></span></div><div id="lad"></div><div class="msg" id="msg"></div><input id="in" maxlength="4" placeholder="next word" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="row"><button class="btn" id="go">Climb</button><button class="btn ghost" id="ht">Hint +1</button><button class="btn ghost" id="un">Undo</button></div></div>`;
+lad();$("in").focus();$("in").onkeydown=e=>{if(e.key==="Enter")go()};$("go").onclick=go;$("ht").onclick=hint;$("un").onclick=()=>{if(lock||path.length<2)return;path.pop();lad();msg("",0)}}
+function go(){if(lock)return;const P=PZ[pi],i=$("in"),w=i.value.trim().toLowerCase(),c=path[path.length-1];
+const m=w.length!=4||!G[w]?"Not in my word list":path.includes(w)?"Already on the ladder":df(c,w)!=1?"Change exactly one letter":"";
+if(m){msg(m);shake(i);vib([60,40,60]);return}
+path.push(w);str++;i.value="";lad();msg("",0);sky((pi+Math.min(.95,path.length/(P.par+1)))/5*.85);if(w===P.t)win(P)}
+function hint(){if(lock)return;const n=bfs(PZ[pi].t).p[path[path.length-1]];if(n){str++;$("sc").textContent="STROKES "+str+" / PAR "+PZ[pi].par;msg("Try: "+n.toUpperCase(),0)}}
+function win(P){lock=1;const x=str-P.par,s=$("v").firstChild;ban(s,x?"+"+x+" over par":"Perfect",x?"#ffc933":"#2ec4a0");burst(s,CK,x?20:44);vib(x?[40,40]:[40,40,40,40,120]);
+res.push({s:P.s,t:P.t,par:P.par,str});save(res);pi++;$("in").disabled=true;$("go").textContent=pi>=5?"See results":"Next ladder";$("go").onclick=play}
+function end(){$("hd").textContent="Done";sky(.95);const tot=res.reduce((a,r)=>a+r.str,0),par=res.reduce((a,r)=>a+r.par,0),x=tot-par,
+ttl=x<=0?"Perfect climb":x<=2?"Sure-footed":x<=5?"Wobbly rungs":"Scenic route",sh="Rungs #"+num+"  "+tot+"/"+par+"\n"+res.map(r=>"▲".repeat(r.par)+"△".repeat(Math.max(0,r.str-r.par))).join("\n");
+$("v").innerHTML=`<div class="card"><p class="kick">Final</p><div class="big">${tot}<small> / ${par} par</small></div><h2 style="font-size:1.6rem;margin-bottom:18px">${ttl}</h2><div class="st">${res.map((r,i)=>`<div style="--i:${i}"><span>${r.s} → ${r.t}<small>${r.str<=r.par?"optimal route ✓":"optimal: "+route(r.s,r.t).join(" › ")}</small></span><b>${r.str}/${r.par}</b></div>`).join("")}</div><div class="row"><button class="btn" id="cp">Copy result</button></div><p class="kick" id="cd" style="margin-top:16px"></p></div>`;
+$("cp").onclick=()=>cp(sh,$("cp"));cdown($("cd"));if(x<=0)burst($("v").firstChild,CK,40)}
+pi>=5?end():pi?play():intro();
+</script></body></html>

@@ -79,22 +79,38 @@
       "artType": "ballpark",
       "backend": "worker-d1",
       "status": "live"
+    },
+    {
+      "id": "rungs",
+      "title": "Rungs",
+      "url": "rungs-word-ladder.html",
+      "tags": ["Word Ladder", "5 rungs"],
+      "desc": "Change one letter at a time to climb from start to target. Five daily ladders.",
+      "cta": "Climb the ladder",
+      "color": "var(--c2)",
+      "bgHex": "#4a95ee",
+      "artType": "rungs",
+      "backend": "client-deterministic",
+      "status": "live"
+    },
+    {
+      "id": "sprint",
+      "title": "Sprint",
+      "url": "sprint-anagram.html",
+      "tags": ["Anagrams", "60 seconds"],
+      "desc": "60 seconds. Six letters. Chain anagrams inside five seconds to stack combos and hit FEVER.",
+      "cta": "Start the sprint",
+      "color": "var(--c0)",
+      "bgHex": "#ff5d4e",
+      "artType": "sprint",
+      "backend": "client-deterministic",
+      "status": "live"
     }
   ],
   "lab": [
     {
-      "id": "wordy-golf",
-      "num": "01",
-      "title": "Wordy Golf",
-      "desc": "Change one letter at a time. Beat the daily par.",
-      "color": "var(--c0)",
-      "bgHex": "#ff7a6b",
-      "status": "Soon",
-      "url": ""
-    },
-    {
       "id": "rank-it-rage",
-      "num": "02",
+      "num": "01",
       "title": "Rank It Rage",
       "desc": "Sort five things by a hidden number in three guesses.",
       "color": "var(--c2)",
@@ -104,7 +120,7 @@
     },
     {
       "id": "petty",
-      "num": "03",
+      "num": "02",
       "title": "Petty",
       "desc": "A daily game of trivial grievances and minor vendettas.",
       "color": "var(--c3)",
