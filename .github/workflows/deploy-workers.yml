@@ -1,4 +1,4 @@
-name: Deploy Cloudflare Workers (Strata, Kin, PassPhew & Pinpoint)
+name: Deploy Cloudflare Workers (Strata, Kin, PassPhew, Pinpoint & Ballpark)
 
 on:
   workflow_dispatch:
@@ -9,10 +9,12 @@ on:
       - 'kin/src/**'
       - 'passphew/src/**'
       - 'pinpoint/worker/**'
+      - 'ballpark/src/**'
       - 'wrangler.toml'
       - 'kin/wrangler.toml'
       - 'passphew/wrangler.toml'
       - 'pinpoint/wrangler.toml'
+      - 'ballpark/wrangler.toml'
 
 jobs:
   deploy-workers:
@@ -50,6 +52,7 @@ jobs:
           PASSPHEW_DATABASE_ID: ${{ secrets.PASSPHEW_DATABASE_ID }}
           PINPOINT_DATABASE_ID: ${{ secrets.PINPOINT_DATABASE_ID }}
           PINPOINT_KV_ID: ${{ secrets.PINPOINT_KV_ID }}
+          BALLPARK_DATABASE_ID: ${{ secrets.BALLPARK_DATABASE_ID }}
         run: |
           node scripts/setup_cf_d1.js
 
@@ -86,4 +89,13 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'pinpoint'
+          command: deploy
+
+      - name: Deploy Ballpark Worker
+        if: steps.check_cf.outputs.has_token == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'ballpark'
           command: deploy

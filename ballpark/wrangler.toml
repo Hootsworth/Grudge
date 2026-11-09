@@ -1,0 +1,12 @@
+name = "ballpark-backend"
+main = "src/index.ts"
+compatibility_date = "2024-04-01"
+
+# D1 Database binding for questions, sessions, guesses, and stats
+[[d1_databases]]
+binding = "DB"
+database_name = "ballpark-db"
+database_id = "local-ballpark-db-id"
+
+[vars]
+APPROVAL_SECRET = "ballpark-admin-secret-key"

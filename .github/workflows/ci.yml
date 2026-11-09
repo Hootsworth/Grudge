@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   test:
-    name: Run All Tests (Strata, Kin, Fibber)
+    name: Run All Tests (Strata, Kin, PassPhew, Pinpoint, Ballpark, Fibber)
     runs-on: ubuntu-latest
 
     steps:
@@ -51,6 +51,10 @@ jobs:
         working-directory: pinpoint
         run: npm install --no-audit
 
+      - name: Install Ballpark dependencies
+        working-directory: ballpark
+        run: npm install --no-audit
+
       - name: Run Strata backend tests
         run: npm test
 
@@ -62,6 +66,9 @@ jobs:
 
       - name: Run Pinpoint backend tests
         run: npm run test:pinpoint
+
+      - name: Run Ballpark backend tests
+        run: npm run test:ballpark
 
       - name: Run Fibber Python unit tests
         run: python3 -m unittest discover -s tests -p "test_*.py"

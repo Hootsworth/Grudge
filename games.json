@@ -66,6 +66,19 @@
       "artType": "pinpoint",
       "backend": "worker-d1-kv",
       "status": "live"
+    },
+    {
+      "id": "ballpark",
+      "title": "Ballpark",
+      "url": "ballpark.html",
+      "tags": ["Estimation", "5 orders"],
+      "desc": "Five absurd real-world quantities. Slide the logarithmic ruler from one to a septillion.",
+      "cta": "Estimate the scale",
+      "color": "var(--c1)",
+      "bgHex": "#f0b429",
+      "artType": "ballpark",
+      "backend": "worker-d1",
+      "status": "live"
     }
   ],
   "lab": [

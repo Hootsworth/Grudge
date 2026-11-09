@@ -1,0 +1,63 @@
+name: Daily Ballpark Puzzle Pipeline (04:00 UTC)
+
+on:
+  schedule:
+    # 04:00 UTC every day
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-ballpark-puzzle:
+    name: Generate Next Day's Ballpark Puzzle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Ballpark dependencies
+        working-directory: ballpark
+        run: npm ci || npm install
+
+      - name: Run Nightly Question Generation & Verification
+        working-directory: ballpark
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BALLPARK_WORKER_URL: ${{ secrets.BALLPARK_WORKER_URL || 'https://ballpark-backend.adityapdixit.workers.dev' }}
+          APPROVAL_SECRET: ${{ secrets.APPROVAL_SECRET || 'ballpark-admin-secret-key' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          REVIEW_EMAIL_RECIPIENT: ${{ secrets.REVIEW_EMAIL_RECIPIENT }}
+        run: |
+          npm run generate
+
+      - name: Run Seed / Backlog Update
+        working-directory: ballpark
+        run: |
+          npm run seed
+
+      - name: Upload Candidate Preview Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ballpark-daily-preview
+          path: |
+            ballpark/backlog/fixtures.json
+          retention-days: 7
+
+      - name: Commit Backlog & Fixtures Updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ballpark/backlog/ ballpark_today.json public/ballpark_today.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(ballpark): update daily candidate and backlog fixtures [skip ci]"
+            git push origin main
+          fi
