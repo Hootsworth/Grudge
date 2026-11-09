@@ -1,0 +1,59 @@
+name: Daily Pinpoint Puzzle Pipeline (03:00 UTC)
+
+on:
+  schedule:
+    # 03:00 UTC every day
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-pinpoint-puzzle:
+    name: Generate Next Day's Pinpoint Puzzle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Pinpoint dependencies
+        working-directory: pinpoint
+        run: npm ci || npm install
+
+      - name: Run Nightly Spot Generation & Pre-Rendering
+        working-directory: pinpoint
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PINPOINT_WORKER_URL: ${{ secrets.PINPOINT_WORKER_URL || 'https://pinpoint-backend.adityapdixit.workers.dev' }}
+          APPROVAL_SECRET: ${{ secrets.APPROVAL_SECRET || 'pinpoint-admin-secret-key' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          REVIEW_EMAIL_RECIPIENT: ${{ secrets.REVIEW_EMAIL_RECIPIENT }}
+        run: |
+          node --experimental-strip-types generator/generate.ts
+
+      - name: Upload Candidate Preview Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pinpoint-daily-preview
+          path: |
+            pinpoint/backlog/pending_*.json
+            pinpoint/backlog/preview_email_*.html
+          retention-days: 7
+
+      - name: Commit Backlog & Fixtures Updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add pinpoint/backlog/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(pinpoint): update daily candidate and backlog fixtures [skip ci]"
+            git push origin main
+          fi

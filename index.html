@@ -189,6 +189,23 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <div class="tag"><span>Cryptic</span><span>Unlimited</span></div>
 <h2>PassPhew</h2><p>One username. One cryptic clue. Unlimited password guesses. Crack the daily vault.</p>
 <div class="play">Crack the vault<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
+
+<!-- Game 5: Pinpoint -->
+<a class="g" href="pinpoint.html" style="--bgc:#ff7a6b">
+<div class="art"><div class="pinpoint-art">
+<svg viewBox="0 0 100 100" style="width:100px;height:100px">
+  <circle cx="50" cy="50" r="44" fill="#b9dcf2" stroke="#14131a" stroke-width="4"/>
+  <!-- Target Crosshair & Pin -->
+  <circle cx="50" cy="50" r="28" fill="none" stroke="#14131a" stroke-width="2.5" stroke-dasharray="4 3"/>
+  <line x1="50" y1="12" x2="50" y2="88" stroke="#14131a" stroke-width="2.5"/>
+  <line x1="12" y1="50" x2="88" y2="50" stroke="#14131a" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="14" fill="#ff7a6b" stroke="#14131a" stroke-width="3"/>
+  <circle cx="50" cy="50" r="5" fill="#fffaf0"/>
+</svg>
+</div></div>
+<div class="tag"><span>Geography</span><span>5 spots</span></div>
+<h2>Pinpoint</h2><p>Unlabeled windows of coastlines and borders. Drop a pin on the world map. Read the shape of the land.</p>
+<div class="play">Find mystery spots<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
 </section>
 
 <section class="soon">
@@ -211,7 +228,7 @@ const loadGames=()=>{
     if(!manifest||!manifest.live)return;
     const liveSec=document.querySelector(".live");
     if(!liveSec)return;
-    const known={"fibber":1,"strata":1,"kin":1,"passphew":1};
+    const known={"fibber":1,"strata":1,"kin":1,"passphew":1,"pinpoint":1};
     const custom=manifest.live.filter(g=>!known[g.id]&&!rendered[g.id]);
     custom.forEach((g,idx)=>{
       rendered[g.id]=true;

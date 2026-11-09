@@ -43,11 +43,25 @@ jobs:
         working-directory: kin
         run: npm install --no-audit
 
+      - name: Install PassPhew dependencies
+        working-directory: passphew
+        run: npm install --no-audit
+
+      - name: Install Pinpoint dependencies
+        working-directory: pinpoint
+        run: npm install --no-audit
+
       - name: Run Strata backend tests
         run: npm test
 
       - name: Run Kin backend tests
         run: npm run test:kin
+
+      - name: Run PassPhew backend tests
+        run: npm run test:passphew
+
+      - name: Run Pinpoint backend tests
+        run: npm run test:pinpoint
 
       - name: Run Fibber Python unit tests
         run: python3 -m unittest discover -s tests -p "test_*.py"

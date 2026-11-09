@@ -1,4 +1,4 @@
-name: Deploy Cloudflare Workers (Strata, Kin & PassPhew)
+name: Deploy Cloudflare Workers (Strata, Kin, PassPhew & Pinpoint)
 
 on:
   workflow_dispatch:
@@ -8,9 +8,11 @@ on:
       - 'src/**'
       - 'kin/src/**'
       - 'passphew/src/**'
+      - 'pinpoint/worker/**'
       - 'wrangler.toml'
       - 'kin/wrangler.toml'
       - 'passphew/wrangler.toml'
+      - 'pinpoint/wrangler.toml'
 
 jobs:
   deploy-workers:
@@ -46,6 +48,8 @@ jobs:
           STRATA_DATABASE_ID: ${{ secrets.STRATA_DATABASE_ID }}
           KIN_DATABASE_ID: ${{ secrets.KIN_DATABASE_ID }}
           PASSPHEW_DATABASE_ID: ${{ secrets.PASSPHEW_DATABASE_ID }}
+          PINPOINT_DATABASE_ID: ${{ secrets.PINPOINT_DATABASE_ID }}
+          PINPOINT_KV_ID: ${{ secrets.PINPOINT_KV_ID }}
         run: |
           node scripts/setup_cf_d1.js
 
@@ -73,4 +77,13 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'passphew'
+          command: deploy
+
+      - name: Deploy Pinpoint Worker
+        if: steps.check_cf.outputs.has_token == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'pinpoint'
           command: deploy

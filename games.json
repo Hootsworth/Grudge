@@ -53,6 +53,19 @@
       "artType": "passphew",
       "backend": "worker-d1",
       "status": "live"
+    },
+    {
+      "id": "pinpoint",
+      "title": "Pinpoint",
+      "url": "pinpoint.html",
+      "tags": ["Geography", "5 spots"],
+      "desc": "Unlabeled windows of coastlines and borders. Drop a pin on the world map. Read the shape of the land.",
+      "cta": "Find mystery spots",
+      "color": "var(--c0)",
+      "bgHex": "#ff7a6b",
+      "artType": "pinpoint",
+      "backend": "worker-d1-kv",
+      "status": "live"
     }
   ],
   "lab": [

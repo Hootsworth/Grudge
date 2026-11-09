@@ -1,0 +1,12 @@
+node_modules/
+*/node_modules/
+.wrangler/
+*/.wrangler/
+.env
+*/.env
+__pycache__/
+*/__pycache__/
+*.pyc
+.DS_Store
+dist/
+_site/

@@ -22,6 +22,12 @@ const DATABASES = [
     envVar: process.env.PASSPHEW_DATABASE_ID,
     migrationDir: 'passphew/migrations',
   },
+  {
+    name: 'pinpoint-db',
+    configFile: 'pinpoint/wrangler.toml',
+    envVar: process.env.PINPOINT_DATABASE_ID,
+    migrationDir: 'pinpoint/migrations',
+  },
 ];
 
 async function main() {
@@ -87,7 +93,7 @@ async function main() {
     }
 
     // If we have a valid UUID, replace the dummy database_id in the wrangler.toml
-    if (uuid && uuid !== 'local-strata-db-id' && uuid !== 'local-kin-db-id' && uuid !== 'local-passphew-db-id') {
+    if (uuid && uuid !== 'local-strata-db-id' && uuid !== 'local-kin-db-id' && uuid !== 'local-passphew-db-id' && uuid !== 'local-pinpoint-db-id') {
       let content = fs.readFileSync(configPath, 'utf-8');
       content = content.replace(/database_id\s*=\s*["'][^"']+["']/, `database_id = "${uuid}"`);
       fs.writeFileSync(configPath, content, 'utf-8');
@@ -109,6 +115,33 @@ async function main() {
       console.warn(`[CF D1 SETUP] Warning: No real database ID could be resolved for "${db.name}".`);
       console.warn(`[CF D1 SETUP] Deployment may fail if database_id is still a placeholder like "local-${db.name}-id".`);
       console.warn(`[CF D1 SETUP] To fix: Run "npx wrangler d1 create ${db.name}" and paste the database_id into ${db.configFile}.`);
+    }
+  }
+
+  // Resolve KV Namespace for Pinpoint
+  const pinpointConfig = path.resolve(process.cwd(), 'pinpoint/wrangler.toml');
+  if (fs.existsSync(pinpointConfig)) {
+    let kvId = process.env.PINPOINT_KV_ID;
+    if (!kvId) {
+      try {
+        const kvList = execSync('npx wrangler kv namespace list', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
+        const namespaces = JSON.parse(kvList);
+        const match = namespaces.find((n) => n.title && n.title.includes('pinpoint-kv'));
+        if (match) kvId = match.id;
+      } catch (e) {}
+    }
+    if (!kvId) {
+      try {
+        const createOut = execSync('npx wrangler kv namespace create pinpoint-kv', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] });
+        const m = createOut.match(/id\s*=\s*["']([^"']+)["']/);
+        if (m) kvId = m[1];
+      } catch (e) {}
+    }
+    if (kvId && kvId !== 'local-pinpoint-kv-id') {
+      let content = fs.readFileSync(pinpointConfig, 'utf-8');
+      content = content.replace(/id\s*=\s*"local-pinpoint-kv-id"/, `id = "${kvId}"`);
+      fs.writeFileSync(pinpointConfig, content, 'utf-8');
+      console.log(`[CF SETUP] Updated pinpoint/wrangler.toml with kv id = "${kvId}"`);
     }
   }
 }
