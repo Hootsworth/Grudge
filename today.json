@@ -1,70 +1,70 @@
 {
-  "date": "2026-11-08",
+  "date": "2026-11-09",
   "rounds": [
     [
       {
-        "t": "Inflatable festival moon breaks free and rolls down busy city streets",
+        "t": "Florida man hurls a live alligator through a Wendy’s drive-thru window",
         "real": true,
-        "s": "Fuzhou, China, 2016. Typhoon Meranti."
+        "s": "Lake City, Florida, 2016. Widely reported."
       },
       {
-        "t": "Swedish post office trains badgers to sort international packages by scent",
+        "t": "Australia sends soldiers with machine guns to fight emus, and loses",
+        "real": true,
+        "s": "The Great Emu War, Western Australia, 1932."
+      },
+      {
+        "t": "Vermont town fines residents who fail to wave at snowplow drivers",
         "real": false,
         "s": "Invented for this puzzle."
       },
       {
-        "t": "Icelandic road builders divert highway around boulder believed to house elves",
+        "t": "A Minnesota town elects a dog as its mayor",
         "real": true,
-        "s": "Galgahraun lava field, Iceland, 2014."
-      },
-      {
-        "t": "Zoo monkey steals visitor’s phone and accidentally orders grocery delivery",
-        "real": true,
-        "s": "Yancheng Safari Park, China, 2021."
+        "s": "Cormorant, Minnesota elected Duke the dog in 2014."
       }
     ],
     [
       {
-        "t": "Bank robber hands teller a note written on his own birth certificate",
-        "real": true,
-        "s": "Pittsburgh, Pennsylvania, 2019."
-      },
-      {
-        "t": "Italian village issues noise complaints against church rooster crowing off-key",
+        "t": "Dutch railway offers free tickets to passengers who bring a sourdough starter",
         "real": false,
         "s": "Invented for this puzzle."
       },
       {
-        "t": "Canadian police rescue man trapped inside claw machine while trying to steal toy",
+        "t": "A penguin is knighted by the Norwegian King’s Guard",
         "real": true,
-        "s": "Edmonton, Alberta, 2019."
+        "s": "Sir Nils Olav, Edinburgh Zoo’s king penguin, holds the rank of brigadier."
       },
       {
-        "t": "Escaped cow evades police in Polish forest for months by living with wild bisons",
+        "t": "Thieves steal millions of dollars of maple syrup from a Quebec reserve",
         "real": true,
-        "s": "Bialowieza Primeval Forest, Poland, 2018."
+        "s": "The Great Canadian Maple Syrup Heist, 2011 to 2012."
+      },
+      {
+        "t": "A laughter epidemic closes schools across a region of Tanzania",
+        "real": true,
+        "s": "The 1962 Tanganyika laughter epidemic."
       }
     ],
     [
       {
-        "t": "Man legally changes name to match randomly generated password to prove point",
+        "t": "Ohio library begins lending out retired librarians as in-person search engines",
         "real": false,
         "s": "Invented for this puzzle."
       },
       {
-        "t": "Airport security stops traveler trying to smuggle twenty live pigeons in pants",
+        "t": "Alaska town keeps a cat as honorary mayor for two decades",
         "real": true,
-        "s": "Melbourne Airport, Australia, 2009."
+        "s": "Stubbs of Talkeetna, Alaska."
       },
       {
-        "t": "City council declares official state of emergency after pigeon enters building",
+        "t": "A 130-tonne fatberg clogs a London sewer, and gets put in a museum",
         "real": true,
-        "s": "Havant, Hampshire, UK, 2018."
+        "s": "Whitechapel, 2017. A chunk went to the Museum of London."
       },
       {
-        "t": "Man attempts to rob convenience store while wearing hollowed-out watermelon on head",
+        "t": "Hundreds of people dance for days in a French city and cannot stop",
         "real": true,
-        "s": "Louisa County, Virginia, 2020."
+        "s": "The Dancing Plague of 1518, Strasbourg."
       }
     ]
   ]
