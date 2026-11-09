@@ -1,31 +1,31 @@
 {
-  "plate": 1,
-  "date": "2026-11-09",
+  "plate": 2,
+  "date": "2026-11-10",
   "questions": [
     {
-      "id": "q_20261109_1",
-      "question": "How many operable commercial nuclear reactors exist worldwide as of 2024?",
-      "unit": "operable reactors"
+      "id": "q_20261110_1",
+      "question": "How many finished oil paintings did Vincent van Gogh produce during his entire decade-long artistic career?",
+      "unit": "oil paintings"
     },
     {
-      "id": "q_20261109_2",
-      "question": "How many times does an average human heart beat across an 80-year lifespan?",
-      "unit": "heartbeats"
+      "id": "q_20261110_2",
+      "question": "How many commercial passenger flights take off worldwide on a typical single day?",
+      "unit": "flights per day"
     },
     {
-      "id": "q_20261109_3",
-      "question": "How many individual ants are alive on Earth at any given time according to global ecological surveys?",
-      "unit": "ants"
+      "id": "q_20261110_3",
+      "question": "How many cells make up an average adult human body?",
+      "unit": "human cells"
     },
     {
-      "id": "q_20261109_4",
-      "question": "How many total humans are estimated to have ever been born throughout human history?",
-      "unit": "people ever born"
+      "id": "q_20261110_4",
+      "question": "How many living trees stand on planet Earth according to satellite and ground surveys?",
+      "unit": "trees"
     },
     {
-      "id": "q_20261109_5",
-      "question": "How many total litres of water are held in all of Earth’s oceans combined?",
-      "unit": "litres of ocean water"
+      "id": "q_20261110_5",
+      "question": "How many kilograms does the planet Earth weigh in total mass?",
+      "unit": "kilograms"
     }
   ]
 }

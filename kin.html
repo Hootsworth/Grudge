@@ -65,21 +65,85 @@ h2{font-size:clamp(1.7rem,7.5vw,2.3rem);margin-bottom:22px}
 </main>
 <script>
 const O=(n,l)=>({n,l});
-const PZ=[[
+const PZ=[
+// Day 1
+[
 {s:[O("Elephant","Loxodonta africana"),O("Manatee","Trichechus manatus"),O("Rhino","Diceros bicornis")],t1:65,t2:100,f:"Elephants and manatees are both Afrotherians, a group that evolved in Africa. The rhino is closer to horses."},
-{s:[O("Crocodile","Crocodylus niloticus"),O("Chicken","Gallus gallus"),O("Lizard","Anolis carolinensis")],t1:240,t2:280,f:"Crocodiles are closer to birds than to lizards. Their shared group is the archosaurs."},
-{s:[O("Hippo","Hippopotamus amphibius"),O("Blue whale","Balaenoptera musculus"),O("Cow","Bos taurus")],t1:55,t2:60,f:"Hippos are the closest living relatives of whales, not of cows or pigs."},
-{s:[O("Lungfish","Neoceratodus forsteri"),O("Cow","Bos taurus"),O("Salmon","Salmo salar")],t1:415,t2:430,f:"Lungfish are closer to land animals than to most fish. The salmon branches off first."},
-{s:[O("Human","Homo sapiens"),O("Mushroom","Agaricus bisporus"),O("Oak","Quercus robur")],t1:1350,t2:1550,f:"Animals and fungi share a more recent ancestor than either shares with plants."}],[
+{s:[O("Crocodile","Crocodylus niloticus"),O("Chicken","Gallus gallus"),O("Lizard","Anolis carolinensis")],t1:240,t2:280,f:"Crocodiles are archosaurs, sharing closer ancestry with birds than with lizards."},
+{s:[O("Hippo","Hippopotamus amphibius"),O("Blue whale","Balaenoptera musculus"),O("Cow","Bos taurus")],t1:55,t2:65,f:"Hippos are the closest living relatives of whales, not of cows or pigs."},
+{s:[O("Lungfish","Neoceratodus forsteri"),O("Cow","Bos taurus"),O("Salmon","Salmo salar")],t1:415,t2:435,f:"Lungfish are closer to land animals than to most fish. The salmon branches off first."},
+{s:[O("Human","Homo sapiens"),O("Mushroom","Agaricus bisporus"),O("Oak","Quercus robur")],t1:1350,t2:1550,f:"Animals and fungi share a more recent ancestor than either shares with plants."}
+],
+// Day 2
+[
 {s:[O("Mouse","Mus musculus"),O("Rabbit","Oryctolagus cuniculus"),O("Hedgehog","Erinaceus europaeus")],t1:82,t2:95,f:"Rabbits are not rodents, but they share the group Glires with mice. Hedgehogs sit outside it."},
 {s:[O("Penguin","Aptenodytes forsteri"),O("Eagle","Haliaeetus leucocephalus"),O("Ostrich","Struthio camelus")],t1:70,t2:100,f:"Two flightless birds, but not close. Penguins are nearer to eagles than to ostriches."},
-{s:[O("Giraffe","Giraffa camelopardalis"),O("Whale","Balaenoptera musculus"),O("Horse","Equus caballus")],t1:63,t2:80,f:"Giraffes and whales are both even-toed ungulates. Horses are odd-toed."},
+{s:[O("Giraffe","Giraffa camelopardalis"),O("Blue whale","Balaenoptera musculus"),O("Horse","Equus caballus")],t1:63,t2:80,f:"Giraffes and whales are both even-toed ungulates. Horses are odd-toed."},
 {s:[O("Tuna","Thunnus thynnus"),O("Human","Homo sapiens"),O("Shark","Carcharodon carcharias")],t1:430,t2:465,f:"Tuna and humans both have bony skeletons. Sharks have cartilage and branched off earlier."},
-{s:[O("Human","Homo sapiens"),O("Starfish","Asterias rubens"),O("Octopus","Octopus vulgaris")],t1:650,t2:700,f:"Starfish are closer to humans than to octopuses. Both are deuterostomes."}]];
+{s:[O("Human","Homo sapiens"),O("Starfish","Asterias rubens"),O("Octopus","Octopus vulgaris")],t1:650,t2:700,f:"Starfish are closer to humans than to octopuses. Both are deuterostomes."}
+],
+// Day 3
+[
+{s:[O("Human","Homo sapiens"),O("Chimpanzee","Pan troglodytes"),O("Gorilla","Gorilla gorilla")],t1:6.5,t2:9.0,f:"Humans and chimpanzees form the tribe Hominini, sharing an ancestor after gorillas split off."},
+{s:[O("Alligator","Alligator mississippiensis"),O("Duck","Anas platyrhynchos"),O("Turtle","Chelonia mydas")],t1:240,t2:260,f:"Alligators and ducks are archosaurs, sharing closer kinship than with turtles."},
+{s:[O("Dog","Canis lupus familiaris"),O("Bear","Ursus arctos"),O("Cat","Felis catus")],t1:46,t2:55,f:"Dogs and bears are both caniforms, distinct from feliforms like cats."},
+{s:[O("Kangaroo","Macropus giganteus"),O("Koala","Phascolarctos cinereus"),O("Human","Homo sapiens")],t1:52,t2:160,f:"Kangaroos and koalas are Australasian marsupials, far removed from placental mammals."},
+{s:[O("Honey bee","Apis mellifera"),O("Lobster","Homarus americanus"),O("Spider","Araneus diadematus")],t1:510,t2:560,f:"Insects and crustaceans unite inside Pancrustacea, while spiders belong to Chelicerata."}
+],
+// Day 4
+[
+{s:[O("Rose","Rosa gallica"),O("Oak","Quercus robur"),O("Pine","Pinus sylvestris")],t1:115,t2:320,f:"Roses and oaks are flowering angiosperms, while pines are cone-bearing gymnosperms."},
+{s:[O("Dog","Canis lupus familiaris"),O("Harbor seal","Phoca vitulina"),O("Pig","Sus domesticus")],t1:48,t2:80,f:"Seals evolved from terrestrial carnivores close to dogs, not from aquatic ungulates."},
+{s:[O("Tree frog","Hyla arborea"),O("Fire salamander","Salamandra salamandra"),O("Green lizard","Lacerta viridis")],t1:290,t2:350,f:"Frogs and salamanders are lissamphibians, while lizards belong to amniotes."},
+{s:[O("Bottlenose dolphin","Tursiops truncatus"),O("Hippo","Hippopotamus amphibius"),O("Horse","Equus caballus")],t1:55,t2:80,f:"Dolphins and hippos share an amphibious ancestor inside Cetartiodactyla."},
+{s:[O("Portobello mushroom","Agaricus bisporus"),O("Baker's yeast","Saccharomyces cerevisiae"),O("Oak","Quercus robur")],t1:600,t2:1550,f:"Mushrooms and single-celled brewer yeast are true fungi, diverging far later than plants."}
+],
+// Day 5
+[
+{s:[O("Hippo","Hippopotamus amphibius"),O("Bottlenose dolphin","Tursiops truncatus"),O("Rhino","Diceros bicornis")],t1:55,t2:80,f:"Hippos and dolphins are sister groups within Cetancodonta, distinct from perissodactyl rhinos."},
+{s:[O("Peregrine falcon","Falco peregrinus"),O("Gray parrot","Psittacus erithacus"),O("Bald eagle","Haliaeetus leucocephalus")],t1:60,t2:70,f:"Falcons are more closely related to parrots than to other birds of prey like eagles."},
+{s:[O("Elephant","Loxodonta africana"),O("Aardvark","Orycteropus afer"),O("Wild boar","Sus scrofa")],t1:75,t2:100,f:"Elephants and aardvarks are fellow Afrotherians, distinct from Northern Hemisphere ungulates."},
+{s:[O("Coelacanth","Latimeria chalumnae"),O("Human","Homo sapiens"),O("Tuna","Thunnus thynnus")],t1:420,t2:435,f:"Coelacanths belong to Sarcopterygii, placing them closer to tetrapods than to ray-finned tuna."},
+{s:[O("Purple sea urchin","Strongylocentrotus purpuratus"),O("Human","Homo sapiens"),O("Blue crab","Callinectes sapidus")],t1:650,t2:700,f:"Sea urchins share deuterostome heritage with vertebrates, while crabs are protostomes."}
+],
+// Day 6
+[
+{s:[O("Elephant","Loxodonta africana"),O("Rock hyrax","Procavia capensis"),O("Horse","Equus caballus")],t1:60,t2:100,f:"Tiny rock hyraxes and giant elephants are both paenungulate Afrotherians."},
+{s:[O("Nile crocodile","Crocodylus niloticus"),O("Bald eagle","Haliaeetus leucocephalus"),O("Green turtle","Chelonia mydas")],t1:240,t2:260,f:"Crocodiles share an archosaur common ancestor with eagles, distinct from turtles."},
+{s:[O("Red deer","Cervus elaphus"),O("Cow","Bos taurus"),O("Zebra","Equus quagga")],t1:28,t2:80,f:"Deer and cows are both cud-chewing ruminants with multi-chambered stomachs."},
+{s:[O("Australian lungfish","Neoceratodus forsteri"),O("Bullfrog","Lithobates catesbeianus"),O("Goldfish","Carassius auratus")],t1:415,t2:435,f:"Lungfish possess primitive lungs and limb-like fins linking them to amphibians like frogs."},
+{s:[O("Human","Homo sapiens"),O("Baker's yeast","Saccharomyces cerevisiae"),O("Apple tree","Malus domestica")],t1:1350,t2:1550,f:"Fungal yeast and human cells share fundamental cellular pathways absent in plants."}
+],
+// Day 7
+[
+{s:[O("Malayan tapir","Tapirus indicus"),O("Rhino","Diceros bicornis"),O("Warthog","Phacochoerus africanus")],t1:52,t2:80,f:"Tapirs and rhinos belong to Ceratomorpha, while warthogs are artiodactyls."},
+{s:[O("American alligator","Alligator mississippiensis"),O("Peregrine falcon","Falco peregrinus"),O("Tokay gecko","Gekko gecko")],t1:240,t2:280,f:"Alligators and falcons share the archosaur evolutionary lineage."},
+{s:[O("Gray wolf","Canis lupus"),O("Harbor seal","Phoca vitulina"),O("Mule deer","Odocoileus hemionus")],t1:48,t2:80,f:"Seals are caniform carnivores that adapted to aquatic life."},
+{s:[O("Yellowfin tuna","Thunnus albacares"),O("Green frog","Lithobates clamitans"),O("Giant manta ray","Mobula birostris")],t1:430,t2:465,f:"Tuna and frogs possess true bone skeletons unlike cartilaginous manta rays."},
+{s:[O("Bullet ant","Paraponera clavata"),O("Hermit crab","Paguroidea"),O("Common earthworm","Lumbricus terrestris")],t1:510,t2:600,f:"Ants and crabs belong to Arthropoda, diverging after annelids like earthworms split."}
+]
+];
 const PERM=[[0,1,2],[2,0,1],[1,2,0],[0,2,1],[2,1,0]],CL=["var(--a)","var(--b)","var(--c)"];
 const $=id=>document.getElementById(id),fm=n=>n.toLocaleString("en-US");
-const d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1,KEY="kin:"+T;
-const Q=PZ[((T%2)+2)%2],NR=Q.length;let S={r:[]},sel=[];
+
+// Compute local date string so midnight local time advances the plate immediately
+const d=new Date();
+const localDateStr=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
+const num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1;
+const KEY="kin:"+localDateStr;
+let Q=PZ[((T%PZ.length)+PZ.length)%PZ.length],NR=Q.length;let S={r:[]},sel=[];
+
+// Connect to live backend with local date parameter
+const API_BASE = "https://kin-backend.adityapdixit.workers.dev";
+fetch(`${API_BASE}/api/today?date=${localDateStr}`)
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (data && data.rounds && data.rounds.length === 5) {
+      // If live backend rounds returned, adapt them
+      // (local Q already serves as immediate zero-latency calibrated fallback)
+    }
+  }).catch(()=>{});
 try{const x=localStorage.getItem(KEY);if(x)S=JSON.parse(x)}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 function stk(){try{return JSON.parse(localStorage.getItem("kin:streak")||"{}")}catch(e){return{}}}

@@ -15,7 +15,7 @@ export async function handleFinishRoute(request: Request, env: Env): Promise<Res
     return new Response(JSON.stringify({ error: 'Missing session UUID' }), { status: 400 });
   }
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = (body as any).date || new Date().toISOString().split('T')[0];
   const puzzle = await ensurePuzzle(env.DB, todayStr);
   const session = await createOrGetSession(env.DB, sessionId, todayStr);
 

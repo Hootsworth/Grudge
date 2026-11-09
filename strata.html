@@ -66,6 +66,87 @@ h1{font-size:clamp(1.9rem,8vw,2.6rem);letter-spacing:-.045em;line-height:1;margi
 <div id="end"></div>
 </main>
 <script>
+const STRATA_BACKLOG = [{"plate":"The Quantum Century","events":[{"t":"Hubble discovers galaxies beyond the Milky Way","y":1924,"ap":0},{"t":"Penicillin is discovered in Alexander Fleming’s lab","y":1928,"ap":0},{"t":"Watson and Crick determine DNA double helix structure","y":1953,"ap":0},{"t":"Cosmic microwave background radiation detected","y":1964,"ap":0},{"t":"The first cloned mammal Dolly the sheep is born","y":1996,"ap":0},{"t":"Planck introduces quantum theory of black-body radiation","y":1900,"ap":0}]},{"plate":"Across Oceans & Orbits","events":[{"t":"Phoenician circumnavigation of Africa under Necho II","y":-600,"ap":1},{"t":"Vikings establish settlement at L’Anse aux Meadows","y":1000,"ap":1},{"t":"Magellan’s expedition completes global circumnavigation","y":1522,"ap":0},{"t":"Amundsen leads expedition reaching the South Pole","y":1911,"ap":0},{"t":"Yuri Gagarin completes orbital flight around Earth","y":1961,"ap":0},{"t":"Voyager 1 enters interstellar space","y":2012,"ap":0}]},{"plate":"Renaissance to Modernity","events":[{"t":"Gutenberg press produces copies of the Latin Bible","y":1455,"ap":0},{"t":"Shakespeare’s Globe Theatre opens in London","y":1599,"ap":0},{"t":"Diderot and d’Alembert publish the Encyclopedie","y":1751,"ap":0},{"t":"Beethoven conducts premiere of the Ninth Symphony","y":1824,"ap":0},{"t":"The Eiffel Tower opens for the Paris Exposition","y":1889,"ap":0},{"t":"The Louvre Museum officially opens to the public","y":1793,"ap":0}]},{"plate":"Silicon & Microchips","events":[{"t":"Wright brothers conduct sustained powered airplane flight","y":1903,"ap":0},{"t":"Bell Labs engineers invent the point-contact transistor","y":1947,"ap":0},{"t":"First message transmitted over ARPANET network","y":1969,"ap":0},{"t":"Intel releases the commercial 4004 microprocessor","y":1971,"ap":0},{"t":"Tim Berners-Lee publishes proposal for the World Wide Web","y":1989,"ap":0},{"t":"Edison demonstrates commercial incandescent electric lamp","y":1879,"ap":0}]},{"plate":"The Olympic Revival","events":[{"t":"First modern Olympic Games held in Athens","y":1896,"ap":0},{"t":"Tour de France bicycle race stages inaugural edition","y":1903,"ap":0},{"t":"Inaugural FIFA World Cup tournament held in Uruguay","y":1930,"ap":0},{"t":"Roger Bannister breaks the four-minute mile barrier","y":1954,"ap":0},{"t":"Pele wins three World Cup titles with Brazil","y":1970,"ap":0},{"t":"Miracle on Ice hockey match at Lake Placid","y":1980,"ap":0}]},{"plate":"Crowns to Republics","events":[{"t":"Peace of Westphalia ends the Thirty Years’ War","y":1648,"ap":0},{"t":"English Parliament passes the Bill of Rights","y":1689,"ap":0},{"t":"Continental Congress adopts Declaration of Independence","y":1776,"ap":0},{"t":"Storming of the Bastille sparks revolutionary change","y":1789,"ap":0},{"t":"Congress of Vienna establishes European borders","y":1815,"ap":0},{"t":"United Nations Charter signed in San Francisco","y":1945,"ap":0}]},{"plate":"Dawn of Civilization","events":[{"t":"Construction of the Great Pyramid of Giza finishes","y":-2560,"ap":1},{"t":"Babylonian king Hammurabi codifies laws on stone stele","y":-1750,"ap":1},{"t":"Inaugural ancient Olympic festival recorded at Olympia","y":-776,"ap":1},{"t":"Construction begins on the Parthenon in Athens","y":-447,"ap":0},{"t":"Julius Caesar assassinated on the Ides of March","y":-44,"ap":0},{"t":"Fall of the Western Roman Empire with Romulus Augustulus","y":476,"ap":0}]},{"plate":"From Stars to Atoms","events":[{"t":"Aristotle writes natural philosophy treatise Physics","y":-330,"ap":1},{"t":"Archimedes formulates law of buoyancy in Syracuse","y":-250,"ap":1},{"t":"Copernicus publishes heliocentric astronomical model","y":1543,"ap":0},{"t":"Newton publishes mathematical principles of gravity","y":1687,"ap":0},{"t":"Darwin publishes theory of evolution in Origin of Species","y":1859,"ap":0},{"t":"Einstein publishes theory of General Relativity","y":1915,"ap":0}]},{"plate":"The Polar & Space Race","events":[{"t":"Nansen’s ship Fram reaches far northern Arctic waters","y":1895,"ap":0},{"t":"Robert Peary expedition claims reaching North Pole","y":1909,"ap":0},{"t":"Charles Lindbergh flies solo across Atlantic Ocean","y":1927,"ap":0},{"t":"Edmund Hillary and Tenzing Norgay summit Mount Everest","y":1953,"ap":0},{"t":"Bathyscaphe Trieste dives to Challenger Deep ocean floor","y":1960,"ap":0},{"t":"Apollo 11 mission lands astronauts on the lunar surface","y":1969,"ap":0}]},{"plate":"Modernist Shocks","events":[{"t":"Van Gogh paints The Starry Night at Saint-Remy","y":1889,"ap":0},{"t":"Picasso paints proto-Cubist canvas Les Demoiselles d’Avignon","y":1907,"ap":0},{"t":"Stravinsky’s Rite of Spring ballet causes Paris riot","y":1913,"ap":0},{"t":"James Joyce publishes modernist novel Ulysses in Paris","y":1922,"ap":0},{"t":"George Orwell publishes dystopian novel Nineteen Eighty-Four","y":1949,"ap":0},{"t":"Beatles hold final public concert on Abbey Road rooftop","y":1969,"ap":0}]},{"plate":"Steam to Electricity","events":[{"t":"Newcomen constructs atmospheric steam engine for mines","y":1712,"ap":0},{"t":"James Watt patents condenser improving steam efficiency","y":1769,"ap":0},{"t":"Alessandro Volta invents the electrochemical electric battery","y":1800,"ap":0},{"t":"Morse and Vail demonstrate the electromagnetic telegraph","y":1844,"ap":0},{"t":"Alexander Graham Bell patents the speaking telephone","y":1876,"ap":0},{"t":"Guglielmo Marconi sends transatlantic wireless radio signal","y":1901,"ap":0}]},{"plate":"Cold War & Treaties","events":[{"t":"Treaty of Versailles ends World War I fighting","y":1919,"ap":0},{"t":"Twelve Western nations sign North Atlantic Treaty (NATO)","y":1949,"ap":0},{"t":"East Germany erects concrete wall dividing Berlin","y":1961,"ap":0},{"t":"Peace accords signed ending American role in Vietnam","y":1973,"ap":0},{"t":"Berlin Wall opened as crowds celebrate across border","y":1989,"ap":0},{"t":"Maastricht Treaty formally establishes European Union","y":1993,"ap":0}]},{"plate":"Iron & Classical Age","events":[{"t":"Late Bronze Age collapse strikes eastern Mediterranean kingdoms","y":-1177,"ap":1},{"t":"Assyrian king Ashurbanipal establishes royal library at Nineveh","y":-650,"ap":1},{"t":"Cyrus the Great issues declaration freeing Babylonian captives","y":-539,"ap":0},{"t":"Battle of Marathon repels Persian invasion forces","y":-490,"ap":0},{"t":"Alexander the Great defeats Persian forces at Gaugamela","y":-331,"ap":0},{"t":"Qin Shi Huang unifies warring states and founds Qin dynasty","y":-221,"ap":0}]},{"plate":"Pioneering Games","events":[{"t":"America wins inaugural yacht race around Isle of Wight","y":1851,"ap":0},{"t":"England and Scotland play first official international soccer match","y":1872,"ap":0},{"t":"Inaugural Wimbledon lawn tennis championships staged","y":1877,"ap":0},{"t":"First running of the modern Boston Marathon","y":1897,"ap":0},{"t":"Inaugural Indianapolis 500 automobile race takes place","y":1911,"ap":0},{"t":"Jesse Owens wins four gold medals at Berlin stadium","y":1936,"ap":0}]}];
+const COL=["#e07a4f","#f0b84a","#d9c48f","#94a84f","#4b8f93","#b783b3"],
+CP=["polygon(0 10%,14% 0,34% 8%,58% 0,80% 9%,100% 0,100% 90%,86% 100%,62% 91%,40% 100%,16% 92%,0 100%)","polygon(0 0,18% 9%,40% 0,64% 8%,84% 0,100% 9%,100% 100%,82% 91%,58% 100%,36% 92%,14% 100%,0 91%)","polygon(0 6%,22% 0,46% 9%,70% 0,100% 8%,100% 94%,78% 100%,52% 92%,28% 100%,0 93%)","polygon(0 0,26% 8%,50% 0,76% 9%,100% 0,100% 100%,74% 92%,48% 100%,24% 91%,0 100%)"];
+const $=id=>document.getElementById(id),H=68,STEP=62,N=6,MAXA=4;
+
+// Compute local date string so midnight local time advances the plate immediately
+const d=new Date();
+const localDateStr=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
+const num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1;
+const KEY="strata:"+localDateStr;
+
+const dayTemplate = STRATA_BACKLOG[((T % STRATA_BACKLOG.length) + STRATA_BACKLOG.length) % STRATA_BACKLOG.length];
+const EV = dayTemplate.events.map((e, i) => ({ ...e, id: i }));
+const truth = EV.slice().sort((a, b) => b.y - a.y).map(e => e.id);-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Strata — dig history into order</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#f1e6d0;--ink:#2a1d14;--mute:#8a7660;--line:#d9c9a8;--panel:#e8d9b8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17110d;--ink:#f4e7d0;--mute:#9b8870;--line:#33271e;--panel:#221a14}}
+:root[data-theme="dark"]{--bg:#17110d;--ink:#f4e7d0;--mute:#9b8870;--line:#33271e;--panel:#221a14}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Syne,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+main{max-width:560px;margin:0 auto;padding:18px 16px 56px}
+.mono{font-family:"DM Mono",ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.logo{font-weight:800;font-size:1.7rem;letter-spacing:-.04em;display:flex;align-items:center;gap:10px}
+.logo i{display:flex;flex-direction:column;gap:2px}.logo i b{display:block;height:5px;border-radius:2px;width:22px}
+.logo i b:nth-child(1){background:#6bbf59}.logo i b:nth-child(2){background:#e8a94a}.logo i b:nth-child(3){background:#c4603f}.logo i b:nth-child(4){background:#7a5a8c}
+.digs-counter{display:flex;gap:8px;align-items:center;color:var(--mute);font-family:"DM Mono",ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+.pips{display:flex;gap:6px;align-items:center}
+.pips span{width:12px;height:12px;border-radius:50%;border:2px solid var(--mute);transition:background .3s;box-sizing:border-box;display:inline-block;flex-shrink:0}
+.pips span.u{background:var(--ink);border-color:var(--ink)}
+.back{display:inline-flex;align-items:center;color:var(--mute);text-decoration:none;font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border:2px solid var(--line);border-radius:999px;transition:color .2s,border-color .2s}
+.back:hover{color:var(--ink);border-color:var(--ink)}
+h1{font-size:clamp(1.9rem,8vw,2.6rem);letter-spacing:-.045em;line-height:1;margin:0 0 8px;font-weight:800;animation:rise .7s both}
+.sub{color:var(--mute);margin:0 0 20px;font-family:"DM Mono",monospace;font-size:.82rem;line-height:1.5}
+.lab{display:flex;justify-content:space-between;color:var(--mute);margin:0 4px 6px}
+.surf{height:12px;background:#6bbf59;border-radius:6px 6px 0 0;margin-bottom:6px}
+.bed{height:16px;margin-top:6px;border-radius:0 0 8px 8px;background:repeating-linear-gradient(90deg,var(--ink) 0 14px,var(--mute) 14px 22px);opacity:.55}
+#list{position:relative}
+.card{position:absolute;left:0;right:0;height:68px;transition:transform .32s cubic-bezier(.2,.8,.2,1);animation:fade .5s both;animation-delay:calc(var(--i)*70ms)}
+.card.drag{transition:none;z-index:5;filter:drop-shadow(0 10px 14px rgba(0,0,0,.35))}
+.c{height:100%;display:flex;align-items:center;gap:12px;padding:0 20px 0 12px;background:var(--bc);color:#1c130d;position:relative}
+.grip{flex:none;width:30px;height:38px;display:grid;place-items:center;cursor:grab;touch-action:none;border-radius:8px;outline-offset:2px}
+.grip:active{cursor:grabbing}
+.grip::before{content:"";width:12px;height:22px;background:radial-gradient(circle,#1c130d 2px,transparent 2.6px) 0 0/6px 7px;opacity:.75}
+.t{flex:1;font-weight:600;font-size:.98rem;line-height:1.2;letter-spacing:-.01em}
+.yr{display:none;font:500 .82rem "DM Mono",monospace;white-space:nowrap}
+.tg{display:none;font:500 .62rem "DM Mono",monospace;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.lock .grip{display:none}.lock .tg{display:block}.lock .c::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(0,0,0,.09) 0 6px,transparent 6px 12px);pointer-events:none}
+.rev .yr{display:block}.rev .tg{display:none}
+.ok .c{animation:ok .6s}.no .c{animation:no .6s}
+.row{display:flex;gap:12px;align-items:center;margin-top:22px}
+.btn{font:800 1rem Syne,sans-serif;border:0;border-radius:999px;background:var(--ink);color:var(--bg);padding:15px 28px;cursor:pointer;transition:transform .15s,opacity .2s}
+.btn:active{transform:scale(.96)}.btn:disabled{opacity:.25;pointer-events:none}
+.say{flex:1;font-family:"DM Mono",monospace;font-size:.82rem;line-height:1.4;color:var(--mute);animation:fade .4s both}
+.end{background:var(--panel);border-radius:22px;padding:22px;margin-top:24px;animation:rise .7s both}
+.big{font-size:clamp(3rem,14vw,4.6rem);font-weight:800;letter-spacing:-.06em;line-height:.95;margin:6px 0 10px}
+.stat{font-family:"DM Mono",monospace;font-size:.84rem;line-height:1.6;color:var(--mute);margin:0 0 16px}.stat b{color:var(--ink);font-weight:500}
+.sq{display:grid;gap:5px;margin:0 0 18px}.sq div{display:flex;gap:5px}.sq i{width:26px;height:26px;border-radius:5px;background:var(--line);display:block}.sq i.g{background:#6bbf59}
+.cd{margin-top:14px;color:var(--mute)}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}}
+@keyframes fade{from{opacity:0}}
+@keyframes ok{40%{transform:scale(1.035)}}
+@keyframes no{20%{transform:translateX(-9px) rotate(-1.4deg)}45%{transform:translateX(9px) rotate(1.4deg)}70%{transform:translateX(-5px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><main>
+<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back" title="Back to Oddly">← Oddly</a><div class="logo"><i><b></b><b></b><b></b><b></b></i>Strata</div></div><div class="digs-counter"><span id="al">Digs</span><div class="pips"><span id="p0"></span><span id="p1"></span><span id="p2"></span><span id="p3"></span></div></div></header>
+<h1>Stack history in order.</h1>
+<p class="sub">Drag the grip. Newest on the surface, oldest on the bedrock. Correct layers lock in place after each dig.</p>
+<div class="lab mono"><span>Surface · newest</span><span id="n"></span></div>
+<div class="surf"></div><div id="list"></div><div class="bed"></div>
+<div class="lab mono" style="margin-top:6px"><span>Bedrock · oldest</span></div>
+<div class="row" id="ctl"><button class="btn" id="lk">Dig</button><div class="say" id="say">Six layers. Four digs. Go.</div></div>
+<div id="end"></div>
+</main>
+<script>
 const P=[
 [{t:"Gutenberg’s movable-type press starts printing",y:1440,ap:1},{t:"Constantinople falls to the Ottomans",y:1453},{t:"Columbus lands in the Americas",y:1492},{t:"The Wright brothers fly a powered aircraft",y:1903},{t:"Humans land on the Moon",y:1969},{t:"The first website goes live",y:1991}],
 [{t:"The Great Fire of London",y:1666},{t:"The US Declaration of Independence is adopted",y:1776},{t:"The Bastille is stormed",y:1789},{t:"Bell patents the telephone",y:1876},{t:"The Titanic sinks",y:1912},{t:"Penicillin is discovered",y:1928}],

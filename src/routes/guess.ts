@@ -45,7 +45,7 @@ export async function handleGuessRoute(request: Request, env: Env): Promise<Resp
   }
 
   // 3. Fetch Today's Puzzle
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = (body as any).date || new Date().toISOString().split('T')[0];
   const puzzle = await getPublishedPuzzleForDate(env.DB, todayStr);
   if (!puzzle || !puzzle.events || puzzle.events.length !== 6) {
     return new Response(JSON.stringify({ error: 'Puzzle not available for today.' }), {

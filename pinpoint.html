@@ -75,7 +75,7 @@ const sessionId = localStorage.getItem("pinpoint:session_id") || (() => {
 })();
 
 const d0 = new Date();
-const todayStr = d0.toISOString().split("T")[0];
+const todayStr = `${d0.getFullYear()}-${String(d0.getMonth()+1).padStart(2,'0')}-${String(d0.getDate()).padStart(2,'0')}`;
 const T = Math.floor(Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate()) / 864e5);
 let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
 const KEY = "pinpoint:" + todayStr;
@@ -445,7 +445,7 @@ async function end() {
 }
 
 // Fetch today metadata (plate)
-fetch(`${API_BASE}/api/today`)
+fetch(`${API_BASE}/api/today?date=${todayStr}`)
   .then(r => r.ok ? r.json() : null)
   .then(data => {
     if (data && data.plate) num = data.plate;

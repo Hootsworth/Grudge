@@ -74,17 +74,16 @@ const API_BASE = window.location.hostname.includes("workers.dev")
   ? ""
   : "https://passphew-backend.adityapdixit.workers.dev";
 
-const P=[
-{u:"night_owl",c:"Silent, shuffled, means to hear",a:"listen",e:"SILENT, shuffled, is LISTEN. The definition is “to hear”."},
-{u:"root_admin",c:"Opener of locks, then the error for a missing page",a:"key404",e:"A KEY opens locks. HTTP error 404 means “page not found”."},
-{u:"winston_s",c:"Orwell’s dystopian year, read in the mirror",a:"4891",e:"Nineteen Eighty-Four reversed is 4891."},
-{u:"guest_001",c:"Cut roughly, then the Queen: one who breaks into systems",a:"hacker",e:"HACK (cut roughly) + ER (the Queen, Elizabeth Regina) = HACKER."},
-{u:"q_branch",c:"Snoop, then Bond’s digits",a:"spy007",e:"A SPY is a snoop, and James Bond’s code number is 007."},
-{u:"cipher_clerk",c:"Coded, but not finished, is a secret system",a:"code",e:"CODED, not finished (last letter removed), is CODE."}];
+const P = [{"u":"night_owl","c":"Silent, shuffled, means to hear","a":"listen","e":"SILENT, shuffled, is LISTEN. The definition is “to hear”."},{"u":"root_admin","c":"Opener of locks, then the error for a missing page","a":"key404","e":"A KEY opens locks. HTTP error 404 means “page not found”."},{"u":"winston_s","c":"Orwell’s dystopian year, read in the mirror","a":"4891","e":"Nineteen Eighty-Four reversed is 4891."},{"u":"guest_001","c":"Cut roughly, then the Queen: one who breaks into systems","a":"hacker","e":"HACK (cut roughly) + ER (the Queen, Elizabeth Regina) = HACKER."},{"u":"q_branch","c":"Snoop, then Bond’s digits","a":"spy007","e":"A SPY is a snoop, and James Bond’s code number is 007."},{"u":"cipher_clerk","c":"Coded, but not finished, is a secret system","a":"code","e":"CODED, not finished (last letter removed), is CODE."},{"u":"crypt_keeper","c":"Concealed in dark safe: a sharp device","a":"knife","e":"Hidden inside “darK saFE” is KNIFE."},{"u":"heist_lead","c":"Container for stolen goods held by street","a":"stash","e":"ST (street) + ASH (container) = STASH (hidden stolen goods)."},{"u":"spectre_nine","c":"Sounding like a flower, but an explosion in the corridor","a":"bloom","e":"Homophone of BOOM/BLOOM: sounds like a flower (bloom)."},{"u":"enigma_operator","c":"Protected vault safe, or secure in a harbor","a":"lock","e":"Double definition: LOCK (device on vault door) and LOCK (canal/harbor enclosure)."},{"u":"safecracker_vic","c":"Torn map holds fifty inside: a diagram of secrets","a":"plan","e":"PAN (map/scan) around L (fifty) gives PLAN."},{"u":"ghost_protocol","c":"Ten reversed, then the secret operative","a":"01mole","e":"10 reversed gives 01 + MOLE (secret operative) = 01MOLE."},{"u":"deep_throat","c":"Covert disclosure, or a puncture in the pipeline","a":"leak","e":"Double definition: LEAK (secret intelligence disclosure) and LEAK (puncture in pipeline)."},{"u":"shadow_broker","c":"Scrambled tokens yield hidden stronghold","a":"knot","e":"Anagram of KNOT (secure tie)."}];
 const $=id=>document.getElementById(id),nz=s=>s.toLowerCase().replace(/[^a-z0-9]/g,"");
-const d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),KEY="passphew:"+T;
-let num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1;
-let Z=P[((T%6)+6)%6];
+
+// Compute local date string so midnight local time advances the plate immediately
+const d = new Date();
+const localDateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const T = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+const KEY = "passphew:" + localDateStr;
+let num = T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1;
+let Z = P[((T % P.length) + P.length) % P.length];
 let S={n:0,over:false},deg=0,buf="",lock=false;
 
 // Anonymous session UUID for API tracking
@@ -123,7 +122,7 @@ async function submit(){
     const res = await fetch(`${API_BASE}/api/guess`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session: sessionId, guess: v })
+      body: JSON.stringify({ session: sessionId, guess: v, date: localDateStr })
     });
     if (res.status === 429) {
       const data = await res.json().catch(()=>({}));
@@ -181,7 +180,7 @@ function applyLivePuzzle(data){
   }
 }
 
-fetch(`${API_BASE}/api/today`)
+fetch(`${API_BASE}/api/today?date=${localDateStr}`)
   .then(r=>r.ok?r.json():null)
   .then(data=>{
     if(data) applyLivePuzzle(data);

@@ -7,9 +7,9 @@ import { hashIp, checkIpRateLimit } from '../rate_limit.ts';
 export async function handleStepRoute(request: Request, env: Env): Promise<Response> {
   const rawIp = request.headers.get('CF-Connecting-IP') || '127.0.0.1';
   const ipHash = await hashIp(rawIp);
-  const todayStr = new Date().toISOString().split('T')[0];
+  const fallbackDate = new Date().toISOString().split('T')[0];
 
-  const rateCheck = await checkIpRateLimit(env.DB, ipHash, todayStr);
+  const rateCheck = await checkIpRateLimit(env.DB, ipHash, fallbackDate);
   if (!rateCheck.allowed) {
     return new Response(JSON.stringify({ error: rateCheck.lockoutMessage || 'Rate limit active' }), {
       status: 429,
@@ -28,6 +28,7 @@ export async function handleStepRoute(request: Request, env: Env): Promise<Respo
   }
 
   const { session: sessionId, round: requestedRound, word: rawWord } = body;
+  const todayStr = (body as any).date || fallbackDate;
 
   if (!sessionId || typeof sessionId !== 'string') {
     return new Response(JSON.stringify({ error: 'Missing or invalid session UUID' }), {

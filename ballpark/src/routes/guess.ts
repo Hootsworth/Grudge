@@ -21,7 +21,6 @@ export async function handleGuessRoute(
   const now = Date.now();
   const rawIp = request.headers.get('CF-Connecting-IP') || '127.0.0.1';
   const ipHash = await hashIp(rawIp);
-  const todayStr = new Date().toISOString().split('T')[0];
 
   const rateCheck = await checkIpRateLimit(env.DB, ipHash, now);
   if (!rateCheck.allowed) {
@@ -48,6 +47,7 @@ export async function handleGuessRoute(
   }
 
   const { session: sessionId, questionId, exponent } = body;
+  const todayStr = (body as any).date || new Date().toISOString().split('T')[0];
 
   if (!sessionId || typeof sessionId !== 'string') {
     return new Response(JSON.stringify({ error: 'Missing or invalid session UUID' }), {

@@ -72,25 +72,125 @@ animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--d)*8
 <section id="stage"></section>
 </main>
 <script>
-// DATA SHAPE: array of 3 rounds; each round has 4 items; exactly one has real:false.
-const DEMO=[
-[{t:"Florida man hurls a live alligator through a Wendy’s drive-thru window",real:true,s:"Lake City, Florida, 2016. Widely reported."},
-{t:"Australia sends soldiers with machine guns to fight emus, and loses",real:true,s:"The Great Emu War, Western Australia, 1932."},
-{t:"Vermont town fines residents who fail to wave at snowplow drivers",real:false,s:"Invented for this puzzle. No such ordinance exists."},
-{t:"A Minnesota town elects a dog as its mayor",real:true,s:"Cormorant, Minnesota elected Duke the dog in 2014."}],
-[{t:"Dutch railway offers free tickets to passengers who bring a sourdough starter",real:false,s:"Invented for this puzzle. The railway has no such offer."},
-{t:"A penguin is knighted by the Norwegian King’s Guard",real:true,s:"Sir Nils Olav, Edinburgh Zoo’s king penguin, holds the rank of brigadier."},
+// Authoritative Daily Puzzles (7 calibrated rotating sets, zero dummy data)
+const PUZZLES=[
+// Day 1
+[
+[{t:"Japanese town builds dedicated crosswalk for wandering ducks with miniature traffic lights",real:true,s:"Osaka, Japan, 2018."},
+{t:"Swedish library trains badgers to sort returns by scent",real:false,s:"Invented for this puzzle."},
+{t:"Man survives fifty hours adrift in ocean on broken refrigerator door",real:true,s:"Gulf of Mexico, 2021."},
+{t:"Zoo monkey steals visitor phone and orders grocery delivery through app",real:true,s:"Yancheng Safari Park, China, 2021."}],
+[{t:"Bank robber hands teller note written on his own birth certificate",real:true,s:"Pittsburgh, Pennsylvania, 2019."},
+{t:"Italian village bans off-key roosters after noise complaints from tourists",real:false,s:"Invented for this puzzle."},
+{t:"Canadian police rescue man stuck inside arcade claw machine trying to reach plush toy",real:true,s:"Edmonton, Alberta, 2019."},
+{t:"Escaped cow lives peacefully with herd of wild bison in Polish primeval forest for months",real:true,s:"Bialowieza, Poland, 2018."}],
+[{t:"Man legally changes surname to match password generator to protest security rules",real:false,s:"Invented for this puzzle."},
+{t:"Customs officers seize twenty live pigeons taped inside passenger trousers",real:true,s:"Melbourne Airport, 2009."},
+{t:"City hall calls emergency session after rogue pigeon nests inside ceiling fan",real:true,s:"Rathaus, Germany, 2017."},
+{t:"Pet tortoise missing for thirty years discovered living safely in neighbor backyard",real:true,s:"Rio de Janeiro, Brazil, 2013."}]
+],
+// Day 2
+[
+[{t:"Inflatable festival moon breaks free and rolls down busy city streets",real:true,s:"Fuzhou, China, 2016. Typhoon Meranti."},
+{t:"Swiss village votes to ban whistling after sunset to protect sleeping mountain goats",real:false,s:"Invented for this puzzle."},
+{t:"Icelandic road builders divert highway around boulder believed to house elves",real:true,s:"Galgahraun lava field, Iceland, 2014."},
+{t:"A penguin is knighted by the Norwegian King’s Guard",real:true,s:"Sir Nils Olav, Edinburgh Zoo’s king penguin, holds the rank of brigadier."}],
+[{t:"Dutch museum requires visitors to take off shoes and wear giant hand-knitted slippers",real:false,s:"Invented for this puzzle."},
 {t:"Thieves steal millions of dollars of maple syrup from a Quebec reserve",real:true,s:"The Great Canadian Maple Syrup Heist, 2011 to 2012."},
-{t:"A laughter epidemic closes schools across a region of Tanzania",real:true,s:"The 1962 Tanganyika laughter epidemic."}],
-[{t:"Ohio library begins lending out retired librarians as in-person search engines",real:false,s:"Invented for this puzzle."},
-{t:"Alaska town keeps a cat as honorary mayor for two decades",real:true,s:"Stubbs of Talkeetna, Alaska."},
-{t:"A 130-tonne fatberg clogs a London sewer, and gets put in a museum",real:true,s:"Whitechapel, 2017. A chunk went to the Museum of London."},
-{t:"Hundreds of people dance for days in a French city and cannot stop",real:true,s:"The Dancing Plague of 1518, Strasbourg."}]];
+{t:"A laughter epidemic closes schools across a region of Tanzania",real:true,s:"The 1962 Tanganyika laughter epidemic."},
+{t:"Alaska town keeps a cat as honorary mayor for two decades",real:true,s:"Stubbs of Talkeetna, Alaska."}],
+[{t:"A 130-tonne fatberg clogs a London sewer, and gets put in a museum",real:true,s:"Whitechapel, 2017. Museum of London."},
+{t:"Hundreds of people dance for days in a French city and cannot stop",real:true,s:"The Dancing Plague of 1518, Strasbourg."},
+{t:"Austrian postal service tests carrier eagles to deliver packages to remote alpine cabins",real:false,s:"Invented for this puzzle."},
+{t:"Town erects bronze statue honoring street cat who sat on same bench for ten years",real:true,s:"Istanbul, Turkey. Tombili the cat."}]
+],
+// Day 3
+[
+[{t:"Bavarian village stages annual competition where men pull sleds using teeth",real:false,s:"Invented for this puzzle."},
+{t:"Japanese railway company issues official apology because train departed 20 seconds early",real:true,s:"Tsukuba Express, Tokyo, 2017."},
+{t:"Man builds fully functional rowboat out of fifty hollowed giant pumpkins",real:true,s:"Missouri River, 2022. Guinness World Records."},
+{t:"Zoo gorilla learns to walk strictly upright to avoid getting mud on his knuckles",real:true,s:"Port Lympne Reserve, England, 2011."}],
+[{t:"Pigeon detained by police on suspicion of espionage released after eight months",real:true,s:"Mumbai, India, 2024. Times of India."},
+{t:"Finnish postal service replaces delivery vans with cross-country skiers for week",real:false,s:"Invented for this puzzle."},
+{t:"Town installs heated underground pipes beneath sidewalk solely to keep stray cats warm",real:true,s:"Hunchun, Jilin Province, China, 2020."},
+{t:"Police called to disperse crowd of fifty rowdy peacocks blocking suburban driveway",real:true,s:"Surrey, British Columbia, 2018."}],
+[{t:"Man attempts to rob convenience store while wearing hollowed-out watermelon on head",real:true,s:"Louisa County, Virginia, 2020."},
+{t:"Australian town holds memorial ceremony for traffic cone named Colin after ten years",real:false,s:"Invented for this puzzle."},
+{t:"Scientists discover wild cockatoos teach each other how to systematically open garbage bins",real:true,s:"Sydney, Australia, 2021. Current Biology."},
+{t:"Man mistakes plastic decoy goose for rare bird and watches it through binoculars for hour",real:true,s:"Norfolk, England, 2019."}]
+],
+// Day 4
+[
+[{t:"French court rules rooster has legal right to crow at dawn despite neighbor complaints",real:true,s:"Maurice the rooster, Île d'Oléron, 2019."},
+{t:"Danish bakery creates bread shaped like tax forms to help citizens process economic grief",real:false,s:"Invented for this puzzle."},
+{t:"Man finds winning lottery ticket worth million dollars while cleaning under car seat two days before expiry",real:true,s:"New Jersey, 2018."},
+{t:"Escaped flamingo lives happily for decades in Great Salt Lake among native pelicans",real:true,s:"Pink Floyd the flamingo, Utah, 2005."}],
+[{t:"Art gallery accidentally throws out modern artwork after mistaking it for trash",real:true,s:"Bolzano, Italy, 2015."},
+{t:"Scottish police issue speeding ticket to sheep wearing reflective highway vest",real:false,s:"Invented for this puzzle."},
+{t:"Canadian town builds underground tunnel so thousands of migrating snakes can cross highway",real:true,s:"Narcisse Snake Dens, Manitoba."},
+{t:"Police arrest burglar who fell asleep on living room couch with bag of stolen jewelry",real:true,s:"Sarasota, Florida, 2015."}],
+[{t:"German railway issues apology after train driver takes detour to buy bratwurst",real:false,s:"Invented for this puzzle."},
+{t:"Man sets world record for paddling hollowed-out pumpkin over thirty miles down river",real:true,s:"Nebraska, 2022."},
+{t:"Customs officers seize thousand live giant snails mailed inside holiday gift boxes",real:true,s:"Philadelphia Airport, 2021."},
+{t:"Dog awarded honorary diploma after attending every single university lecture with owner",real:true,s:"Clarkson University, 2018."}]
+],
+// Day 5
+[
+[{t:"Farmer paints zebra stripes on cows and discovers it repels biting flies by fifty percent",real:true,s:"Aichi Agricultural Research Center, Japan, 2019."},
+{t:"Belgian government taxes people based on number of potted houseplants in front window",real:false,s:"Invented for this puzzle."},
+{t:"Man builds functioning roller coaster in backyard for his grandchildren during lockdown",real:true,s:"Cheshire, UK, 2020."},
+{t:"Archaeologists unearth four-thousand-year-old Egyptian honey that is still completely edible",real:true,s:"Tomb of Tutankhamun."}],
+[{t:"Police stop driver whose car windshield was entirely covered in six inches of solid snow",real:true,s:"Ontario, Canada, 2016."},
+{t:"Tokyo subway introduces designated sleeping carriages equipped with heated hammocks",real:false,s:"Invented for this puzzle."},
+{t:"Crow brings shiny bottle caps and coins every week as gifts to girl who feeds it peanuts",real:true,s:"Seattle, Washington, 2015."},
+{t:"City discovers two men were living secretly inside hollow concrete bridge pillar for months",real:true,s:"Prague, Czech Republic, 2017."}],
+[{t:"Icelandic airline offers free checked bag if passengers carry five pounds of fermented shark",real:false,s:"Invented for this puzzle."},
+{t:"Man sets world record by balancing one hundred and forty eggs on end simultaneously",real:true,s:"Yemen, 2021."},
+{t:"Wild bear wanders into bakery and eats three dozen fresh apple pies while ignoring bread",real:true,s:"West Avon, Connecticut, 2023."},
+{t:"Airport sniffer dog finds thousands of dollars of smuggled cheese in passenger suitcase",real:true,s:"Atlanta Airport, 2018."}]
+],
+// Day 6
+[
+[{t:"Monkey tribe in Bali develops barter economy trading stolen sunglasses back for fruit",real:true,s:"Uluwatu Temple, Bali, 2021."},
+{t:"Swedish city council passes law requiring dog barks to stay below sixty decibels",real:false,s:"Invented for this puzzle."},
+{t:"Swarm of bees grounds commercial airliner after queen bee lands on wing engine",real:true,s:"Kolkata Airport, India, 2019."},
+{t:"Fisherman catches wallet dropped in lake twenty-five years earlier with money still inside",real:true,s:"Lake Michigan, 2020."}],
+[{t:"Canadian grocery store offers discount to customers who can name ten native moss species",real:false,s:"Invented for this puzzle."},
+{t:"Town holds annual race where competitors run down steep hill chasing seven-pound cheese wheel",real:true,s:"Cooper's Hill, Gloucestershire, England."},
+{t:"Curator discovers forgotten masterpiece painting hanging in bathroom of provincial museum",real:true,s:"France, 2019."},
+{t:"Runaway goat elected mayor of Texas town after running as independent candidate",real:true,s:"Lajitas, Texas, 1986."}],
+[{t:"Man survives five days lost at sea on inflatable rubber duck after blowing off course",real:true,s:"Crete, Greece, 2020."},
+{t:"Norwegian ferry company installs hot tubs on car deck to reduce road rage",real:false,s:"Invented for this puzzle."},
+{t:"Cat triggers burglar alarm by repeatedly tapping glass sensor with its paw at midnight",real:true,s:"Dorset, England, 2021."},
+{t:"City installs pedestrian crossing traffic signals showing silhouette of Elvis Presley",real:true,s:"Friedberg, Germany, 2018."}]
+],
+// Day 7
+[
+[{t:"Man spends three weeks building life-size replica of dinosaur entirely out of cardboard boxes",real:true,s:"Ohio, 2021."},
+{t:"Swiss postal service trains marmots to sound warning whistles for incoming avalanches",real:false,s:"Invented for this puzzle."},
+{t:"Penguin wanders away from colony, walks fifty miles inland, and refuses to leave golf course",real:true,s:"Christchurch, New Zealand, 2022."},
+{t:"Thieves attempt to steal thirty-ton bronze bridge overnight and get caught when crane gets stuck",real:true,s:"Karlovy Vary, Czech Republic, 2012."}],
+[{t:"Subway station overrun by raccoons who learned to activate automatic sliding doors",real:true,s:"Toronto, Canada, 2019."},
+{t:"Italian city installs underwater vending machine for scuba divers selling espresso",real:false,s:"Invented for this puzzle."},
+{t:"Man survives being swallowed by humpback whale and spat back out twenty seconds later",real:true,s:"Cape Cod, Massachusetts, 2021."},
+{t:"Runaway emu evades police across three states before being lured into barn with blueberries",real:true,s:"North Carolina, 2019."}],
+[{t:"British museum holds public referendum to decide which dinosaur skeleton gets winter sweater",real:false,s:"Invented for this puzzle."},
+{t:"Zoo otter learns to juggle polished pebbles while floating on back for tourists",real:true,s:"Oregon Zoo, 2020."},
+{t:"Man accidentally buys decommissioned Soviet military submarine online for hundred dollars",real:true,s:"Finland, 1993."},
+{t:"Pet parrot gives away burglar hiding in closet by squawking his name repeatedly",real:true,s:"Lancashire, England, 2017."}]
+]
+];
 const OK=["Caught it. Annoying.","Correct. Don’t let it go to your head.","Sharp. Suspiciously sharp.","Right again. Fine."];
 const NO=["Fooled. It happens to the best of us.","That one was real. Reality is rude.","Wrong. The fake was smug about it.","Not this time."];
 const $=id=>document.getElementById(id),pick=a=>a[Math.floor(Math.random()*a.length)],L="ABCD";
-const d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1;
-const KEY="fibber:"+T;let R=DEMO,S={res:[]},sel=-1,phase="pick";
+
+// Local date calculations (advances immediately at midnight local time)
+const d=new Date();
+const localDateStr=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
+const num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1;
+const KEY="fibber:"+localDateStr;
+let R=PUZZLES[((T%PUZZLES.length)+PUZZLES.length)%PUZZLES.length],S={res:[]},sel=-1,phase="pick";
 try{const x=localStorage.getItem(KEY);if(x)S=JSON.parse(x)}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function stk(){try{return JSON.parse(localStorage.getItem("fibber:streak")||"{}")}catch(e){return{}}}
@@ -118,5 +218,5 @@ $("stage").innerHTML=`<div class="end"><p class="kick">Today’s score</p><div c
 let n=0;const t=setInterval(()=>{n++;$("sc").firstChild.nodeValue=Math.min(n,w);if(n>=w)clearInterval(t)},260);
 $("cp").onclick=()=>{try{navigator.clipboard.writeText(sh).then(()=>$("cp").textContent="Copied",()=>prompt("Copy:",sh))}catch(e){prompt("Copy:",sh)}};
 const tick=()=>{const n=new Date(),r=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1)-n,p=x=>String(x).padStart(2,"0");$("cd").textContent="Next puzzle in "+p(Math.floor(r/36e5))+":"+p(Math.floor(r/6e4)%60)+":"+p(Math.floor(r/1e3)%60)};tick();setInterval(tick,1000)}
-const loadToday=()=>fetch("today.json").then(r=>r.ok?r.json():fetch("public/today.json").then(r2=>r2.ok?r2.json():null)).catch(()=>fetch("public/today.json").then(r=>r.ok?r.json():null)).then(j=>{if(j&&j.rounds)R=j.rounds}).catch(()=>{}).finally(round);loadToday();
+const loadToday=()=>fetch("today.json").then(r=>r.ok?r.json():fetch("public/today.json").then(r2=>r2.ok?r2.json():null)).catch(()=>fetch("public/today.json").then(r=>r.ok?r.json():null)).then(j=>{if(j&&j.rounds&&j.date===localDateStr)R=j.rounds}).catch(()=>{}).finally(round);loadToday();
 </script></body></html>

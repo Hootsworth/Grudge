@@ -67,7 +67,7 @@ export async function handleGuessRoute(
     });
   }
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = (body as any).date || new Date().toISOString().split('T')[0];
 
   // 2. Fetch or ensure today's live puzzle in DB
   const puzzle = await ensureTodayPuzzle(env.DB, todayStr);

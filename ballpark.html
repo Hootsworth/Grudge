@@ -77,7 +77,7 @@ function sig(n){if(n<=0)return 0;const f=Math.pow(10,Math.floor(Math.log10(n))-1
 function fmt(v){const u=U.find(x=>v>=x[0]*.995);if(!u)return String(+sig(v).toFixed(1));return +(sig(v/u[0])).toFixed(1)+" "+u[1]}
 
 const d0 = new Date();
-const todayStr = d0.toISOString().split("T")[0];
+const todayStr = `${d0.getFullYear()}-${String(d0.getMonth() + 1).padStart(2, '0')}-${String(d0.getDate()).padStart(2, '0')}`;
 const T = Math.floor(Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate()) / 864e5);
 let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
 const KEY = "ballpark:" + todayStr;
@@ -188,7 +188,7 @@ async function lockGuess() {
     const res = await fetch(`${API_BASE}/api/guess`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session: sessionId, questionId: q.id, exponent: x })
+      body: JSON.stringify({ session: sessionId, questionId: q.id, exponent: x, date: todayStr })
     });
 
     if (!res.ok) {
@@ -301,7 +301,7 @@ document.addEventListener("keydown", e => {
 });
 
 // Load today's questions from Worker API
-fetch(`${API_BASE}/api/today?session=${sessionId}`)
+fetch(`${API_BASE}/api/today?session=${sessionId}&date=${todayStr}`)
   .then(r => r.ok ? r.json() : null)
   .then(data => {
     if (data && data.questions && data.questions.length >= 5) {

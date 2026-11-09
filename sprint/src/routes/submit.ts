@@ -8,9 +8,9 @@ export async function handleSubmitWordRoute(request: Request, env: Env): Promise
   const now = Date.now();
   const rawIp = request.headers.get('CF-Connecting-IP') || '127.0.0.1';
   const ipHash = await hashIp(rawIp);
-  const todayStr = new Date().toISOString().split('T')[0];
+  const fallbackDate = new Date().toISOString().split('T')[0];
 
-  const rateCheck = await checkIpRateLimit(env.DB, ipHash, todayStr, now);
+  const rateCheck = await checkIpRateLimit(env.DB, ipHash, fallbackDate, now);
   if (!rateCheck.allowed) {
     return new Response(JSON.stringify({ error: rateCheck.lockoutMessage || 'Rate limit active' }), {
       status: 429,
@@ -29,6 +29,7 @@ export async function handleSubmitWordRoute(request: Request, env: Env): Promise
   }
 
   const { session: sessionId, word: rawWord } = body;
+  const todayStr = (body as any).date || fallbackDate;
   if (!sessionId || typeof sessionId !== 'string') {
     return new Response(JSON.stringify({ error: 'Missing or invalid session UUID' }), {
       status: 400,

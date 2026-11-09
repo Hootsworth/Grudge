@@ -5,6 +5,7 @@ import type {
   OrganismRecord,
   DivergenceRecord,
 } from './types.ts';
+import { ORGANISMS_LIST } from './backlog/organismsData.ts';
 
 export async function getPublishedPuzzleForDate(db: D1Database, dateStr: string): Promise<PuzzleRecord | null> {
   const puzzle = await db
@@ -79,6 +80,40 @@ export async function savePuzzleWithRounds(
   puzzle: PuzzleRecord,
   rounds: RoundRecord[]
 ): Promise<void> {
+  const orgStatements: D1PreparedStatement[] = [];
+  const orgMap = new Map(ORGANISMS_LIST.map((o) => [o.id, o]));
+
+  const neededOrgIds = new Set<string>();
+  for (const r of rounds) {
+    neededOrgIds.add(r.org_a);
+    neededOrgIds.add(r.org_b);
+    neededOrgIds.add(r.org_c);
+  }
+
+  for (const orgId of neededOrgIds) {
+    const o = orgMap.get(orgId) || {
+      id: orgId,
+      name: orgId.replace('org_', '').replace('_', ' '),
+      latin: orgId,
+      taxid: 0,
+      fam: 5,
+      cat: 'Organism',
+      body: 'Standard',
+    };
+    orgStatements.push(
+      db
+        .prepare(
+          `INSERT OR IGNORE INTO organisms (id, common_name, scientific_name, ncbi_taxid, familiarity, category, body_plan)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`
+        )
+        .bind(o.id, o.name, o.latin, o.taxid || null, o.fam || 5, o.cat || 'Organism', o.body || 'Standard')
+    );
+  }
+
+  if (orgStatements.length > 0) {
+    await db.batch(orgStatements);
+  }
+
   const statements: D1PreparedStatement[] = [
     db
       .prepare(

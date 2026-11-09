@@ -18,7 +18,7 @@ export async function handleHintRoute(request: Request, env: Env): Promise<Respo
     return new Response(JSON.stringify({ error: 'Invalid session or round' }), { status: 400 });
   }
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = (body as any).date || new Date().toISOString().split('T')[0];
   const puzzle = await ensurePuzzle(env.DB, todayStr);
   const ladderTarget = puzzle.ladders.find((l) => l.round === roundNum);
 

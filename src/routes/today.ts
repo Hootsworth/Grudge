@@ -33,7 +33,8 @@ export async function handleTodayRoute(request: Request, env: Env): Promise<Resp
     });
   }
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  const url = new URL(request.url);
+  const todayStr = url.searchParams.get('date') || new Date().toISOString().split('T')[0];
 
   let puzzle = await getPublishedPuzzleForDate(env.DB, todayStr);
   if (!puzzle) {

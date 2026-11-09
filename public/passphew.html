@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PassPhew — crack the cryptic password</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@500;700&display=swap">
+<style>
+:root{--wall:#efe3c6;--line:rgba(27,36,48,.07);--ink:#1b2430;--cream:#fffaf0;--vg:#1f6f5c;--must:#f2b134;--brick:#c8463a;--ok:#2f9e6e;--mute:#6d6757;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--wall:#0e1f26;--line:rgba(255,255,255,.05);--mute:#9aa8ad}}
+:root[data-theme="dark"]{--wall:#0e1f26;--line:rgba(255,255,255,.05);--mute:#9aa8ad}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--wall);background-image:repeating-linear-gradient(90deg,var(--line) 0 2px,transparent 2px 64px);color:var(--ink);font-family:Archivo,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+main{max-width:440px;margin:0 auto;padding:12px 16px 48px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase}
+header{display:flex;justify-content:space-between;align-items:center}
+.logo{font:1.5rem "Archivo Black",sans-serif;letter-spacing:-.04em;display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none}
+.logo svg{width:22px;height:22px}.logo em{font-style:normal;color:#d98f10}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .logo,:root:not([data-theme="light"]) .meta{color:var(--cream)}}
+.meta{color:var(--mute);text-align:right}
+.note{position:relative;background:#ffe27a;color:#1b2430;border-radius:4px 4px 14px 4px;padding:18px 18px 16px;margin:18px 8px 6px;transform:rotate(-1.6deg);box-shadow:0 8px 0 rgba(0,0,0,.14);animation:slap .7s cubic-bezier(.2,1.4,.4,1) both}
+.note::before{content:"";position:absolute;left:50%;top:-12px;width:84px;height:24px;margin-left:-42px;background:rgba(255,255,255,.55);transform:rotate(3deg);border-radius:2px}
+.note::after{content:"";position:absolute;right:0;bottom:0;width:26px;height:26px;background:linear-gradient(135deg,transparent 50%,rgba(0,0,0,.16) 50%);border-radius:0 0 14px 0}
+.note small{display:block;color:rgba(27,36,48,.6);margin-bottom:6px}
+.note p{margin:0;font:700 clamp(1.15rem,5.2vw,1.45rem)/1.25 Archivo,sans-serif;letter-spacing:-.02em}
+.stage{position:relative;width:min(68vw,33vh,290px);min-width:190px;aspect-ratio:1;margin:12px auto 4px}
+.stage svg{position:relative;width:100%;height:100%;display:block;transform-origin:left center;filter:drop-shadow(0 10px 0 rgba(0,0,0,.18))}
+.glow{position:absolute;inset:4%;border-radius:50%;background:radial-gradient(circle,#fff3c0,#f2b134 55%,transparent 72%);opacity:0;transition:opacity .8s .4s}
+.stage.open .glow{opacity:1}.stage.open svg{animation:swing 1.3s cubic-bezier(.5,0,.2,1) forwards}
+.stage.open .bolt{transform:translateY(26px)}.stage.flash #rim{animation:alarm .22s 4 alternate}.stage.shake{animation:shake .45s}
+.bolt{fill:var(--must);stroke:var(--ink);stroke-width:3;transition:transform .8s cubic-bezier(.5,0,.2,1)}
+#dial{transform-origin:120px 120px;transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.con{background:var(--ink);border-radius:24px;padding:14px;box-shadow:0 8px 0 rgba(0,0,0,.2);animation:rise .6s .15s cubic-bezier(.2,.8,.2,1) both}
+.ch{display:flex;justify-content:space-between;align-items:center;color:#a9b4c0;margin:0 4px 10px}
+.ch div{display:flex;align-items:center;gap:8px}.ch b{color:var(--cream);font-weight:500}
+.led{width:10px;height:10px;border-radius:50%;background:var(--must);transition:background .2s;box-shadow:0 0 8px currentColor;color:var(--must)}
+.led.no{background:var(--brick);color:var(--brick)}.led.ok{background:#4de39a;color:#4de39a}
+.lcd{height:58px;border-radius:12px;background:#0a1a16;display:flex;align-items:center;padding:0 16px;font:500 1.5rem "IBM Plex Mono",monospace;letter-spacing:.14em;color:#7dffb0;text-shadow:0 0 10px rgba(125,255,176,.6);overflow:hidden;white-space:nowrap;margin-bottom:12px;box-shadow:inset 0 3px 0 rgba(0,0,0,.4)}
+.lcd.ph{color:#2f5a49;text-shadow:none;font-size:.95rem;letter-spacing:.2em}
+.lcd.no{color:#ff7a6b;text-shadow:0 0 10px rgba(255,122,107,.6);font-size:1.2rem;animation:blink .25s 3}
+.lcd.ok{color:#ffe27a;text-shadow:0 0 12px rgba(255,226,122,.7);font-size:1.2rem}
+.cur{display:inline-block;width:.6ch;height:1.1em;background:currentColor;margin-left:3px;animation:blink 1s steps(2) infinite}
+.kb{display:grid;gap:6px}.kr{display:flex;gap:5px}
+.k{flex:1;min-width:0;height:clamp(38px,6vh,46px);border:0;border-radius:9px;background:var(--cream);color:var(--ink);font:600 .95rem "IBM Plex Mono",monospace;cursor:pointer;box-shadow:0 4px 0 #b9ad92;transition:transform .06s,box-shadow .06s;padding:0}
+.k:active,.k.p{transform:translateY(3px);box-shadow:0 1px 0 #b9ad92}
+.k.w{flex:1.7;font-size:.72rem;letter-spacing:.06em}.k.en{background:var(--must);box-shadow:0 4px 0 #b57d10}.k.en:active{box-shadow:0 1px 0 #b57d10}
+.k.dl{background:#e88b7f;box-shadow:0 4px 0 #a9473b}.k.dl:active{box-shadow:0 1px 0 #a9473b}
+.con.off .k{opacity:.35;pointer-events:none}
+.end{background:var(--ink);color:var(--cream);border-radius:24px;padding:22px;margin-top:16px;animation:rise .7s both;box-shadow:0 8px 0 rgba(0,0,0,.2)}
+.end h2{font:2rem "Archivo Black",sans-serif;letter-spacing:-.04em;margin:0 0 8px}
+.end p{line-height:1.5;margin:0 0 16px;opacity:.92}.end b{color:var(--must)}
+.cp{font:.95rem "Archivo Black",sans-serif;border:0;border-radius:12px;background:var(--must);color:#1b2430;padding:14px 24px;cursor:pointer}.cd{margin-top:14px;opacity:.7;color:#a9b4c0}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}}
+@keyframes slap{from{opacity:0;transform:rotate(-8deg) translateY(-40px) scale(1.15)}}
+@keyframes shake{20%{transform:translateX(-10px) rotate(-1.5deg)}45%{transform:translateX(10px) rotate(1.5deg)}70%{transform:translateX(-5px)}}
+@keyframes swing{to{transform:perspective(700px) rotateY(-78deg)}}
+@keyframes alarm{to{fill:var(--brick)}}
+@keyframes blink{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><main>
+<header><a href="index.html" class="logo"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6" fill="var(--must)" stroke="currentColor" stroke-width="2.5"/><path d="M12 12v9M12 17h4M12 21h3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>Pass<em>Phew</em></a><div class="meta mono" id="mt"></div></header>
+<div class="note"><small class="mono">Password hint</small><p id="ht"></p></div>
+<div class="stage" id="st"><div class="glow"></div>
+<svg viewBox="0 0 240 240"><circle id="rim" cx="120" cy="120" r="112" fill="var(--vg)" stroke="var(--ink)" stroke-width="6"/><g id="rv"></g><g id="bolts"></g>
+<circle cx="120" cy="120" r="84" fill="#185c4c" stroke="var(--ink)" stroke-width="4"/>
+<g id="dial"><circle cx="120" cy="120" r="56" fill="var(--cream)" stroke="var(--ink)" stroke-width="5"/><g id="ticks"></g>
+<g fill="var(--must)" stroke="var(--ink)" stroke-width="3"><rect x="114" y="74" width="12" height="46" rx="6"/><rect x="114" y="74" width="12" height="46" rx="6" transform="rotate(120 120 120)"/><rect x="114" y="74" width="12" height="46" rx="6" transform="rotate(240 120 120)"/></g>
+<circle cx="120" cy="120" r="12" fill="var(--ink)"/></g></svg></div>
+<div class="con" id="cn"><div class="ch mono"><div><i class="led" id="led"></i>User <b id="us"></b></div><span id="fl"></span></div>
+<div class="lcd ph" id="lcd"></div><div class="kb" id="kb"></div></div>
+<div id="end"></div>
+</main>
+<script>
+const API_BASE = window.location.hostname.includes("workers.dev")
+  ? ""
+  : "https://passphew-backend.adityapdixit.workers.dev";
+
+const P = [{"u":"night_owl","c":"Silent, shuffled, means to hear","a":"listen","e":"SILENT, shuffled, is LISTEN. The definition is “to hear”."},{"u":"root_admin","c":"Opener of locks, then the error for a missing page","a":"key404","e":"A KEY opens locks. HTTP error 404 means “page not found”."},{"u":"winston_s","c":"Orwell’s dystopian year, read in the mirror","a":"4891","e":"Nineteen Eighty-Four reversed is 4891."},{"u":"guest_001","c":"Cut roughly, then the Queen: one who breaks into systems","a":"hacker","e":"HACK (cut roughly) + ER (the Queen, Elizabeth Regina) = HACKER."},{"u":"q_branch","c":"Snoop, then Bond’s digits","a":"spy007","e":"A SPY is a snoop, and James Bond’s code number is 007."},{"u":"cipher_clerk","c":"Coded, but not finished, is a secret system","a":"code","e":"CODED, not finished (last letter removed), is CODE."},{"u":"crypt_keeper","c":"Concealed in dark safe: a sharp device","a":"knife","e":"Hidden inside “darK saFE” is KNIFE."},{"u":"heist_lead","c":"Container for stolen goods held by street","a":"stash","e":"ST (street) + ASH (container) = STASH (hidden stolen goods)."},{"u":"spectre_nine","c":"Sounding like a flower, but an explosion in the corridor","a":"bloom","e":"Homophone of BOOM/BLOOM: sounds like a flower (bloom)."},{"u":"enigma_operator","c":"Protected vault safe, or secure in a harbor","a":"lock","e":"Double definition: LOCK (device on vault door) and LOCK (canal/harbor enclosure)."},{"u":"safecracker_vic","c":"Torn map holds fifty inside: a diagram of secrets","a":"plan","e":"PAN (map/scan) around L (fifty) gives PLAN."},{"u":"ghost_protocol","c":"Ten reversed, then the secret operative","a":"01mole","e":"10 reversed gives 01 + MOLE (secret operative) = 01MOLE."},{"u":"deep_throat","c":"Covert disclosure, or a puncture in the pipeline","a":"leak","e":"Double definition: LEAK (secret intelligence disclosure) and LEAK (puncture in pipeline)."},{"u":"shadow_broker","c":"Scrambled tokens yield hidden stronghold","a":"knot","e":"Anagram of KNOT (secure tie)."}];
+const $=id=>document.getElementById(id),nz=s=>s.toLowerCase().replace(/[^a-z0-9]/g,"");
+
+// Compute local date string so midnight local time advances the plate immediately
+const d = new Date();
+const localDateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const T = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+const KEY = "passphew:" + localDateStr;
+let num = T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1;
+let Z = P[((T % P.length) + P.length) % P.length];
+let S={n:0,over:false},deg=0,buf="",lock=false;
+
+// Anonymous session UUID for API tracking
+let sessionId=localStorage.getItem("passphew:session_id");
+if(!sessionId){
+  sessionId=([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+  try{localStorage.setItem("passphew:session_id",sessionId)}catch(e){}
+}
+
+try{const x=localStorage.getItem(KEY);if(x)S=JSON.parse(x)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+function stk(){try{return JSON.parse(localStorage.getItem("passphew:streak")||"{}")}catch(e){return{}}}
+function bump(){const s=stk();if(s.t===T)return;s.n=s.last===T-1?(s.n||0)+1:1;s.last=T;s.t=T;try{localStorage.setItem("passphew:streak",JSON.stringify(s))}catch(e){}}
+
+$("bolts").innerHTML=[0,1,2,3,4,5,6,7].map(i=>`<g transform="translate(120 120) rotate(${i*45})"><rect class="bolt" x="-10" y="-118" width="20" height="18" rx="4"/></g>`).join("");
+$("rv").innerHTML=Array.from({length:24},(_,i)=>`<circle cx="120" cy="120" r="3" fill="var(--cream)" opacity=".7" transform="rotate(${i*15} 120 120) translate(0 -97)"/>`).join("");
+$("ticks").innerHTML=Array.from({length:24},(_,i)=>`<rect x="119" y="68" width="2" height="${i%6?5:9}" fill="var(--ink)" transform="rotate(${i*15} 120 120)"/>`).join("");
+$("ht").textContent=Z.c;$("us").textContent=Z.u;
+
+const R=[..."1234567890".split(""),..."QWERTYUIOP".split(""),..."ASDFGHJKL".split(""),..."ZXCVBNM".split("")];
+$("kb").innerHTML=[R.slice(0,10),R.slice(10,20),R.slice(20,29)].map(r=>`<div class="kr">${r.map(k=>`<button class="k" data-k="${k}">${k}</button>`).join("")}</div>`).join("")+`<div class="kr">${R.slice(29).map(k=>`<button class="k" data-k="${k}">${k}</button>`).join("")}<button class="k w dl" data-k="DEL">DEL</button><button class="k w en" data-k="ENTER">ENTER</button></div>`;
+
+const turn=n=>{deg+=n;$("dial").style.transform=`rotate(${deg}deg)`};
+function lcd(){const l=$("lcd");if(l.dataset.m)return;l.className="lcd"+(buf?"":" ph");l.innerHTML=buf?buf.toUpperCase()+'<i class="cur"></i>':"Enter password"}
+function msg(t,c){const l=$("lcd");l.dataset.m=1;l.className="lcd "+c;l.textContent=t}
+function clr(){const l=$("lcd");delete l.dataset.m;lcd()}
+function head(){$("fl").textContent="Failed "+S.n;$("mt").innerHTML="Plate "+String(num).padStart(3,"0")+"<br>Streak "+(stk().n||0)}
+function press(k){if(S.over||lock)return;
+if(k==="ENTER")return submit();if(k==="DEL"){buf=buf.slice(0,-1);turn(-22)}else if(buf.length<20){buf+=k.toLowerCase();turn(22)}else return;lcd()}
+
+async function submit(){
+  const v=nz(buf);if(!v||lock)return;turn(360);
+  
+  // Check API first if available, with instantaneous fallback
+  try {
+    const res = await fetch(`${API_BASE}/api/guess`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session: sessionId, guess: v, date: localDateStr })
+    });
+    if (res.status === 429) {
+      const data = await res.json().catch(()=>({}));
+      lock = true;
+      $("led").className="led no";
+      msg((data.lockoutMessage || "VAULT LOCKOUT").slice(0,22).toUpperCase(), "no");
+      setTimeout(()=>{lock=false;$("led").className="led";clr()}, 2000);
+      return;
+    }
+    if (res.ok) {
+      const data = await res.json();
+      if (data.correct) {
+        S.over=true;
+        if(data.answer) { Z.a = data.answer; S.ans = data.answer; }
+        if(data.explanation) { Z.e = data.explanation; S.exp = data.explanation; }
+        bump();save();win();
+        return;
+      } else {
+        S.n = typeof data.failed === 'number' ? data.failed : S.n + 1;
+        save();
+        triggerDenied();
+        return;
+      }
+    }
+  } catch(e) {}
+
+  // Local mechanical check (offline / fallback)
+  if(Z.a && v===Z.a){
+    S.over=true;S.ans=Z.a;S.exp=Z.e;bump();save();win();
+  } else {
+    S.n++;save();
+    triggerDenied();
+  }
+}
+
+function triggerDenied(){
+  lock=true;buf="";const st=$("st");st.classList.remove("shake","flash");void st.offsetWidth;st.classList.add("shake","flash");$("led").className="led no";msg("ACCESS DENIED","no");head();setTimeout(()=>{lock=false;$("led").className="led";clr()},1100);
+}
+
+function win(){
+  head();const ans=S.ans||Z.a||"";const exp=S.exp||Z.e||"";buf=ans;$("led").className="led ok";msg("ACCESS GRANTED","ok");$("cn").classList.add("off");$("st").classList.add("open");
+  const sh="PassPhew #"+num+"  cracked after "+(S.n+1)+(S.n?" attempts":" attempt");
+  $("end").innerHTML=`<div class="end"><h2>Cracked.</h2><p>Password: <b>${ans.toUpperCase()}</b>. ${S.n?S.n+" failed "+(S.n===1?"attempt":"attempts")+" before it opened.":"First try."}<br>${exp}</p><button class="cp" id="cp">Copy result</button><p class="cd mono" id="cd"></p></div>`;
+  $("cp").onclick=()=>{try{navigator.clipboard.writeText(sh).then(()=>$("cp").textContent="Copied",()=>prompt("Copy:",sh))}catch(e){prompt("Copy:",sh)}};
+  const tick=()=>{const a=new Date(),r=new Date(a.getFullYear(),a.getMonth(),a.getDate()+1)-a,q=x=>String(x).padStart(2,"0");$("cd").textContent="Next vault in "+q(Math.floor(r/36e5))+":"+q(Math.floor(r/6e4)%60)+":"+q(Math.floor(r/1e3)%60)};tick();setInterval(tick,1000);
+}
+
+// Load live puzzle from Cloudflare Worker backend with static JSON fallback
+function applyLivePuzzle(data){
+  if(data && data.clue){
+    Z.c = data.clue;
+    if(data.username) Z.u = data.username;
+    if(data.plate) num = data.plate;
+    $("ht").textContent=Z.c;$("us").textContent=Z.u;head();
+  }
+}
+
+fetch(`${API_BASE}/api/today?date=${localDateStr}`)
+  .then(r=>r.ok?r.json():null)
+  .then(data=>{
+    if(data) applyLivePuzzle(data);
+    else fetch('passphew_today.json').then(r=>r.ok?r.json():null).then(applyLivePuzzle).catch(()=>{});
+  })
+  .catch(()=>{
+    fetch('passphew_today.json').then(r=>r.ok?r.json():null).then(applyLivePuzzle).catch(()=>{});
+  });
+
+$("kb").onclick=e=>{const b=e.target.closest(".k");if(b)press(b.dataset.k)};
+document.addEventListener("keydown",e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;let k=null;if(/^[a-zA-Z0-9]$/.test(e.key))k=e.key.toUpperCase();else if(e.key==="Backspace")k="DEL";else if(e.key==="Enter")k="ENTER";if(!k)return;e.preventDefault();
+const b=document.querySelector(`.k[data-k="${k}"]`);if(b){b.classList.add("p");setTimeout(()=>b.classList.remove("p"),90)}press(k)});
+head();lcd();if(S.over)win();
+</script></body></html>
