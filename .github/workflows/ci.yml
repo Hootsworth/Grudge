@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   test:
-    name: Run All Tests (Strata, Kin, PassPhew, Pinpoint, Ballpark, Fibber)
+    name: Run All Tests (Strata, Kin, PassPhew, Pinpoint, Ballpark, Rungs, Sprint, Fibber)
     runs-on: ubuntu-latest
 
     steps:
@@ -55,6 +55,14 @@ jobs:
         working-directory: ballpark
         run: npm install --no-audit
 
+      - name: Install Rungs dependencies
+        working-directory: rungs
+        run: npm install --no-audit
+
+      - name: Install Sprint dependencies
+        working-directory: sprint
+        run: npm install --no-audit
+
       - name: Run Strata backend tests
         run: npm test
 
@@ -69,6 +77,12 @@ jobs:
 
       - name: Run Ballpark backend tests
         run: npm run test:ballpark
+
+      - name: Run Rungs backend tests
+        run: npm run test:rungs
+
+      - name: Run Sprint backend tests
+        run: npm run test:sprint
 
       - name: Run Fibber Python unit tests
         run: python3 -m unittest discover -s tests -p "test_*.py"

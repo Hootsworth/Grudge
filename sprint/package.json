@@ -1,0 +1,20 @@
+{
+  "name": "sprint-backend",
+  "version": "1.0.0",
+  "description": "Daily Anagram Sprint backend with complete dictionary database, combo multiplier, and missed words revelation on Cloudflare Workers + D1",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "seed": "node --experimental-strip-types src/generator/seed.ts",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.90.0"
+  }
+}

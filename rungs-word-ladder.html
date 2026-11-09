@@ -52,6 +52,14 @@ input{width:100%;font:500 1.6rem "Space Grotesk",sans-serif;color:var(--ink);bac
 </style></head><body><div id="st"></div><main><div class="pill"><b>Rungs</b><span id="hd">Daily</span></div><div id="v"></div></main><script>
 const WORDS="ale ant ape apt arm art ate cat cot ear eat era fin fir fig gin lap lea let lit net nap one opt ore owe own pal pan pat pea pen pet per pot rag ran rat red rep rig rot row run sat sea set sin sit tan tap tar tea ten tie tin toe top won woe now nor rod ode don doe end den and age are gad nag orc ram mat sac leap lane lean lent neat pale pane pant pate peat pelt pent plan plea tale teal late seam same mate meat team tame tear tare rate rest star tars arts rats ears eats east seat teas sear mast mart tram term arms rams stem mare dare dear read rend nerd gear rage rang aged dean near earn darn case cast cats lace last sale salt slat lest lets acts line lint list lens nest nets sent tens site sine tile tine silt slit tins lies ties isle lien gone gore ogre roan fire fine fern ring grin rein rife rock core cork coke cote rote tore opts pest pore port post pots rope rots sort spot step stop tops pose rose sore down done node word wore wend wren redo rode owed bake bale bare base bone bore bold bolt bond bell belt bill ball bull burn cage cake came cane care cart cave cold cord corn cone dame date dime dine dire dome dove fade fake fame fate file fill film five flat gale game gate gave hale hare hate have hole home hope hose hide hike hire kite lake lame lore lose love mile mine mole more mule nine none note pile pine pipe poke pole rice ride rile rise rule safe sage sake sole some tube tune vale vane vile wade wage wake wane ware wave wide wine wire wise back bank band bark barn bend bent best bird bite boat boil book boom boss call calm camp card cash chat chop clap clay coal coat cook cool cost dark dash deal deck deep desk dish dock doll door dust fall farm fast feel fell felt fish fist foot fork form gift girl glad goal gold golf good hall hand hang hard harm head heal heap hear heat help hill hold hood hook hurt jump keep kick king lamp land lock look loop luck mask mind mist moon mild mill milk nail neck need pack page pain pair park pass past path pick pink plot plug pull push race rack rail rain rank rent roll room root sack sand seed sell ship shop sick sing sink skin slip snap soap sock soft soil sold soul tail talk tall tank task test tent tick toll tool town trip walk wall warm wash weed well went wild will wind wing wolf wood wool work yard plane plant plate panel petal pleat leapt steam mates meats tames teams smart marts trams terms tears rates stare aster tares anger range grand scale laces least steal slate stale tales teals cleat caste inlet islet stile stein lines tiles organ groan argon goner finer reign store poets prose spore ports sport strop drone owner planet stream master garden danger gander ranged castle cleats silent listen tinsel enlist inlets orange finger fringe poster presto repost tropes wonder downer",NAME="rungs";
 
+const API_BASE = "https://rungs-backend.adityapdixit.workers.dev";
+const sessionKey = "rungs_session_uuid";
+let sessionUUID = localStorage.getItem(sessionKey);
+if (!sessionUUID) {
+  sessionUUID = (crypto.randomUUID ? crypto.randomUUID() : "sess_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+  localStorage.setItem(sessionKey, sessionUUID);
+}
+
 const $=id=>document.getElementById(id),R=Math.random,d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1,KEY=NAME+":"+T;
 const mb=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},vib=v=>{try{navigator.vibrate&&navigator.vibrate(v)}catch(e){}};
 const ST=[[0,"#8fd3ff"],[.2,"#4a95ee"],[.4,"#2f55bd"],[.6,"#1b2a73"],[.8,"#0b1033"],[1,"#04050d"]],hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
@@ -69,28 +77,120 @@ const L4=W.filter(w=>w.length==4),df=(a,b)=>[...a].filter((c,i)=>c!=b[i]).length
 L4.forEach(w=>G[w]=L4.filter(x=>df(w,x)==1));
 function bfs(s){const d={[s]:0},p={},q=[s];for(const u of q)for(const v of G[u])if(!(v in d)){d[v]=d[u]+1;p[v]=u;q.push(v)}return{d,p}}
 function route(s,t){const{p}=bfs(t),r=[s];while(r[r.length-1]!==t)r.push(p[r[r.length-1]]);return r}
-const rg=mb(T*7+1),PZ=[],us=new Set();
-for(const want of [3,3,4,4,5])for(let n=0;n<300;n++){const s=L4[Math.floor(rg()*L4.length)];if(us.has(s))continue;const{d}=bfs(s),c=Object.keys(d).filter(k=>d[k]<=want&&d[k]>=(n<100?want:3));if(c.length){const t=c[Math.floor(rg()*c.length)];us.add(s);PZ.push({s,t,par:d[t]});break}}
+
+let PZ=[];
+async function initPuzzles(){
+  try {
+    const res = await fetch(`${API_BASE}/api/today`);
+    if(res.ok){
+      const data = await res.json();
+      if(data && data.ladders && data.ladders.length === 5){
+        PZ = data.ladders.map(l=>({s:l.start, t:l.target, par:l.par}));
+        return;
+      }
+    }
+  }catch(e){}
+  // Offline deterministic fallback
+  const rg=mb(T*7+1),us=new Set();
+  PZ=[];
+  for(const want of [3,3,4,4,5])for(let n=0;n<300;n++){const s=L4[Math.floor(rg()*L4.length)];if(us.has(s))continue;const{d}=bfs(s),c=Object.keys(d).filter(k=>d[k]<=want&&d[k]>=(n<100?want:3));if(c.length){const t=c[Math.floor(rg()*c.length)];us.add(s);PZ.push({s,t,par:d[t]});break}}
+}
+
 const tl=(w,p,a)=>[...w].map((c,i)=>`<div class="t${p&&p[i]!=c?" on"+(a?" f":""):""}" style="--i:${i}">${c}</div>`).join("");
 let pi=0,path=[],str=0,lock=0,res=load()||[];pi=res.length;
 const msg=(m,s=1)=>{const e=$("msg");e.textContent=m;if(s)shake(e)};
 function lad(){const P=PZ[pi],n=path.length-1,ph=Math.max(0,P.par-n-1);
 $("lad").innerHTML=`<div class="tl g">${tl(P.t)}</div>`+Array.from({length:ph},()=>`<div class="ph">? ? ?</div>`).join("")+path.map((w,i)=>`<div class="tl s${i>P.par?" ov":""}${i&&i==n?" a":""}${w===P.t?" win":""}">${tl(w,i?path[i-1]:"",i&&i==n)}</div>`).reverse().join("");
 $("sc").textContent="STROKES "+str+" / PAR "+P.par}
-function intro(){$("v").innerHTML=`<div class="card"><p class="kick">Ladder ${String(num).padStart(3,"0")}</p><h1>Change one letter.<br>Climb to <em>the top</em>.</h1><p class="lede">Turn the start word into the target, changing exactly one letter at a time. Every rung must be a real word. The dashed boxes show how many rungs the shortest route needs. Five ladders a day.</p><button class="btn" id="b">Start climbing</button></div>`;$("b").onclick=play}
+function intro(){$("v").innerHTML=`<div class="card"><p class="kick">Ladder ${String(num).padStart(3,"0")}</p><h1>Change one letter.<br>Climb to <em>the top</em>.</h1><p class="lede">Turn the start word into the target, changing exactly one letter at a time. Every rung must be in the word database. The dashed boxes show how many rungs the shortest route needs. Five ladders a day.</p><button class="btn" id="b">Start climbing</button></div>`;$("b").onclick=play}
 function play(){if(pi>=5)return end();const P=PZ[pi];path=[P.s];str=0;lock=0;$("hd").textContent="Ladder "+(pi+1)+" of 5";sky(pi/5*.85);
 $("v").innerHTML=`<div class="card"><div class="top kick"><span>${P.s} → ${P.t}</span><span id="sc"></span></div><div id="lad"></div><div class="msg" id="msg"></div><input id="in" maxlength="4" placeholder="next word" autocomplete="off" autocapitalize="off" spellcheck="false"><div class="row"><button class="btn" id="go">Climb</button><button class="btn ghost" id="ht">Hint +1</button><button class="btn ghost" id="un">Undo</button></div></div>`;
 lad();$("in").focus();$("in").onkeydown=e=>{if(e.key==="Enter")go()};$("go").onclick=go;$("ht").onclick=hint;$("un").onclick=()=>{if(lock||path.length<2)return;path.pop();lad();msg("",0)}}
-function go(){if(lock)return;const P=PZ[pi],i=$("in"),w=i.value.trim().toLowerCase(),c=path[path.length-1];
-const m=w.length!=4||!G[w]?"Not in my word list":path.includes(w)?"Already on the ladder":df(c,w)!=1?"Change exactly one letter":"";
-if(m){msg(m);shake(i);vib([60,40,60]);return}
-path.push(w);str++;i.value="";lad();msg("",0);sky((pi+Math.min(.95,path.length/(P.par+1)))/5*.85);if(w===P.t)win(P)}
-function hint(){if(lock)return;const n=bfs(PZ[pi].t).p[path[path.length-1]];if(n){str++;$("sc").textContent="STROKES "+str+" / PAR "+PZ[pi].par;msg("Try: "+n.toUpperCase(),0)}}
+
+async function go(){
+  if(lock)return;
+  const P=PZ[pi],i=$("in"),w=i.value.trim().toLowerCase(),c=path[path.length-1];
+
+  // Try server step validation against authoritative word database
+  try {
+    const sRes = await fetch(`${API_BASE}/api/step`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({session: sessionUUID, round: pi + 1, word: w})
+    });
+    if(sRes.ok){
+      const sData = await sRes.json();
+      if(!sData.valid){
+        msg(sData.message || "Invalid word");
+        shake(i);
+        vib([60,40,60]);
+        return;
+      }
+      path.push(w);
+      str++;
+      i.value="";
+      lad();
+      msg("",0);
+      sky((pi+Math.min(.95,path.length/(P.par+1)))/5*.85);
+      if(sData.solved || w===P.t)win(P);
+      return;
+    }
+  }catch(e){}
+
+  // Local fallback validation
+  const m=w.length!=4||(!G[w]&&!W.includes(w))?"Not in word database":path.includes(w)?"Already on the ladder":df(c,w)!=1?"Change exactly one letter":"";
+  if(m){msg(m);shake(i);vib([60,40,60]);return}
+  path.push(w);str++;i.value="";lad();msg("",0);sky((pi+Math.min(.95,path.length/(P.par+1)))/5*.85);if(w===P.t)win(P)
+}
+
+async function hint(){
+  if(lock)return;
+  try {
+    const hRes = await fetch(`${API_BASE}/api/hint`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({session: sessionUUID, round: pi + 1, currentWord: path[path.length-1]})
+    });
+    if(hRes.ok){
+      const hData = await hRes.json();
+      if(hData.hint){
+        str++;
+        $("sc").textContent="STROKES "+str+" / PAR "+PZ[pi].par;
+        msg("Try: "+hData.hint,0);
+        return;
+      }
+    }
+  }catch(e){}
+  const n=bfs(PZ[pi].t).p[path[path.length-1]];if(n){str++;$("sc").textContent="STROKES "+str+" / PAR "+PZ[pi].par;msg("Try: "+n.toUpperCase(),0)}
+}
+
 function win(P){lock=1;const x=str-P.par,s=$("v").firstChild;ban(s,x?"+"+x+" over par":"Perfect",x?"#ffc933":"#2ec4a0");burst(s,CK,x?20:44);vib(x?[40,40]:[40,40,40,40,120]);
 res.push({s:P.s,t:P.t,par:P.par,str});save(res);pi++;$("in").disabled=true;$("go").textContent=pi>=5?"See results":"Next ladder";$("go").onclick=play}
-function end(){$("hd").textContent="Done";sky(.95);const tot=res.reduce((a,r)=>a+r.str,0),par=res.reduce((a,r)=>a+r.par,0),x=tot-par,
-ttl=x<=0?"Perfect climb":x<=2?"Sure-footed":x<=5?"Wobbly rungs":"Scenic route",sh="Rungs #"+num+"  "+tot+"/"+par+"\n"+res.map(r=>"▲".repeat(r.par)+"△".repeat(Math.max(0,r.str-r.par))).join("\n");
-$("v").innerHTML=`<div class="card"><p class="kick">Final</p><div class="big">${tot}<small> / ${par} par</small></div><h2 style="font-size:1.6rem;margin-bottom:18px">${ttl}</h2><div class="st">${res.map((r,i)=>`<div style="--i:${i}"><span>${r.s} → ${r.t}<small>${r.str<=r.par?"optimal route ✓":"optimal: "+route(r.s,r.t).join(" › ")}</small></span><b>${r.str}/${r.par}</b></div>`).join("")}</div><div class="row"><button class="btn" id="cp">Copy result</button></div><p class="kick" id="cd" style="margin-top:16px"></p></div>`;
-$("cp").onclick=()=>cp(sh,$("cp"));cdown($("cd"));if(x<=0)burst($("v").firstChild,CK,40)}
-pi>=5?end():pi?play():intro();
+
+async function end(){
+  $("hd").textContent="Done";sky(.95);
+  let tot=res.reduce((a,r)=>a+r.str,0),par=res.reduce((a,r)=>a+r.par,0),x=tot-par;
+  let ttl=x<=0?"Perfect climb":x<=2?"Sure-footed":x<=5?"Wobbly rungs":"Scenic route";
+  let sh="Rungs #"+num+"  "+tot+"/"+par+"\n"+res.map(r=>"▲".repeat(r.par)+"△".repeat(Math.max(0,r.str-r.par))).join("\n");
+
+  try {
+    const fRes = await fetch(`${API_BASE}/api/finish`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({session: sessionUUID})
+    });
+    if(fRes.ok){
+      const fData = await fRes.json();
+      if(fData.title) ttl = fData.title;
+      if(fData.shareCard) sh = fData.shareCard;
+    }
+  }catch(e){}
+
+  $("v").innerHTML=`<div class="card"><p class="kick">Final</p><div class="big">${tot}<small> / ${par} par</small></div><h2 style="font-size:1.6rem;margin-bottom:18px">${ttl}</h2><div class="st">${res.map((r,i)=>`<div style="--i:${i}"><span>${r.s} → ${r.t}<small>${r.str<=r.par?"optimal route ✓":"optimal: "+route(r.s,r.t).join(" › ")}</small></span><b>${r.str}/${r.par}</b></div>`).join("")}</div><div class="row"><button class="btn" id="cp">Copy result</button></div><p class="kick" id="cd" style="margin-top:16px"></p></div>`;
+  $("cp").onclick=()=>cp(sh,$("cp"));cdown($("cd"));if(x<=0)burst($("v").firstChild,CK,40)
+}
+
+initPuzzles().then(()=>{
+  pi>=5?end():pi?play():intro();
+});
 </script></body></html>

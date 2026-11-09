@@ -1,0 +1,12 @@
+name = "rungs-backend"
+main = "src/index.ts"
+compatibility_date = "2024-04-01"
+
+# D1 Database binding for puzzles, sessions, ladder progress, and stats
+[[d1_databases]]
+binding = "DB"
+database_name = "rungs-db"
+database_id = "local-rungs-db-id"
+
+[vars]
+APPROVAL_SECRET = "rungs-admin-secret-key"

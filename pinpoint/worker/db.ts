@@ -70,6 +70,43 @@ export async function createOrGetSession(
     return existing;
   }
 
+  // Auto-heal: Ensure parent puzzle row exists in puzzles table to satisfy foreign key constraint
+  const baseDate = Date.UTC(2026, 0, 1);
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const curDate = Date.UTC(y, m - 1, d);
+  const fallbackPlate = Math.max(1, Math.floor((curDate - baseDate) / 864e5) + 1);
+
+  await db
+    .prepare('INSERT OR IGNORE INTO puzzles (date, plate, status, created_at) VALUES (?, ?, "live", ?)')
+    .bind(dateStr, fallbackPlate, nowMs)
+    .run();
+
+  // Also ensure 5 rounds exist for dateStr
+  const existingRounds = await db
+    .prepare('SELECT COUNT(*) as count FROM rounds WHERE puzzle_date = ?')
+    .bind(dateStr)
+    .first<{ count: number }>();
+
+  if (!existingRounds || existingRounds.count === 0) {
+    const fallbackSpots = [
+      { name: 'Strait of Gibraltar', lat: 35.96, lon: -5.6, continent: 'Europe', difficulty: 2, fact: 'The Strait of Gibraltar connects the Atlantic Ocean to the Mediterranean Sea.', source_url: 'https://en.wikipedia.org/wiki/Strait_of_Gibraltar' },
+      { name: 'Sinai Peninsula', lat: 29.5, lon: 33.8, continent: 'Asia', difficulty: 2, fact: 'The Sinai Peninsula serves as a land bridge connecting Asia and Africa.', source_url: 'https://en.wikipedia.org/wiki/Sinai_Peninsula' },
+      { name: 'Baja California', lat: 28.0, lon: -113.5, continent: 'North America', difficulty: 3, fact: 'Baja California separates the Pacific Ocean from the Gulf of California.', source_url: 'https://en.wikipedia.org/wiki/Baja_California_Peninsula' },
+      { name: 'Bosphorus Strait', lat: 41.1, lon: 29.05, continent: 'Europe', difficulty: 3, fact: 'The Bosphorus Strait forms part of the continental boundary between Europe and Asia.', source_url: 'https://en.wikipedia.org/wiki/Bosphorus' },
+      { name: 'Cape of Good Hope', lat: -34.35, lon: 18.49, continent: 'Africa', difficulty: 4, fact: 'The Cape of Good Hope marks the point where ships begin to travel more eastward than southward.', source_url: 'https://en.wikipedia.org/wiki/Cape_of_Good_Hope' },
+    ];
+    for (let r = 1; r <= 5; r++) {
+      const s = fallbackSpots[r - 1];
+      await db
+        .prepare(
+          `INSERT OR IGNORE INTO rounds (id, puzzle_date, round_number, name, fact, source_url, lat, lon, continent, difficulty, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        )
+        .bind(`${dateStr}_${r}`, dateStr, r, s.name, s.fact, s.source_url, s.lat, s.lon, s.continent, s.difficulty, nowMs)
+        .run();
+    }
+  }
+
   const newSession: SessionRecord = {
     id: sessionId,
     puzzle_date: dateStr,

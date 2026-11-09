@@ -1,4 +1,4 @@
-name: Deploy Cloudflare Workers (Strata, Kin, PassPhew, Pinpoint & Ballpark)
+name: Deploy Cloudflare Workers (Strata, Kin, PassPhew, Pinpoint, Ballpark, Rungs & Sprint)
 
 on:
   workflow_dispatch:
@@ -10,11 +10,15 @@ on:
       - 'passphew/src/**'
       - 'pinpoint/worker/**'
       - 'ballpark/src/**'
+      - 'rungs/src/**'
+      - 'sprint/src/**'
       - 'wrangler.toml'
       - 'kin/wrangler.toml'
       - 'passphew/wrangler.toml'
       - 'pinpoint/wrangler.toml'
       - 'ballpark/wrangler.toml'
+      - 'rungs/wrangler.toml'
+      - 'sprint/wrangler.toml'
 
 jobs:
   deploy-workers:
@@ -53,6 +57,8 @@ jobs:
           PINPOINT_DATABASE_ID: ${{ secrets.PINPOINT_DATABASE_ID }}
           PINPOINT_KV_ID: ${{ secrets.PINPOINT_KV_ID }}
           BALLPARK_DATABASE_ID: ${{ secrets.BALLPARK_DATABASE_ID }}
+          RUNGS_DATABASE_ID: ${{ secrets.RUNGS_DATABASE_ID }}
+          SPRINT_DATABASE_ID: ${{ secrets.SPRINT_DATABASE_ID }}
         run: |
           node scripts/setup_cf_d1.js
 
@@ -98,4 +104,22 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'ballpark'
+          command: deploy
+
+      - name: Deploy Rungs Worker
+        if: steps.check_cf.outputs.has_token == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'rungs'
+          command: deploy
+
+      - name: Deploy Sprint Worker
+        if: steps.check_cf.outputs.has_token == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'sprint'
           command: deploy

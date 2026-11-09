@@ -52,6 +52,14 @@ input{width:100%;font:500 1.6rem "Space Grotesk",sans-serif;color:var(--ink);bac
 </style></head><body><div id="st"></div><main><div class="pill"><b>Sprint</b><span id="hd">Daily</span></div><div id="v"></div></main><script>
 const WORDS="ale ant ape apt arm art ate cat cot ear eat era fin fir fig gin lap lea let lit net nap one opt ore owe own pal pan pat pea pen pet per pot rag ran rat red rep rig rot row run sat sea set sin sit tan tap tar tea ten tie tin toe top won woe now nor rod ode don doe end den and age are gad nag orc ram mat sac leap lane lean lent neat pale pane pant pate peat pelt pent plan plea tale teal late seam same mate meat team tame tear tare rate rest star tars arts rats ears eats east seat teas sear mast mart tram term arms rams stem mare dare dear read rend nerd gear rage rang aged dean near earn darn case cast cats lace last sale salt slat lest lets acts line lint list lens nest nets sent tens site sine tile tine silt slit tins lies ties isle lien gone gore ogre roan fire fine fern ring grin rein rife rock core cork coke cote rote tore opts pest pore port post pots rope rots sort spot step stop tops pose rose sore down done node word wore wend wren redo rode owed bake bale bare base bone bore bold bolt bond bell belt bill ball bull burn cage cake came cane care cart cave cold cord corn cone dame date dime dine dire dome dove fade fake fame fate file fill film five flat gale game gate gave hale hare hate have hole home hope hose hide hike hire kite lake lame lore lose love mile mine mole more mule nine none note pile pine pipe poke pole rice ride rile rise rule safe sage sake sole some tube tune vale vane vile wade wage wake wane ware wave wide wine wire wise back bank band bark barn bend bent best bird bite boat boil book boom boss call calm camp card cash chat chop clap clay coal coat cook cool cost dark dash deal deck deep desk dish dock doll door dust fall farm fast feel fell felt fish fist foot fork form gift girl glad goal gold golf good hall hand hang hard harm head heal heap hear heat help hill hold hood hook hurt jump keep kick king lamp land lock look loop luck mask mind mist moon mild mill milk nail neck need pack page pain pair park pass past path pick pink plot plug pull push race rack rail rain rank rent roll room root sack sand seed sell ship shop sick sing sink skin slip snap soap sock soft soil sold soul tail talk tall tank task test tent tick toll tool town trip walk wall warm wash weed well went wild will wind wing wolf wood wool work yard plane plant plate panel petal pleat leapt steam mates meats tames teams smart marts trams terms tears rates stare aster tares anger range grand scale laces least steal slate stale tales teals cleat caste inlet islet stile stein lines tiles organ groan argon goner finer reign store poets prose spore ports sport strop drone owner planet stream master garden danger gander ranged castle cleats silent listen tinsel enlist inlets orange finger fringe poster presto repost tropes wonder downer",NAME="sprint";
 
+const API_BASE = "https://sprint-backend.adityapdixit.workers.dev";
+const sessionKey = "sprint_session_uuid";
+let sessionUUID = localStorage.getItem(sessionKey);
+if (!sessionUUID) {
+  sessionUUID = (crypto.randomUUID ? crypto.randomUUID() : "sess_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+  localStorage.setItem(sessionKey, sessionUUID);
+}
+
 const $=id=>document.getElementById(id),R=Math.random,d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),num=T-Math.floor(Date.UTC(2026,0,1)/864e5)+1,KEY=NAME+":"+T;
 const mb=s=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296},vib=v=>{try{navigator.vibrate&&navigator.vibrate(v)}catch(e){}};
 const ST=[[0,"#8fd3ff"],[.2,"#4a95ee"],[.4,"#2f55bd"],[.6,"#1b2a73"],[.8,"#0b1033"],[1,"#04050d"]],hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
@@ -65,9 +73,33 @@ cp=(t,b)=>{try{navigator.clipboard.writeText(t).then(()=>b.textContent="Copied",
 function cdown(el){const f=()=>{const x=new Date(),r=new Date(x.getFullYear(),x.getMonth(),x.getDate()+1)-x,q=y=>String(y).padStart(2,"0");el.textContent="Next one in "+q(Math.floor(r/36e5))+":"+q(Math.floor(r/6e4)%60)+":"+q(Math.floor(r/1e3)%60)};f();setInterval(f,1000)}
 const W=[...new Set(WORDS.split(" "))],CK=["#2ec4a0","#ffc933","#fff","#4d8dff","#ff6fb0"];
 
-const SK=[...new Set(W.filter(w=>w.length==6).map(w=>[...w].sort().join("")))],key=SK[T%SK.length],cnt=s=>{const o={};for(const c of s)o[c]=(o[c]||0)+1;return o},kc=cnt(key),
-can=w=>{const c=cnt(w);return Object.keys(c).every(k=>c[k]<=(kc[k]||0))},ANS=W.filter(w=>w.length>=3&&w.length<=6&&can(w)),PT={3:1,4:2,5:4,6:8},MAXP=ANS.reduce((a,w)=>a+PT[w.length],0),rg=mb(T*13+5);
+const SK=[...new Set(W.filter(w=>w.length==6).map(w=>[...w].sort().join("")))];
+let key=SK[T%SK.length];
+let cnt=s=>{const o={};for(const c of s)o[c]=(o[c]||0)+1;return o},kc=cnt(key);
+let can=w=>{const c=cnt(w);return Object.keys(c).every(k=>c[k]<=(kc[k]||0))};
+let ANS=W.filter(w=>w.length>=3&&w.length<=6&&can(w)),PT={3:1,4:2,5:4,6:8},MAXP=ANS.reduce((a,w)=>a+PT[w.length],0),rg=mb(T*13+5);
 let LT=[...key],found=[],sc=0,used=[],iv=0,prac=0,done=load(),cb=0,last=0,bm=1;
+let serverMissedWords = [];
+
+async function initSprint(){
+  try {
+    const res = await fetch(`${API_BASE}/api/today`);
+    if(res.ok){
+      const data = await res.json();
+      if(data && data.letters && data.letters.length === 6){
+        key = data.letters.toLowerCase();
+        kc = cnt(key);
+        can = w=>{const c=cnt(w);return Object.keys(c).every(k=>c[k]<=(kc[k]||0))};
+        ANS = W.filter(w=>w.length>=3&&w.length<=6&&can(w));
+        MAXP = data.maxScore || ANS.reduce((a,w)=>a+PT[w.length],0);
+        LT = [...key];
+        shuf();
+        return;
+      }
+    }
+  }catch(e){}
+}
+
 const pp=(e,c="pp")=>{e.classList.remove(c);void e.offsetWidth;e.classList.add(c)},F=document.body.classList;
 function shuf(){for(let i=5;i>0;i--){const j=Math.floor(rg()*(i+1));[LT[i],LT[j]]=[LT[j],LT[i]]}}shuf();
 function intro(){sky(0);$("hd").textContent="Daily";$("v").innerHTML=`<div class="card"><p class="kick">Sprint ${String(num).padStart(3,"0")}</p><h1>60 seconds.<br><em>Six letters.</em></h1><p class="lede">Make words from the tiles. Chain them inside 5 seconds to stack a multiplier up to ×4 and hit FEVER. One bad word and the combo dies. 3 letters = 1 point, 4 = 2, 5 = 4, all six = 8.</p><button class="btn" id="b">Go</button></div>`;$("b").onclick=play}
@@ -75,7 +107,7 @@ function tiles(c){$("lt").innerHTML=LT.map((l,i)=>`<button class="t ${c}" data-i
 function draw(){const n=used.length;$("cw").innerHTML=n?used.map((u,i)=>`<div class="t on ${i==n-1?"a":""}" style="--i:0">${LT[u]}</div>`).join(""):`<span class="kick" style="margin:22px 0">Type or tap letters</span>`;[...$("lt").children].forEach((b,i)=>b.classList.toggle("u",used.includes(i)))}
 function add(i){if(iv&&i>=0&&!used.includes(i)){used.push(i);draw()}}
 function brk(){cb=0;F.remove("fever");if($("mx")){$("mx").textContent="×1";$("ht").style.width=0}}
-function play(){found=[];sc=0;used=[];cb=0;bm=1;F.remove("fever");sky(0);$("hd").textContent="Go!";const t0=performance.now();
+function play(){found=[];sc=0;used=[];cb=0;bm=1;serverMissedWords=[];F.remove("fever");sky(0);$("hd").textContent="Go!";const t0=performance.now();
 $("v").innerHTML=`<div class="card" id="cd0"><div class="top"><div><small>SCORE</small><b id="sc">0</b></div><div class="mx" id="mx">×1</div><div style="text-align:right"><small>TIME</small><b id="tm">60</b></div></div><div class="heat"><i id="ht"></i></div><div class="timer"><i id="tb"></i></div><div class="tl" id="cw" style="min-height:62px"></div><div class="tl" id="lt"></div><div class="row" style="justify-content:center"><button class="btn" id="go">Enter</button><button class="btn ghost" id="sh">Shuffle</button><button class="btn ghost" id="cl">Clear</button></div><div id="fd" style="margin-top:14px"></div></div>`;
 tiles("a");draw();$("lt").onclick=e=>{const b=e.target.closest("button");if(b)add(+b.dataset.i)};$("go").onclick=sub;$("cl").onclick=()=>{used=[];draw()};$("sh").onclick=shfl;
 clearInterval(iv);iv=setInterval(()=>{const n=performance.now(),tm=Math.max(0,60-(n-t0)/1e3);$("tb").style.width=tm/.6+"%";$("tm").textContent=Math.ceil(tm);if(tm<=10)$("tb").classList.add("low");
@@ -83,16 +115,85 @@ if(cb){const h=Math.max(0,1-(n-last)/5000);$("ht").style.width=h*100+"%";if(!h)b
 function shfl(){used=[];shuf();tiles("f");draw()}
 document.onkeydown=e=>{if(!iv)return;if(e.key==="Enter")sub();else if(e.key==="Backspace"){used.pop();draw()}else if(e.key===" "){e.preventDefault();shfl()}else if(/^[a-z]$/i.test(e.key))add(LT.findIndex((c,j)=>c==e.key.toLowerCase()&&!used.includes(j)))};
 function fl(t){const e=document.createElement("div");e.className="fl";e.textContent=t;$("cd0").appendChild(e);setTimeout(()=>e.remove(),950)}
-function sub(){const w=used.map(i=>LT[i]).join(""),cw=$("cw"),c0=$("cd0");
-if(w.length<3||!ANS.includes(w)||found.includes(w)){shake(cw);pp(c0,"fr");brk();vib([60,40,60]);if(found.includes(w)){const c=document.querySelector('[data-w="'+w+'"]');c&&shake(c)}return}
-const nw=performance.now();cb=cb&&nw-last<5000?cb+1:1;last=nw;const m=Math.min(4,cb),p=PT[w.length]*m,c=document.createElement("span");bm=Math.max(bm,m);
-sc+=p;found.push(w);sky(sc/(MAXP*.75));$("sc").textContent=sc;pp($("sc"));$("mx").textContent="×"+m;pp($("mx"));c.className="ch l"+w.length;c.dataset.w=w;c.textContent=w+" +"+p;$("fd").prepend(c);fl("+"+p);if(m>=3)pp(c0,"bp");
-if(m==4&&!F.contains("fever")){F.add("fever");ban(c0,"FEVER","#ffe14d")}
-if(w.length==6){burst(c0,["#19f0ff","#ff2bd6","#ffe14d"],44);ban(c0,"FULL BURN","#ff2bd6");vib([40,40,120])}else vib(20);used=[];draw()}
-function end(){clearInterval(iv);iv=0;F.remove("fever");if(!prac){done={sc,f:found,bm};save(done)}fin({sc,f:found,bm})}
-function fin(x){const pc=x.sc/(MAXP*1.5),ttl=pc<.1?"Warm-up":pc<.25?"Wordsmith":pc<.45?"Lexicon Lord":pc<.7?"Dictionary Goblin":"Walking Thesaurus",ms=ANS.filter(w=>!x.f.includes(w)).sort((a,b)=>b.length-a.length||a.localeCompare(b)),
-sh="Sprint #"+num+"  "+x.sc+" pts  x"+(x.bm||1)+" best combo  "+x.f.length+"/"+ANS.length+" words";$("hd").textContent="Time!";sky(Math.min(1,x.sc/(MAXP*.75)));
-$("v").innerHTML=`<div class="card"><p class="kick">Time! Letters: ${[...key].sort().join("").toUpperCase()}</p><div class="big">${x.sc}<small> PTS</small></div><h2>${ttl}</h2><p class="lede" style="margin:10px 0 14px">${x.f.length} of ${ANS.length} words · best combo ×${x.bm||1}</p>${ms.length?`<p class="kick">What you missed</p><div>${ms.slice(0,36).map((w,i)=>`<span class="ch miss" style="--i:${i}">${w}</span>`).join("")}${ms.length>36?`<span class="ch miss">+${ms.length-36} more</span>`:""}</div>`:""}<div class="row"><button class="btn" id="cp">Copy result</button><button class="btn ghost" id="pr">Practice</button></div><p class="kick" id="cd" style="margin-top:16px"></p></div>`;
-$("cp").onclick=()=>cp(sh,$("cp"));$("pr").onclick=()=>{prac=1;shuf();play()};cdown($("cd"));if(pc>=.25)burst($("v").firstChild,["#19f0ff","#ff2bd6","#ffe14d"],40)}
-done?fin(done):intro();
+
+async function sub(){
+  const w=used.map(i=>LT[i]).join(""),cw=$("cw"),c0=$("cd0");
+  if(w.length<3||found.includes(w)){
+    shake(cw);pp(c0,"fr");brk();vib([60,40,60]);
+    if(found.includes(w)){const c=document.querySelector('[data-w="'+w+'"]');c&&shake(c)}
+    return;
+  }
+
+  // Try live server submission against authoritative word database
+  try {
+    const sRes = await fetch(`${API_BASE}/api/submit-word`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({session: sessionUUID, word: w})
+    });
+    if(sRes.ok){
+      const sData = await sRes.json();
+      if(!sData.valid){
+        shake(cw);pp(c0,"fr");brk();vib([60,40,60]);
+        return;
+      }
+      const p = sData.pointsEarned, m = sData.multiplier;
+      sc = sData.totalScore;
+      found.push(w);
+      bm = Math.max(bm, m);
+      cb = m;
+      last = performance.now();
+      sky(sc/(MAXP*.75));
+      $("sc").textContent=sc;pp($("sc"));$("mx").textContent="×"+m;pp($("mx"));
+      const c = document.createElement("span");
+      c.className="ch l"+w.length;c.dataset.w=w;c.textContent=w+" +"+p;
+      $("fd").prepend(c);fl("+"+p);
+      if(m>=3)pp(c0,"bp");
+      if(sData.isFever && !F.contains("fever")){F.add("fever");ban(c0,"FEVER","#ffe14d");}
+      if(sData.isFullBurn){burst(c0,["#19f0ff","#ff2bd6","#ffe14d"],44);ban(c0,"FULL BURN","#ff2bd6");vib([40,40,120]);}else vib(20);
+      used=[];draw();
+      return;
+    }
+  }catch(e){}
+
+  // Local fallback
+  if(!ANS.includes(w)){shake(cw);pp(c0,"fr");brk();vib([60,40,60]);return}
+  const nw=performance.now();cb=cb&&nw-last<5000?cb+1:1;last=nw;const m=Math.min(4,cb),p=PT[w.length]*m,c=document.createElement("span");bm=Math.max(bm,m);
+  sc+=p;found.push(w);sky(sc/(MAXP*.75));$("sc").textContent=sc;pp($("sc"));$("mx").textContent="×"+m;pp($("mx"));c.className="ch l"+w.length;c.dataset.w=w;c.textContent=w+" +"+p;$("fd").prepend(c);fl("+"+p);if(m>=3)pp(c0,"bp");
+  if(m==4&&!F.contains("fever")){F.add("fever");ban(c0,"FEVER","#ffe14d")}
+  if(w.length==6){burst(c0,["#19f0ff","#ff2bd6","#ffe14d"],44);ban(c0,"FULL BURN","#ff2bd6");vib([40,40,120])}else vib(20);used=[];draw()
+}
+
+async function end(){
+  clearInterval(iv);iv=0;F.remove("fever");
+  try {
+    const fRes = await fetch(`${API_BASE}/api/finish`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({session: sessionUUID})
+    });
+    if(fRes.ok){
+      const fData = await fRes.json();
+      if(fData.missedWords) serverMissedWords = fData.missedWords;
+      if(fData.title) doneTitle = fData.title;
+    }
+  }catch(e){}
+  if(!prac){done={sc,f:found,bm,missed:serverMissedWords};save(done)}
+  fin({sc,f:found,bm,missed:serverMissedWords})
+}
+
+let doneTitle = "";
+function fin(x){
+  const pc=x.sc/(MAXP*1.5),ttl=doneTitle||(pc<.1?"Warm-up":pc<.25?"Wordsmith":pc<.45?"Lexicon Lord":pc<.7?"Dictionary Goblin":"Walking Thesaurus");
+  const ms=(x.missed&&x.missed.length)?x.missed:ANS.filter(w=>!x.f.includes(w)).sort((a,b)=>b.length-a.length||a.localeCompare(b));
+  const totCount = x.f.length + ms.length;
+  const sh="Sprint #"+num+"  "+x.sc+" pts  x"+(x.bm||1)+" best combo  "+x.f.length+"/"+totCount+" words";
+  $("hd").textContent="Time!";sky(Math.min(1,x.sc/(MAXP*.75)));
+  $("v").innerHTML=`<div class="card"><p class="kick">Time! Letters: ${[...key].sort().join("").toUpperCase()}</p><div class="big">${x.sc}<small> PTS</small></div><h2>${ttl}</h2><p class="lede" style="margin:10px 0 14px">${x.f.length} of ${totCount} words · best combo ×${x.bm||1}</p>${ms.length?`<p class="kick">What you missed (${ms.length} words accounted for)</p><div>${ms.slice(0,36).map((w,i)=>`<span class="ch miss" style="--i:${i}">${w}</span>`).join("")}${ms.length>36?`<span class="ch miss">+${ms.length-36} more</span>`:""}</div>`:""}<div class="row"><button class="btn" id="cp">Copy result</button><button class="btn ghost" id="pr">Practice</button></div><p class="kick" id="cd" style="margin-top:16px"></p></div>`;
+  $("cp").onclick=()=>cp(sh,$("cp"));$("pr").onclick=()=>{prac=1;shuf();play()};cdown($("cd"));if(pc>=.25)burst($("v").firstChild,["#19f0ff","#ff2bd6","#ffe14d"],40)
+}
+
+initSprint().then(()=>{
+  done?fin(done):intro();
+});
 </script></body></html>

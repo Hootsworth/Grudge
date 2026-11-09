@@ -34,6 +34,18 @@ const DATABASES = [
     envVar: process.env.BALLPARK_DATABASE_ID,
     migrationDir: 'ballpark/migrations',
   },
+  {
+    name: 'rungs-db',
+    configFile: 'rungs/wrangler.toml',
+    envVar: process.env.RUNGS_DATABASE_ID,
+    migrationDir: 'rungs/migrations',
+  },
+  {
+    name: 'sprint-db',
+    configFile: 'sprint/wrangler.toml',
+    envVar: process.env.SPRINT_DATABASE_ID,
+    migrationDir: 'sprint/migrations',
+  },
 ];
 
 async function main() {
@@ -99,7 +111,7 @@ async function main() {
     }
 
     // If we have a valid UUID, replace the dummy database_id in the wrangler.toml
-    if (uuid && uuid !== 'local-strata-db-id' && uuid !== 'local-kin-db-id' && uuid !== 'local-passphew-db-id' && uuid !== 'local-pinpoint-db-id' && uuid !== 'local-ballpark-db-id') {
+    if (uuid && uuid !== 'local-strata-db-id' && uuid !== 'local-kin-db-id' && uuid !== 'local-passphew-db-id' && uuid !== 'local-pinpoint-db-id' && uuid !== 'local-ballpark-db-id' && uuid !== 'local-rungs-db-id' && uuid !== 'local-sprint-db-id') {
       let content = fs.readFileSync(configPath, 'utf-8');
       content = content.replace(/database_id\s*=\s*["'][^"']+["']/, `database_id = "${uuid}"`);
       fs.writeFileSync(configPath, content, 'utf-8');
