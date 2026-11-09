@@ -279,6 +279,32 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <div class="tag"><span>Anagrams</span><span>60 seconds</span></div>
 <h2>Sprint</h2><p>60 seconds. Six letters. Chain anagrams inside five seconds to stack combos and hit FEVER.</p>
 <div class="play">Start the sprint<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
+
+<!-- Game 9: Blackout -->
+<a class="g" href="blackout.html" style="--bgc:#d90429">
+<div class="art"><div class="blackout-art">
+<svg viewBox="0 0 100 100" style="width:100px;height:100px">
+  <!-- Manila Dossier Paper Sheet -->
+  <rect x="16" y="10" width="68" height="80" rx="8" fill="#fdfaf2" stroke="#14131a" stroke-width="4"/>
+  <!-- Top Secret Header Bar -->
+  <rect x="22" y="16" width="56" height="8" rx="2" fill="#14131a"/>
+  <!-- Redacted Classified Lines -->
+  <rect x="22" y="30" width="36" height="6" rx="2" fill="#14131a"/>
+  <rect x="62" y="30" width="16" height="6" rx="2" fill="#14131a"/>
+  <rect x="22" y="42" width="22" height="6" rx="2" fill="#14131a"/>
+  <rect x="48" y="42" width="30" height="6" rx="2" fill="#14131a"/>
+  <rect x="22" y="54" width="40" height="6" rx="2" fill="#14131a"/>
+  <rect x="66" y="54" width="12" height="6" rx="2" fill="#14131a"/>
+  <!-- Angled Red Rubber Stamp: DECLASSIFIED -->
+  <g transform="rotate(-12 50 68)">
+    <rect x="14" y="62" width="72" height="18" rx="4" fill="#d90429" stroke="#14131a" stroke-width="2.5"/>
+    <text x="50" y="74" font-family="'Space Grotesk',sans-serif" font-weight="800" font-size="8.5" fill="#fff" text-anchor="middle" letter-spacing="1">DECLASSIFIED</text>
+  </g>
+</svg>
+</div></div>
+<div class="tag"><span>Declassified</span><span>Redacted</span></div>
+<h2>Blackout</h2><p>A top-secret historical dossier is blacked out. Probe words, test hypotheses, and declassify the file.</p>
+<div class="play">Declassify the file<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
 </section>
 
 <section class="soon">
@@ -300,7 +326,7 @@ const loadGames=()=>{
     if(!manifest||!manifest.live)return;
     const liveSec=document.querySelector(".live");
     if(!liveSec)return;
-    const known={"fibber":1,"strata":1,"kin":1,"passphew":1,"pinpoint":1,"ballpark":1,"rungs":1,"sprint":1};
+    const known={"fibber":1,"strata":1,"kin":1,"passphew":1,"pinpoint":1,"ballpark":1,"rungs":1,"sprint":1,"blackout":1};
     const custom=manifest.live.filter(g=>!known[g.id]&&!rendered[g.id]);
     custom.forEach((g,idx)=>{
       rendered[g.id]=true;

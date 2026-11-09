@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   test:
-    name: Run All Tests (Strata, Kin, PassPhew, Pinpoint, Ballpark, Rungs, Sprint, Fibber)
+    name: Run All Tests (Strata, Kin, PassPhew, Pinpoint, Ballpark, Rungs, Sprint, Blackout, Fibber)
     runs-on: ubuntu-latest
 
     steps:
@@ -63,6 +63,10 @@ jobs:
         working-directory: sprint
         run: npm install --no-audit
 
+      - name: Install Blackout dependencies
+        working-directory: blackout
+        run: npm install --no-audit
+
       - name: Run Strata backend tests
         run: npm test
 
@@ -83,6 +87,9 @@ jobs:
 
       - name: Run Sprint backend tests
         run: npm run test:sprint
+
+      - name: Run Blackout backend tests
+        run: npm run test:blackout
 
       - name: Run Fibber Python unit tests
         run: python3 -m unittest discover -s tests -p "test_*.py"

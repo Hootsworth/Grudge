@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Blackout — daily declassified dossier</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@500;700;800&family=Bricolage+Grotesque:wght@700;800&display=swap">
+  <style>
+    :root {
+      --ink: #14161d;
+      --bg: #111319;
+      --card-bg: #f9f5eb;
+      --card-edge: #e6dfce;
+      --mute: #7e7a72;
+      --stamp-red: #d90429;
+      --stamp-green: #00875a;
+      --gold: #ffe066;
+      --highlight: #fff3a3;
+      --accent-blue: #2a6f97;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #151821;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(217, 4, 41, 0.08) 0%, transparent 60%),
+        linear-gradient(180deg, #181b24 0%, #0e1015 100%);
+      color: var(--ink);
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      overflow-x: hidden;
+      padding: 16px;
+    }
+    main {
+      max-width: 660px;
+      margin: 0 auto;
+      padding-bottom: 60px;
+      position: relative;
+    }
+    
+    /* Top Bar & Navigation */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #9ba1b0;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .back-link:hover {
+      color: #fff;
+      transform: translateX(-3px);
+    }
+    .pill {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 6px 14px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--stamp-red);
+      animation: pulse 2s infinite;
+    }
+
+    /* Manila Dossier Card */
+    .dossier-folder {
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 
+        0 12px 36px rgba(0, 0, 0, 0.5),
+        0 2px 6px rgba(0, 0, 0, 0.2);
+      border: 1px solid #dfd7c4;
+      overflow: hidden;
+      position: relative;
+      animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .folder-tab {
+      background: #eee6d3;
+      border-bottom: 2px solid var(--card-edge);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: "Courier Prime", monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #555149;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .tab-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .folder-tab svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Classified Header */
+    .dossier-header {
+      padding: 24px 24px 18px;
+      border-bottom: 2px dashed #d5ccb6;
+      position: relative;
+    }
+    .classification-bar {
+      display: inline-block;
+      font-family: "Courier Prime", monospace;
+      background: #14161d;
+      color: #fff;
+      padding: 4px 12px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .dossier-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    h1 {
+      margin: 0;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+    .meta-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .meta-tag {
+      background: #ece4d0;
+      border: 1px solid #dcd3bd;
+      border-radius: 6px;
+      padding: 3px 8px;
+      color: #4a463d;
+    }
+
+    /* Stamp */
+    .stamp-badge {
+      border: 4px solid var(--stamp-red);
+      color: var(--stamp-red);
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.18em;
+      padding: 6px 14px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      transform: rotate(-6deg);
+      user-select: none;
+      box-shadow: 0 0 0 2px rgba(217, 4, 41, 0.2);
+      transition: all 0.5s cubic-bezier(0.2, 1.4, 0.4, 1);
+      white-space: nowrap;
+    }
+    .stamp-badge.declassified {
+      border-color: var(--stamp-green);
+      color: var(--stamp-green);
+      transform: rotate(4deg) scale(1.08);
+      box-shadow: 0 0 16px rgba(0, 135, 90, 0.35);
+      animation: stampSlam 0.5s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+    }
+
+    /* Progress Intel Meter */
+    .intel-meter {
+      background: #f0e9d7;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid #e2dac7;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+    .meter-bar {
+      flex: 1;
+      height: 8px;
+      background: #ded5bf;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2a6f97, #2ec4a0);
+      transition: width 0.4s ease;
+    }
+    .intel-stats {
+      white-space: nowrap;
+      color: #555149;
+    }
+
+    /* Document Reader Section */
+    .document-body {
+      padding: 28px 24px;
+      background: #faf7f0;
+      font-family: "Courier Prime", monospace;
+      font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+      line-height: 1.85;
+      color: #1a1a1a;
+      min-height: 200px;
+      position: relative;
+      user-select: none;
+    }
+    
+    /* Redacted Tokens */
+    .token {
+      display: inline-block;
+      vertical-align: baseline;
+      transition: background-color 0.4s, color 0.4s;
+      border-radius: 3px;
+    }
+    .token.redacted {
+      background: #111317;
+      color: transparent;
+      user-select: none;
+      cursor: help;
+      position: relative;
+      border-radius: 2px;
+      margin: 0 1px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    }
+    .token.redacted:hover {
+      background: #252a36;
+    }
+    .token.redacted::after {
+      content: attr(data-len);
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.4);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .token.redacted:hover::after {
+      opacity: 1;
+    }
+    
+    /* Unredacted / Highlight Animation */
+    .token.revealed {
+      background: transparent;
+      color: #111317;
+      font-weight: 700;
+    }
+    .token.just-revealed {
+      background: var(--gold) !important;
+      color: #000 !important;
+      animation: highlightGlow 1.8s ease-out forwards;
+    }
+    .token.article {
+      color: #5c5850;
+      font-weight: 400;
+    }
+
+    /* Control Panel / Inputs */
+    .control-panel {
+      padding: 20px 24px 24px;
+      background: #f4eee1;
+      border-top: 2px solid var(--card-edge);
+    }
+    .tabs-switch {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      border: 2px solid #ded5bf;
+      background: #ebe4d2;
+      color: #555149;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .mode-tab.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+    .input-box {
+      display: flex;
+      gap: 10px;
+    }
+    input[type="text"] {
+      flex: 1;
+      background: #fff;
+      border: 2px solid #d5ccb6;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 4px rgba(42, 111, 151, 0.15);
+    }
+    .btn {
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 0 22px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: transform 0.15s, background 0.2s;
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background: #252a36;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+    .btn.solve-btn {
+      background: var(--stamp-red);
+    }
+    .btn.solve-btn:hover {
+      background: #b50322;
+    }
+
+    /* Message / Status Feedback */
+    .status-msg {
+      margin-top: 10px;
+      min-height: 22px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+      color: #555149;
+    }
+    .status-msg.success { color: var(--stamp-green); }
+    .status-msg.danger { color: var(--stamp-red); }
+
+    /* Guessed Probed Words Ledger */
+    .probed-section {
+      margin-top: 14px;
+    }
+    .probed-title {
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7a756b;
+      margin-bottom: 8px;
+    }
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-height: 96px;
+      overflow-y: auto;
+      padding: 2px;
+    }
+    .chip {
+      background: #e7dfcc;
+      border: 1px solid #d5ccb6;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #3b372f;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip.hit {
+      background: #d8f3dc;
+      border-color: #b7e4c7;
+      color: #1b4332;
+    }
+    .chip .count {
+      font-size: 0.72rem;
+      opacity: 0.8;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 6px;
+      padding: 1px 5px;
+    }
+
+    /* Victory Card / Declassified Dossier Reveal */
+    .declassified-dossier {
+      display: none;
+      margin-top: 20px;
+      background: #fff;
+      border: 3px solid var(--stamp-green);
+      border-radius: 16px;
+      padding: 24px;
+      animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .declassified-dossier.show {
+      display: block;
+    }
+    .declass-kicker {
+      color: var(--stamp-green);
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .declass-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin: 0 0 10px;
+      color: var(--ink);
+    }
+    .declass-rank-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .declass-rank-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #166534;
+    }
+    .declass-guesses {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #4ade80;
+      background: #166534;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .declass-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .share-btn {
+      flex: 1;
+      background: var(--stamp-green);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .share-btn:hover { background: #00704a; }
+    .share-btn:active { transform: scale(0.97); }
+    .source-btn {
+      background: #f4eee1;
+      color: var(--ink);
+      border: 2px solid #d5ccb6;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .source-btn:hover { background: #e8e0ce; }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #111317;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      pointer-events: none;
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.3s;
+      z-index: 100;
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Keyframe Animations */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes stampSlam {
+      0% { opacity: 0; transform: scale(2.5) rotate(-15deg); }
+      70% { transform: scale(0.95) rotate(5deg); }
+      100% { opacity: 1; transform: scale(1.08) rotate(4deg); }
+    }
+    @keyframes highlightGlow {
+      0% { background: #ffe066; transform: scale(1.08); }
+      50% { background: #fff3a3; }
+      100% { background: transparent; transform: scale(1); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    @keyframes shakeNope {
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake { animation: shakeNope 0.4s ease; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="nav">
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Oddly Hub
+      </a>
+      <div class="pill">
+        <span class="dot"></span>
+        <span id="plate-label">BLACKOUT #313</span>
+      </div>
+    </div>
+
+    <!-- The Dossier Manila Folder -->
+    <div class="dossier-folder">
+      <div class="folder-tab">
+        <div class="tab-left">
+          <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+          <span id="file-code">DOSSIER-313 // ARCHIVE</span>
+        </div>
+        <span id="date-label">DAILY</span>
+      </div>
+
+      <div class="dossier-header">
+        <div class="classification-bar" id="classification-badge">TOP SECRET // RESTRICTED</div>
+        <div class="dossier-title-row">
+          <div>
+            <h1 id="subject-header">Classified Dossier</h1>
+            <div class="meta-tags">
+              <span class="meta-tag" id="category-tag">Loading Category...</span>
+              <span class="meta-tag" id="year-tag">Target: Restricted</span>
+            </div>
+          </div>
+          <div class="stamp-badge" id="main-stamp">CLASSIFIED</div>
+        </div>
+      </div>
+
+      <!-- Intel Unredacted Meter -->
+      <div class="intel-meter">
+        <div class="meter-bar">
+          <div class="meter-fill" id="meter-fill"></div>
+        </div>
+        <div class="intel-stats" id="intel-stats">0% Declassified</div>
+      </div>
+
+      <!-- Redacted Document Text Reader -->
+      <div class="document-body" id="document-text">
+        <!-- Rendered tokens injected here -->
+      </div>
+
+      <!-- Controls & Input Panel -->
+      <div class="control-panel" id="controls">
+        <div class="tabs-switch">
+          <button class="mode-tab active" id="tab-probe" onclick="setMode('probe')">1. Probe Word (Keywords)</button>
+          <button class="mode-tab" id="tab-solve" onclick="setMode('solve')">2. Declassify Title (Solve)</button>
+        </div>
+
+        <form id="guess-form" onsubmit="handleFormSubmit(event)">
+          <div class="input-box">
+            <input type="text" id="guess-input" placeholder="Type a word to test..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <button type="submit" class="btn" id="submit-btn">PROBE</button>
+          </div>
+        </form>
+
+        <div class="status-msg" id="status-msg"></div>
+
+        <!-- Probed Words Ledger -->
+        <div class="probed-section">
+          <div class="probed-title">Words Tested (<span id="probed-count">0</span>)</div>
+          <div class="chips-row" id="chips-container">
+            <!-- Chips rendered here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Solved Declassified Dossier Reveal Box -->
+      <div class="declassified-dossier" id="declass-box">
+        <div class="declass-kicker">★ Dossier Deciphered & Declassified</div>
+        <h2 class="declass-title" id="final-title">Manhattan Project</h2>
+        <div class="declass-rank-box">
+          <div>
+            <div style="font-size:0.75rem;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.1em">Assigned Rank</div>
+            <div class="declass-rank-title" id="final-rank">Master Cryptanalyst</div>
+          </div>
+          <div class="declass-guesses" id="final-guesses">8 Guesses</div>
+        </div>
+        <div class="declass-actions">
+          <button class="share-btn" onclick="copyShareCard()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Share Intelligence Report
+          </button>
+          <a class="source-btn" id="source-link" href="#" target="_blank" rel="noopener">
+            Wikipedia File
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast">Intelligence report copied to clipboard!</div>
+
+  <script>
+    // Blackout Client Engine
+    const API_BASE = "https://blackout-backend.adityapdixit.workers.dev";
+    const SESSION_KEY = "blackout_session_uuid";
+    let sessionUUID = localStorage.getItem(SESSION_KEY);
+    if (!sessionUUID) {
+      sessionUUID = (crypto.randomUUID ? crypto.randomUUID() : "blk_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+      localStorage.setItem(SESSION_KEY, sessionUUID);
+    }
+
+    // Curated Fallback Dossiers
+    const FALLBACK_DOSSIERS = [
+      {
+        id: "manhattan-project",
+        date: "2026-11-09",
+        plate: 313,
+        classification: "TOP SECRET // DECLASSIFIED",
+        category: "Atomic Physics & Military Espionage",
+        title: "Manhattan Project",
+        aliases: ["manhattan project", "the manhattan project", "manhattan engineering district", "project manhattan"],
+        year: 1945,
+        excerpt: "The Manhattan Project was a research and development undertaking during World War II that produced the first nuclear weapons. Led by the United States with the assistance of the United Kingdom and Canada, the project succeeded in creating the atomic bomb at Los Alamos under the scientific direction of J. Robert Oppenheimer.",
+        citation: "https://en.wikipedia.org/wiki/Manhattan_Project"
+      },
+      {
+        id: "rosetta-stone",
+        date: "2026-11-10",
+        plate: 314,
+        classification: "ARCHIVAL DOSSIER // DECLASSIFIED",
+        category: "Ancient Epigraphy & Linguistics",
+        title: "Rosetta Stone",
+        aliases: ["rosetta stone", "the rosetta stone"],
+        year: 1799,
+        excerpt: "The Rosetta Stone is an ancient granodiorite stele inscribed with three versions of a decree issued in Memphis, Egypt. Because the decree appears in Ancient Egyptian hieroglyphs, Demotic script, and Ancient Greek, the stone provided the indispensable key to the modern decipherment of Egyptian hieroglyphs.",
+        citation: "https://en.wikipedia.org/wiki/Rosetta_Stone"
+      },
+      {
+        id: "voyager-record",
+        date: "2026-11-11",
+        plate: 315,
+        classification: "DEEP SPACE INTERCEPT // EYES ONLY",
+        category: "Astrophysics & Interstellar Artifacts",
+        title: "Voyager Golden Record",
+        aliases: ["voyager golden record", "golden record", "the voyager golden record", "voyager record"],
+        year: 1977,
+        excerpt: "The Voyager Golden Record is a phonograph record that was included aboard both Voyager spacecraft launched in 1977. The record contains sounds and images selected to portray the diversity of life and culture on Earth, intended for any intelligent extraterrestrial life form who may find them in interstellar space.",
+        citation: "https://en.wikipedia.org/wiki/Voyager_Golden_Record"
+      },
+      {
+        id: "apollo-11",
+        date: "2026-11-12",
+        plate: 316,
+        classification: "MISSION FLIGHT LOG // RESTRICTED",
+        category: "Space Exploration & Aeronautics",
+        title: "Apollo 11",
+        aliases: ["apollo 11", "apollo xi", "apollo eleven", "project apollo 11"],
+        year: 1969,
+        excerpt: "Apollo 11 was the American spaceflight that first landed humans on the Moon. Commander Neil Armstrong and Lunar Module Pilot Buzz Aldrin landed the Apollo Lunar Module Eagle on July 20, 1969, and Armstrong became the first person to step onto the lunar surface six hours later.",
+        citation: "https://en.wikipedia.org/wiki/Apollo_11"
+      }
+    ];
+
+    const COMMON_ARTICLES = new Set([
+      "the", "a", "an", "of", "in", "on", "at", "and", "to", "for", "by", "with", "from", "as", "is", "was", "were", "it", "its", "that"
+    ]);
+
+    // State
+    let currentMode = "probe"; // "probe" or "solve"
+    let todayData = null;
+    let localDossier = null; // Used for offline or verification
+    let probedWords = {};    // word -> hit count
+    let revealedTokenIndices = new Set();
+    let isSolved = false;
+    let totalGuesses = 0;
+    let finalShareText = "";
+
+    // DOM Elements
+    const $ = id => document.getElementById(id);
+
+    function getTodayString() {
+      return new Date().toISOString().split("T")[0];
+    }
+
+    function getFallbackDossier(dateStr) {
+      const found = FALLBACK_DOSSIERS.find(d => d.date === dateStr);
+      if (found) return found;
+      const base = Date.UTC(2026, 0, 1);
+      const [y, m, d] = dateStr.split("-").map(Number);
+      const cur = Date.UTC(y, m - 1, d);
+      const dayIdx = Math.max(0, Math.floor((cur - base) / 864e5));
+      const idx = dayIdx % FALLBACK_DOSSIERS.length;
+      return { ...FALLBACK_DOSSIERS[idx], date: dateStr, plate: dayIdx + 1 };
+    }
+
+    // Initialize Game
+    async function initGame() {
+      const todayStr = getTodayString();
+      localDossier = getFallbackDossier(todayStr);
+
+      // Load saved state from local storage if matching date
+      const savedKey = "blackout_state_" + todayStr;
+      const saved = localStorage.getItem(savedKey);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          probedWords = parsed.probedWords || {};
+          revealedTokenIndices = new Set(parsed.revealedTokenIndices || []);
+          isSolved = !!parsed.isSolved;
+          totalGuesses = parsed.totalGuesses || 0;
+        } catch(e){}
+      }
+
+      try {
+        // Try live worker endpoint
+        const res = await fetch(`${API_BASE}/api/today?date=${todayStr}`);
+        if (res.ok) {
+          todayData = await res.json();
+        } else {
+          todayData = buildClientTodayData(localDossier);
+        }
+      } catch (err) {
+        todayData = buildClientTodayData(localDossier);
+      }
+
+      renderDossierView();
+      if (isSolved) {
+        triggerSolvedUI({
+          title: localDossier.title,
+          category: localDossier.category,
+          year: localDossier.year,
+          fullExcerpt: localDossier.excerpt,
+          citation: localDossier.citation,
+          totalGuesses,
+          rankTitle: getRank(totalGuesses, true)
+        });
+      }
+    }
+
+    function buildClientTodayData(dossier) {
+      const rawWords = dossier.excerpt.split(/\s+/);
+      const tokens = rawWords.map((raw, idx) => {
+        const clean = raw.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, "").toLowerCase();
+        const match = raw.match(/^([^a-zA-Z0-9]*)(.*?)([^a-zA-Z0-9]*)$/);
+        const punctBefore = match ? match[1] : "";
+        const punctAfter = match ? match[3] : "";
+        const isArt = COMMON_ARTICLES.has(clean);
+        return {
+          index: idx,
+          length: clean.length,
+          punctuationBefore: punctBefore,
+          punctuationAfter: punctAfter,
+          preRevealedWord: isArt ? clean : undefined
+        };
+      });
+
+      return {
+        date: dossier.date,
+        plate: dossier.plate,
+        classification: dossier.classification,
+        category: dossier.category,
+        year: dossier.year,
+        totalTokens: tokens.length,
+        totalWords: tokens.filter(t => t.length > 0).length,
+        tokens
+      };
+    }
+
+    function renderDossierView() {
+      $("plate-label").textContent = `BLACKOUT #${todayData.plate || 313}`;
+      $("file-code").textContent = `DOSSIER-${todayData.plate || 313} // RESTRICTED`;
+      $("date-label").textContent = todayData.date;
+      $("classification-badge").textContent = todayData.classification;
+      $("category-tag").textContent = todayData.category;
+      $("year-tag").textContent = todayData.year ? `Target: Circa ${todayData.year}` : "Target: [RESTRICTED]";
+
+      const docContainer = $("document-text");
+      docContainer.innerHTML = "";
+
+      todayData.tokens.forEach(tok => {
+        const span = document.createElement("span");
+        span.id = `tok-${tok.index}`;
+        span.className = "token";
+
+        const pBefore = tok.punctuationBefore || "";
+        const pAfter = tok.punctuationAfter || "";
+
+        if (tok.length === 0) {
+          // Punctuation only
+          span.textContent = pBefore + pAfter + " ";
+          docContainer.appendChild(span);
+          return;
+        }
+
+        if (tok.preRevealedWord) {
+          span.className = "token revealed article";
+          span.textContent = pBefore + tok.preRevealedWord + pAfter + " ";
+        } else if (revealedTokenIndices.has(tok.index)) {
+          span.className = "token revealed";
+          const wordText = getKnownTokenWord(tok.index) || "•".repeat(tok.length);
+          span.textContent = pBefore + wordText + pAfter + " ";
+        } else {
+          span.className = "token redacted";
+          span.dataset.len = `${tok.length}`;
+          span.textContent = "█".repeat(Math.max(1, tok.length));
+          
+          // Wrap in text node with punctuation
+          const wrap = document.createElement("span");
+          if (pBefore) wrap.appendChild(document.createTextNode(pBefore));
+          wrap.appendChild(span);
+          wrap.appendChild(document.createTextNode(pAfter + " "));
+          docContainer.appendChild(wrap);
+          return;
+        }
+
+        docContainer.appendChild(span);
+      });
+
+      updateIntelMeter();
+      renderProbedChips();
+    }
+
+    function getKnownTokenWord(index) {
+      if (!localDossier) return null;
+      const rawWords = localDossier.excerpt.split(/\s+/);
+      if (rawWords[index]) {
+        return rawWords[index].replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, "");
+      }
+      return null;
+    }
+
+    function updateIntelMeter() {
+      const nonArticleTokens = todayData.tokens.filter(t => t.length > 0 && !t.preRevealedWord);
+      const totalToReveal = nonArticleTokens.length;
+      let revealedCount = 0;
+      nonArticleTokens.forEach(t => {
+        if (revealedTokenIndices.has(t.index)) revealedCount++;
+      });
+
+      const pct = totalToReveal > 0 ? Math.round((revealedCount / totalToReveal) * 100) : 0;
+      $("meter-fill").style.width = pct + "%";
+      $("intel-stats").textContent = `${pct}% Declassified (${revealedCount}/${totalToReveal} keywords)`;
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      $("tab-probe").classList.toggle("active", mode === "probe");
+      $("tab-solve").classList.toggle("active", mode === "solve");
+      const input = $("guess-input");
+      const submitBtn = $("submit-btn");
+
+      if (mode === "probe") {
+        input.placeholder = "Type a word to test (e.g. bomb, research)...";
+        submitBtn.textContent = "PROBE";
+        submitBtn.className = "btn";
+      } else {
+        input.placeholder = "Enter Dossier Title (e.g. Manhattan Project)...";
+        submitBtn.textContent = "DECLASSIFY";
+        submitBtn.className = "btn solve-btn";
+      }
+      input.focus();
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      if (isSolved) return;
+
+      const input = $("guess-input");
+      const rawVal = input.value.trim();
+      if (!rawVal) return;
+
+      input.value = "";
+      if (currentMode === "probe") {
+        await executeWordProbe(rawVal.toLowerCase());
+      } else {
+        await executeDossierSolve(rawVal);
+      }
+    }
+
+    async function executeWordProbe(word) {
+      const clean = word.replace(/[^a-z0-9]/g, "");
+      if (!clean) return;
+
+      totalGuesses++;
+      const msg = $("status-msg");
+
+      let matchedIndices = [];
+      let matchesCount = 0;
+
+      // Try live backend first
+      try {
+        const res = await fetch(`${API_BASE}/api/guess`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session: sessionUUID, word: clean }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          matchedIndices = data.matchedIndices || [];
+          matchesCount = data.matchesCount || 0;
+          if (data.totalGuesses) totalGuesses = data.totalGuesses;
+          if (data.isSolved) {
+            executeDossierSolve(clean);
+            return;
+          }
+        } else {
+          matchedIndices = probeLocal(clean);
+          matchesCount = matchedIndices.length;
+        }
+      } catch (err) {
+        matchedIndices = probeLocal(clean);
+        matchesCount = matchedIndices.length;
+      }
+
+      probedWords[clean] = matchesCount;
+
+      if (matchesCount > 0) {
+        msg.className = "status-msg success";
+        msg.textContent = `Target matched: Unredacted ${matchesCount} occurrence${matchesCount === 1 ? '' : 's'} of "${clean}"`;
+        vibrate(40);
+        
+        matchedIndices.forEach(idx => {
+          revealedTokenIndices.add(idx);
+          const tokEl = $(`tok-${idx}`);
+          if (tokEl) {
+            tokEl.className = "token revealed just-revealed";
+            const pBefore = tokEl.parentElement.childNodes[0]?.nodeValue || "";
+            const pAfter = tokEl.parentElement.childNodes[2]?.nodeValue || "";
+            const wordText = getKnownTokenWord(idx) || clean;
+            tokEl.parentElement.innerHTML = "";
+            const freshSpan = document.createElement("span");
+            freshSpan.id = `tok-${idx}`;
+            freshSpan.className = "token revealed just-revealed";
+            freshSpan.textContent = pBefore + wordText + pAfter + " ";
+            $("document-text").replaceChild(freshSpan, $("document-text").childNodes[idx]);
+          }
+        });
+      } else {
+        msg.className = "status-msg danger";
+        msg.textContent = `Zero occurrences of "${clean}" found in dossier`;
+        vibrate([30, 40, 30]);
+        shakeInput();
+      }
+
+      renderDossierView();
+      saveGameState();
+    }
+
+    function probeLocal(clean) {
+      if (!localDossier) return [];
+      const rawWords = localDossier.excerpt.split(/\s+/);
+      const hits = [];
+      rawWords.forEach((raw, idx) => {
+        const w = raw.replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, "").toLowerCase();
+        if (w === clean) hits.push(idx);
+      });
+      return hits;
+    }
+
+    async function executeDossierSolve(guess) {
+      const msg = $("status-msg");
+      totalGuesses++;
+
+      let solveSuccess = false;
+      let solveData = null;
+
+      try {
+        const res = await fetch(`${API_BASE}/api/solve`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session: sessionUUID, titleGuess: guess }),
+        });
+        if (res.ok) {
+          solveData = await res.json();
+          solveSuccess = !!solveData.correct;
+          if (solveData.totalGuesses) totalGuesses = solveData.totalGuesses;
+        } else {
+          solveSuccess = checkLocalTitle(guess);
+        }
+      } catch (err) {
+        solveSuccess = checkLocalTitle(guess);
+      }
+
+      if (solveSuccess) {
+        isSolved = true;
+        msg.className = "status-msg success";
+        msg.textContent = "CLASSIFIED DOSSIER DECLASSIFIED!";
+        vibrate([60, 50, 100]);
+
+        // Reveal all tokens
+        todayData.tokens.forEach(t => revealedTokenIndices.add(t.index));
+        renderDossierView();
+
+        const rank = getRank(totalGuesses, true);
+        triggerSolvedUI({
+          title: solveData?.title || localDossier.title,
+          category: solveData?.category || localDossier.category,
+          year: solveData?.year || localDossier.year,
+          fullExcerpt: solveData?.fullExcerpt || localDossier.excerpt,
+          citation: solveData?.citation || localDossier.citation,
+          totalGuesses,
+          rankTitle: rank,
+          shareCard: solveData?.shareCard
+        });
+        saveGameState();
+      } else {
+        msg.className = "status-msg danger";
+        msg.textContent = `"${guess}" is not the correct dossier codename`;
+        vibrate([40, 50, 40]);
+        shakeInput();
+        saveGameState();
+      }
+    }
+
+    function checkLocalTitle(guess) {
+      if (!localDossier) return false;
+      const norm = s => s.toLowerCase().replace(/^the\s+/, '').replace(/[^a-z0-9]/g, '');
+      const g = norm(guess);
+      if (!g) return false;
+      if (g === norm(localDossier.title)) return true;
+      return localDossier.aliases.some(a => norm(a) === g);
+    }
+
+    function getRank(guesses, solved) {
+      if (!solved) return "Redacted in Action";
+      if (guesses <= 5) return "Master Cryptanalyst";
+      if (guesses <= 12) return "Intelligence Officer";
+      if (guesses <= 20) return "Field Operative";
+      if (guesses <= 35) return "Archival Analyst";
+      return "Clerical Researcher";
+    }
+
+    function triggerSolvedUI(data) {
+      $("main-stamp").textContent = "DECLASSIFIED";
+      $("main-stamp").classList.add("declassified");
+      $("subject-header").textContent = data.title;
+      $("declass-box").classList.add("show");
+      $("final-title").textContent = data.title + (data.year ? ` (${data.year})` : "");
+      $("final-rank").textContent = data.rankTitle;
+      $("final-guesses").textContent = `${data.totalGuesses} Guesses`;
+      $("source-link").href = data.citation;
+      $("controls").style.display = "none";
+
+      finalShareText = data.shareCard || [
+        `BLACKOUT #${todayData.plate || 313}`,
+        `🗂️ Status: DECLASSIFIED in ${data.totalGuesses} guesses`,
+        `🎖️ Rank: ${data.rankTitle}`,
+        `https://grudge.games/blackout`
+      ].join("\n");
+    }
+
+    function renderProbedChips() {
+      const container = $("chips-container");
+      container.innerHTML = "";
+      const words = Object.keys(probedWords);
+      $("probed-count").textContent = words.length;
+
+      // Sort with hits first, then alphabetical
+      words.sort((a, b) => (probedWords[b] - probedWords[a]) || a.localeCompare(b));
+
+      words.forEach(w => {
+        const count = probedWords[w];
+        const chip = document.createElement("span");
+        chip.className = `chip ${count > 0 ? 'hit' : ''}`;
+        chip.innerHTML = `<span>${w}</span><span class="count">${count}</span>`;
+        container.appendChild(chip);
+      });
+    }
+
+    function copyShareCard() {
+      if (!finalShareText) return;
+      navigator.clipboard.writeText(finalShareText).then(() => {
+        showToast("Intelligence report copied to clipboard!");
+      }).catch(() => {
+        showToast("Failed to copy report");
+      });
+    }
+
+    function showToast(text) {
+      const toast = $("toast");
+      toast.textContent = text;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2400);
+    }
+
+    function shakeInput() {
+      const form = $("guess-form");
+      form.classList.remove("shake");
+      void form.offsetWidth;
+      form.classList.add("shake");
+    }
+
+    function vibrate(pattern) {
+      try {
+        if (navigator.vibrate) navigator.vibrate(pattern);
+      } catch (e) {}
+    }
+
+    function saveGameState() {
+      const todayStr = getTodayString();
+      const state = {
+        probedWords,
+        revealedTokenIndices: Array.from(revealedTokenIndices),
+        isSolved,
+        totalGuesses
+      };
+      localStorage.setItem("blackout_state_" + todayStr, JSON.stringify(state));
+    }
+
+    initGame();
+  </script>
+</body>
+</html>

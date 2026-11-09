@@ -1,4 +1,4 @@
-name: Deploy Cloudflare Workers (Strata, Kin, PassPhew, Pinpoint, Ballpark, Rungs & Sprint)
+name: Deploy Cloudflare Workers (Strata, Kin, PassPhew, Pinpoint, Ballpark, Rungs, Sprint & Blackout)
 
 on:
   workflow_dispatch:
@@ -12,6 +12,7 @@ on:
       - 'ballpark/src/**'
       - 'rungs/src/**'
       - 'sprint/src/**'
+      - 'blackout/src/**'
       - 'wrangler.toml'
       - 'kin/wrangler.toml'
       - 'passphew/wrangler.toml'
@@ -19,6 +20,7 @@ on:
       - 'ballpark/wrangler.toml'
       - 'rungs/wrangler.toml'
       - 'sprint/wrangler.toml'
+      - 'blackout/wrangler.toml'
 
 jobs:
   deploy-workers:
@@ -59,6 +61,7 @@ jobs:
           BALLPARK_DATABASE_ID: ${{ secrets.BALLPARK_DATABASE_ID }}
           RUNGS_DATABASE_ID: ${{ secrets.RUNGS_DATABASE_ID }}
           SPRINT_DATABASE_ID: ${{ secrets.SPRINT_DATABASE_ID }}
+          BLACKOUT_DATABASE_ID: ${{ secrets.BLACKOUT_DATABASE_ID }}
         run: |
           node scripts/setup_cf_d1.js
 
@@ -122,4 +125,13 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: 'sprint'
+          command: deploy
+
+      - name: Deploy Blackout Worker
+        if: steps.check_cf.outputs.has_token == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: 'blackout'
           command: deploy

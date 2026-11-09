@@ -105,6 +105,19 @@
       "artType": "sprint",
       "backend": "client-deterministic",
       "status": "live"
+    },
+    {
+      "id": "blackout",
+      "title": "Blackout",
+      "url": "blackout.html",
+      "tags": ["Declassified", "Redacted"],
+      "desc": "A top-secret historical dossier is blacked out. Probe words, test hypotheses, and declassify the file.",
+      "cta": "Declassify the file",
+      "color": "var(--c0)",
+      "bgHex": "#d90429",
+      "artType": "blackout",
+      "backend": "worker-d1",
+      "status": "live"
     }
   ],
   "lab": [
