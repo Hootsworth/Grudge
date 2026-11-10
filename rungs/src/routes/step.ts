@@ -87,10 +87,18 @@ export async function handleStepRoute(request: Request, env: Env): Promise<Respo
 
   const session = await createOrGetSession(env.DB, sessionId, todayStr);
   if (roundNum !== session.current_round) {
-    return new Response(
-      JSON.stringify({ error: `Must play ladders in order. Currently on ladder ${session.current_round}.` }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
+    if (roundNum === 1 && (session.status === 'finished' || session.current_round > 5)) {
+      await env.DB.prepare(
+        'UPDATE sessions SET current_round = 1, total_strokes = 0, total_par = 0, status = "active", finished_at = NULL WHERE id = ?'
+      ).bind(sessionId).run();
+      session.current_round = 1;
+      session.status = 'active';
+    } else {
+      return new Response(
+        JSON.stringify({ error: `Must play ladders in order. Currently on ladder ${session.current_round}.` }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
   }
 
   const progress = await getOrCreateRoundProgress(

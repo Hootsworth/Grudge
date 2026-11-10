@@ -44,7 +44,29 @@ export async function createOrGetSession(
     .bind(sessionId)
     .first<SessionRecord>();
 
-  if (existing) return existing;
+  if (existing) {
+    if (existing.puzzle_date === dateStr) {
+      return existing;
+    }
+    // Reset session for today's puzzle
+    await db
+      .prepare(
+        'UPDATE sessions SET puzzle_date = ?, current_round = 1, total_strokes = 0, total_par = 0, status = "active", started_at = ?, finished_at = NULL WHERE id = ?'
+      )
+      .bind(dateStr, nowMs, sessionId)
+      .run();
+
+    return {
+      ...existing,
+      puzzle_date: dateStr,
+      current_round: 1,
+      total_strokes: 0,
+      total_par: 0,
+      status: 'active',
+      started_at: nowMs,
+      finished_at: null,
+    };
+  }
 
   const newSession: SessionRecord = {
     id: sessionId,

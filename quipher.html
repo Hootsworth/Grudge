@@ -80,7 +80,7 @@ let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
 const KEY = "quipher:" + localDateStr;
 
 // Anonymous session UUID
-const sessionKey = "quipher_session_uuid";
+const sessionKey = "quipher_session_" + localDateStr;
 let sessionId = localStorage.getItem(sessionKey);
 if (!sessionId) {
   sessionId = (crypto.randomUUID ? crypto.randomUUID() : "sess_" + Math.random().toString(36).slice(2) + Date.now().toString(36));

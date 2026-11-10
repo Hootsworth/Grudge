@@ -52,6 +52,12 @@ const DATABASES = [
     envVar: process.env.BLACKOUT_DATABASE_ID,
     migrationDir: 'blackout/migrations',
   },
+  {
+    name: 'quipher-db',
+    configFile: 'quipher/wrangler.toml',
+    envVar: process.env.QUIPHER_DATABASE_ID,
+    migrationDir: 'quipher/migrations',
+  },
 ];
 
 async function main() {

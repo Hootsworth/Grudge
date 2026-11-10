@@ -106,11 +106,22 @@ export async function handleGuessRoute(
     });
   }
 
+  let currentQIndex = session.current_question_index;
+  // If session was completed or past the last question, but user is submitting for question 1, reset session
+  if (question.question_index === 1 && (currentQIndex > 5 || session.completed_at !== null)) {
+    await env.DB.prepare(
+      'UPDATE sessions SET current_question_index = 1, question_served_at = ?, total_points = 0, total_error_orders = 0, completed_at = NULL WHERE session_id = ?'
+    ).bind(now - 3000, sessionId).run();
+    session.current_question_index = 1;
+    session.question_served_at = now - 3000;
+    currentQIndex = 1;
+  }
+
   // Enforce question sequence order (Questions are answered in order)
-  if (question.question_index !== session.current_question_index) {
+  if (question.question_index !== currentQIndex) {
     return new Response(
       JSON.stringify({
-        error: `Out-of-order guess rejected. Currently on question ${session.current_question_index}.`,
+        error: `Out-of-order guess rejected. Currently on question ${currentQIndex}.`,
       }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     );

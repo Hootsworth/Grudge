@@ -107,20 +107,52 @@ export async function createOrGetSession(
     .first<any>();
 
   if (existing) {
+    if (existing.puzzle_date === dateStr) {
+      return {
+        session_id: existing.session_id,
+        puzzle_date: existing.puzzle_date,
+        ip_hash: existing.ip_hash,
+        started_at: existing.started_at,
+        solved_at: existing.solved_at,
+        solve_seconds: existing.solve_seconds,
+        checks_count: existing.checks_count,
+        hints_count: existing.hints_count,
+        last_check_at: existing.last_check_at || 0,
+        score: existing.score,
+        rank_title: existing.rank_title,
+        status: existing.status,
+        flagged_reason: existing.flagged_reason,
+        created_at: existing.created_at,
+      };
+    }
+
+    // Reset session for today's date
+    await db
+      .prepare(
+        `UPDATE sessions SET
+          puzzle_date = ?, ip_hash = ?, started_at = ?, solved_at = NULL,
+          solve_seconds = NULL, checks_count = 0, hints_count = 0,
+          last_check_at = 0, score = NULL, rank_title = NULL, status = 'in_progress',
+          flagged_reason = NULL
+        WHERE session_id = ?`
+      )
+      .bind(dateStr, ipHash, now, sessionId)
+      .run();
+
     return {
       session_id: existing.session_id,
-      puzzle_date: existing.puzzle_date,
-      ip_hash: existing.ip_hash,
-      started_at: existing.started_at,
-      solved_at: existing.solved_at,
-      solve_seconds: existing.solve_seconds,
-      checks_count: existing.checks_count,
-      hints_count: existing.hints_count,
-      last_check_at: existing.last_check_at || 0,
-      score: existing.score,
-      rank_title: existing.rank_title,
-      status: existing.status,
-      flagged_reason: existing.flagged_reason,
+      puzzle_date: dateStr,
+      ip_hash: ipHash,
+      started_at: now,
+      solved_at: null,
+      solve_seconds: null,
+      checks_count: 0,
+      hints_count: 0,
+      last_check_at: 0,
+      score: null,
+      rank_title: null,
+      status: 'in_progress',
+      flagged_reason: null,
       created_at: existing.created_at,
     };
   }

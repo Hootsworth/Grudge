@@ -63,11 +63,17 @@ const API_BASE = window.location.hostname.includes("workers.dev")
   ? ""
   : "https://ballpark-backend.adityapdixit.workers.dev";
 
-const sessionId = localStorage.getItem("ballpark:session_id") || (() => {
+const d0 = new Date();
+const todayStr = `${d0.getFullYear()}-${String(d0.getMonth() + 1).padStart(2, '0')}-${String(d0.getDate()).padStart(2, '0')}`;
+const T = Math.floor(Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate()) / 864e5);
+let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
+const KEY = "ballpark:" + todayStr;
+
+let sessionId = localStorage.getItem("ballpark:session_id:" + todayStr) || (() => {
   const id = (typeof crypto !== "undefined" && crypto.randomUUID)
     ? crypto.randomUUID()
     : "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
-  try { localStorage.setItem("ballpark:session_id", id); } catch(e) {}
+  try { localStorage.setItem("ballpark:session_id:" + todayStr, id); } catch(e) {}
   return id;
 })();
 
@@ -75,12 +81,6 @@ const U=[[1e24,"septillion"],[1e21,"sextillion"],[1e18,"quintillion"],[1e15,"qua
 const $=id=>document.getElementById(id);
 function sig(n){if(n<=0)return 0;const f=Math.pow(10,Math.floor(Math.log10(n))-1);return Math.round(n/f)*f}
 function fmt(v){const u=U.find(x=>v>=x[0]*.995);if(!u)return String(+sig(v).toFixed(1));return +(sig(v/u[0])).toFixed(1)+" "+u[1]}
-
-const d0 = new Date();
-const todayStr = `${d0.getFullYear()}-${String(d0.getMonth() + 1).padStart(2, '0')}-${String(d0.getDate()).padStart(2, '0')}`;
-const T = Math.floor(Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate()) / 864e5);
-let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
-const KEY = "ballpark:" + todayStr;
 
 let QUESTIONS = [];
 let S = { r: [] };
@@ -193,6 +193,11 @@ async function lockGuess() {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
+      if (err.error && err.error.includes("Out-of-order")) {
+        sessionId = "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        try { localStorage.setItem("ballpark:session_id:" + todayStr, sessionId); } catch(e) {}
+        return lock();
+      }
       alert(err.error || "Failed to submit estimate.");
       btn.disabled = false;
       btn.textContent = "Lock it in";

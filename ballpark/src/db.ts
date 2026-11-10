@@ -97,7 +97,28 @@ export async function createOrGetSession(
     .first<SessionRow>();
 
   if (existing) {
-    return existing;
+    if (existing.puzzle_date === date) {
+      return existing;
+    }
+    // If the session was created on a previous date, reset it for today's puzzle
+    await db
+      .prepare(
+        'UPDATE sessions SET puzzle_date = ?, current_question_index = 1, question_served_at = ?, ip_hash = ?, total_points = 0, total_error_orders = 0, completed_at = NULL WHERE session_id = ?'
+      )
+      .bind(date, now, ipHash, sessionId)
+      .run();
+
+    return {
+      session_id: sessionId,
+      puzzle_date: date,
+      current_question_index: 1,
+      question_served_at: now,
+      ip_hash: ipHash,
+      total_points: 0,
+      total_error_orders: 0,
+      completed_at: null,
+      created_at: existing.created_at,
+    };
   }
 
   await db

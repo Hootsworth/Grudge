@@ -11,6 +11,7 @@ const WORKERS = [
   { name: 'rungs-backend', dir: 'rungs' },
   { name: 'sprint-backend', dir: 'sprint' },
   { name: 'blackout-backend', dir: 'blackout' },
+  { name: 'quipher-backend', dir: 'quipher' },
 ];
 
 async function sleep(ms) {

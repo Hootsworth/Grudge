@@ -102,12 +102,20 @@ export async function handleRoundStart(
 
   // Enforce strict round ordering
   if (roundNum !== session.current_round) {
-    return new Response(
-      JSON.stringify({
-        error: `Rounds must be played in order. Currently on round ${session.current_round}.`,
-      }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
+    if (roundNum === 1 && (session.status === 'finished' || session.current_round > 5)) {
+      await env.DB.prepare(
+        'UPDATE sessions SET current_round = 1, round_started_at = ?, hints_used = 0, total_score = 0, status = "active", finished_at = NULL WHERE id = ?'
+      ).bind(now, sessionId).run();
+      session.current_round = 1;
+      session.status = 'active';
+    } else {
+      return new Response(
+        JSON.stringify({
+          error: `Rounds must be played in order. Currently on round ${session.current_round}.`,
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
   }
 
   // Mark round start time

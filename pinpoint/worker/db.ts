@@ -67,7 +67,27 @@ export async function createOrGetSession(
     .first<SessionRecord>();
 
   if (existing) {
-    return existing;
+    if (existing.puzzle_date === dateStr) {
+      return existing;
+    }
+    // If the session was created on a previous date, reset it for today's puzzle
+    await db
+      .prepare(
+        'UPDATE sessions SET puzzle_date = ?, current_round = 1, round_started_at = NULL, hints_used = 0, total_score = 0, status = "active", finished_at = NULL WHERE id = ?'
+      )
+      .bind(dateStr, sessionId)
+      .run();
+
+    return {
+      ...existing,
+      puzzle_date: dateStr,
+      current_round: 1,
+      round_started_at: null,
+      hints_used: 0,
+      total_score: 0,
+      status: 'active',
+      finished_at: null,
+    };
   }
 
   // Auto-heal: Ensure parent puzzle row exists in puzzles table to satisfy foreign key constraint

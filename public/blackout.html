@@ -992,19 +992,20 @@
         
         matchedIndices.forEach(idx => {
           revealedTokenIndices.add(idx);
-          const tokEl = $(`tok-${idx}`);
-          if (tokEl) {
-            tokEl.className = "token revealed just-revealed";
-            const pBefore = tokEl.parentElement.childNodes[0]?.nodeValue || "";
-            const pAfter = tokEl.parentElement.childNodes[2]?.nodeValue || "";
-            const wordText = getKnownTokenWord(idx) || clean;
-            tokEl.parentElement.innerHTML = "";
-            const freshSpan = document.createElement("span");
-            freshSpan.id = `tok-${idx}`;
-            freshSpan.className = "token revealed just-revealed";
-            freshSpan.textContent = pBefore + wordText + pAfter + " ";
-            $("document-text").replaceChild(freshSpan, $("document-text").childNodes[idx]);
+          if (localDossier) {
+            const rawWords = localDossier.excerpt.split(/\s+/);
+            const w = (rawWords[idx] || clean).replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, "");
+            knownWords[idx] = w || clean;
+          } else {
+            knownWords[idx] = clean;
           }
+        });
+
+        renderDossierView();
+
+        matchedIndices.forEach(idx => {
+          const el = $(`tok-${idx}`);
+          if (el) el.classList.add("just-revealed");
         });
       } else {
         msg.className = "status-msg danger";

@@ -46,7 +46,29 @@ export async function createOrGetSession(
     .bind(sessionId)
     .first<SessionRecord>();
 
-  if (existing) return existing;
+  if (existing) {
+    if (existing.puzzle_date === dateStr) {
+      return existing;
+    }
+    await db
+      .prepare(
+        'UPDATE sessions SET puzzle_date = ?, score = 0, best_combo = 1, words_found_json = "[]", last_word_at = NULL, status = "active", started_at = ?, finished_at = NULL WHERE id = ?'
+      )
+      .bind(dateStr, nowMs, sessionId)
+      .run();
+
+    return {
+      ...existing,
+      puzzle_date: dateStr,
+      score: 0,
+      best_combo: 1,
+      words_found_json: '[]',
+      last_word_at: null,
+      status: 'active',
+      started_at: nowMs,
+      finished_at: null,
+    };
+  }
 
   const newSession: SessionRecord = {
     id: sessionId,

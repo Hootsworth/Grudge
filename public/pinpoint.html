@@ -65,20 +65,20 @@ const API_BASE = window.location.hostname.includes("workers.dev")
   ? ""
   : "https://pinpoint-backend.adityapdixit.workers.dev";
 
-// Anonymous Session UUID
-const sessionId = localStorage.getItem("pinpoint:session_id") || (() => {
-  const id = (typeof crypto !== "undefined" && crypto.randomUUID)
-    ? crypto.randomUUID()
-    : "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
-  try { localStorage.setItem("pinpoint:session_id", id); } catch(e) {}
-  return id;
-})();
-
 const d0 = new Date();
 const todayStr = `${d0.getFullYear()}-${String(d0.getMonth()+1).padStart(2,'0')}-${String(d0.getDate()).padStart(2,'0')}`;
 const T = Math.floor(Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate()) / 864e5);
 let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
 const KEY = "pinpoint:" + todayStr;
+
+// Anonymous Session UUID scoped to today
+let sessionId = localStorage.getItem("pinpoint:session_id:" + todayStr) || (() => {
+  const id = (typeof crypto !== "undefined" && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
+  try { localStorage.setItem("pinpoint:session_id:" + todayStr, id); } catch(e) {}
+  return id;
+})();
 
 // Fallback spots & procedural windows for offline play
 const FALLBACK_SPOTS = [

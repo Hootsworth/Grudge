@@ -13,6 +13,7 @@ on:
       - 'rungs/src/**'
       - 'sprint/src/**'
       - 'blackout/src/**'
+      - 'quipher/src/**'
       - 'wrangler.toml'
       - 'kin/wrangler.toml'
       - 'passphew/wrangler.toml'
@@ -21,6 +22,7 @@ on:
       - 'rungs/wrangler.toml'
       - 'sprint/wrangler.toml'
       - 'blackout/wrangler.toml'
+      - 'quipher/wrangler.toml'
 
 jobs:
   deploy-workers:
@@ -62,10 +64,11 @@ jobs:
           RUNGS_DATABASE_ID: ${{ secrets.RUNGS_DATABASE_ID }}
           SPRINT_DATABASE_ID: ${{ secrets.SPRINT_DATABASE_ID }}
           BLACKOUT_DATABASE_ID: ${{ secrets.BLACKOUT_DATABASE_ID }}
+          QUIPHER_DATABASE_ID: ${{ secrets.QUIPHER_DATABASE_ID }}
         run: |
           node scripts/setup_cf_d1.js
 
-      - name: Deploy All 8 Cloudflare Workers with Auto-Retry
+      - name: Deploy All 9 Cloudflare Workers with Auto-Retry
         if: steps.check_cf.outputs.has_token == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
