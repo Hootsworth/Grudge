@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pinpoint — find the mystery spot on a real map</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -84,7 +87,7 @@ function makePinpointSessionId() {
 }
 
 // Anonymous Session UUID scoped to today
-let sessionId = (!S.r || S.r.length === 0)
+let sessionId = (!S.r || S.r.length === 0 || S.r.length >= 5)
   ? makePinpointSessionId()
   : (localStorage.getItem("pinpoint:session_id:" + todayStr) || makePinpointSessionId());
 try { localStorage.setItem("pinpoint:session_id:" + todayStr, sessionId); } catch(e) {}
@@ -231,10 +234,8 @@ function mapEvents() {
 function intro() {
   $("v").innerHTML = `<div class="card"><p class="mono" style="color:var(--mute);margin:0 0 12px">Pinpoint #${String(num).padStart(3, "0")}</p><h1>Where on <em>Earth</em> is this?</h1><p class="lede">Five mystery spots, shown as a tiny unlabeled window of a real map. Read the coastlines, the borders and the shape of the land. Then drop a pin on the world map. If you’re stuck, zoom the mystery view out, at a cost.</p><button class="btn" id="go">Start</button></div>`;
   $("go").onclick = () => {
-    if (!S.r || S.r.length === 0) {
-      sessionId = makePinpointSessionId();
-      try { localStorage.setItem("pinpoint:session_id:" + todayStr, sessionId); } catch(e) {}
-    }
+    sessionId = makePinpointSessionId();
+    try { localStorage.setItem("pinpoint:session_id:" + todayStr, sessionId); } catch(e) {}
     round();
   };
 }
