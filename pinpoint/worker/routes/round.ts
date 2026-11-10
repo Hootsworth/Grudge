@@ -100,9 +100,18 @@ export async function handleRoundStart(
 
   const session = await createOrGetSession(env.DB, sessionId, todayStr, ipHash, now);
 
+  // If session was completed or past round 5, reset session to start cleanly at round 1
+  if (session.status === 'finished' || session.current_round > 5) {
+    await env.DB.prepare(
+      'UPDATE sessions SET current_round = 1, round_started_at = ?, hints_used = 0, total_score = 0, status = "active", finished_at = NULL WHERE id = ?'
+    ).bind(now, sessionId).run();
+    session.current_round = 1;
+    session.status = 'active';
+  }
+
   // Enforce strict round ordering
   if (roundNum !== session.current_round) {
-    if (roundNum === 1 && (session.status === 'finished' || session.current_round > 5)) {
+    if (roundNum === 1) {
       await env.DB.prepare(
         'UPDATE sessions SET current_round = 1, round_started_at = ?, hints_used = 0, total_score = 0, status = "active", finished_at = NULL WHERE id = ?'
       ).bind(now, sessionId).run();
@@ -309,6 +318,15 @@ export async function handleRoundGuess(
 
   const session = await createOrGetSession(env.DB, sessionId, todayStr, ipHash, now);
 
+  // If session was completed or past round 5, reset session cleanly
+  if (session.status === 'finished' || session.current_round > 5) {
+    await env.DB.prepare(
+      'UPDATE sessions SET current_round = 1, round_started_at = ?, hints_used = 0, total_score = 0, status = "active", finished_at = NULL WHERE id = ?'
+    ).bind(now - 3000, sessionId).run();
+    session.current_round = 1;
+    session.status = 'active';
+  }
+
   if (roundNum !== session.current_round) {
     return new Response(
       JSON.stringify({
@@ -319,10 +337,11 @@ export async function handleRoundGuess(
   }
 
   if (!session.round_started_at) {
-    return new Response(
-      JSON.stringify({ error: 'Round must be started before submitting a guess.' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
+    // If round_started_at was not recorded, initialize it so legitimate guesses aren't blocked
+    session.round_started_at = now - 3000;
+    await env.DB.prepare('UPDATE sessions SET round_started_at = ? WHERE id = ?')
+      .bind(session.round_started_at, sessionId)
+      .run();
   }
 
   // Anti-cheat timing check: minimum 1.5 seconds between round start and guess
@@ -335,13 +354,12 @@ export async function handleRoundGuess(
     );
   }
 
-  // Check if round was already guessed in this session
+  // Check if round was already guessed in this session; if so, replace previous guess
   const previousGuesses = await getGuessesForSession(env.DB, sessionId);
   if (previousGuesses.some((g) => g.round_number === roundNum)) {
-    return new Response(
-      JSON.stringify({ error: `Round ${roundNum} has already been guessed in this session.` }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
+    await env.DB.prepare('DELETE FROM guesses WHERE session_id = ? AND round_number = ?')
+      .bind(sessionId, roundNum)
+      .run();
   }
 
   // Fetch true spot location for this round

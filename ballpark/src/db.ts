@@ -105,14 +105,14 @@ export async function createOrGetSession(
       .prepare(
         'UPDATE sessions SET puzzle_date = ?, current_question_index = 1, question_served_at = ?, ip_hash = ?, total_points = 0, total_error_orders = 0, completed_at = NULL WHERE session_id = ?'
       )
-      .bind(date, now, ipHash, sessionId)
+      .bind(date, now - 3000, ipHash, sessionId)
       .run();
 
     return {
       session_id: sessionId,
       puzzle_date: date,
       current_question_index: 1,
-      question_served_at: now,
+      question_served_at: now - 3000,
       ip_hash: ipHash,
       total_points: 0,
       total_error_orders: 0,
@@ -126,14 +126,14 @@ export async function createOrGetSession(
       'INSERT INTO sessions (session_id, puzzle_date, current_question_index, question_served_at, ip_hash, total_points, total_error_orders, created_at) ' +
         'VALUES (?, ?, 1, ?, ?, 0, 0, ?)'
     )
-    .bind(sessionId, date, now, ipHash, now)
+    .bind(sessionId, date, now - 3000, ipHash, now)
     .run();
 
   return {
     session_id: sessionId,
     puzzle_date: date,
     current_question_index: 1,
-    question_served_at: now,
+    question_served_at: now - 3000,
     ip_hash: ipHash,
     total_points: 0,
     total_error_orders: 0,

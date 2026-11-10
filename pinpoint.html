@@ -344,10 +344,18 @@ async function lockGuessAction() {
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      alert(err.error || "Error recording guess");
-      btn.disabled = false;
-      btn.textContent = "Lock in guess";
-      return;
+      if (err.error && (err.error.includes("Out-of-order") || err.error.includes("Round must be started") || err.error.includes("already been guessed") || err.error.includes("too fast") || err.error.includes("order"))) {
+        sessionId = "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        try { localStorage.setItem("pinpoint:session_id:" + todayStr, sessionId); } catch(e) {}
+        await fetch(`${API_BASE}/api/round/start`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session: sessionId, round: roundNum, aspect: "4:3" })
+        }).catch(() => {});
+        await new Promise(r => setTimeout(r, 1600));
+        return lockGuessAction();
+      }
+      throw new Error(err.error || "Error recording guess");
     }
     const data = await res.json();
     const resultObj = {

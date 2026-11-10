@@ -193,15 +193,13 @@ async function lockGuess() {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      if (err.error && err.error.includes("Out-of-order")) {
+      if (err.error && (err.error.includes("Out-of-order") || err.error.includes("already been answered") || err.error.includes("too fast"))) {
         sessionId = "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
         try { localStorage.setItem("ballpark:session_id:" + todayStr, sessionId); } catch(e) {}
-        return lock();
+        await new Promise(r => setTimeout(r, 1600));
+        return lockGuess();
       }
-      alert(err.error || "Failed to submit estimate.");
-      btn.disabled = false;
-      btn.textContent = "Lock it in";
-      return;
+      throw new Error(err.error || "Failed to submit estimate.");
     }
 
     const data = await res.json();
@@ -211,15 +209,15 @@ async function lockGuess() {
     pill();
     reveal(q, data);
   } catch(e) {
-    // Local fallback calculation if offline
+    // Local fallback calculation if offline or server sync error
     ph = "r";
-    const t = 9.0;
+    const t = (q && typeof q.valueLog10 === "number") ? q.valueLog10 : 9.0;
     const err = Math.abs(x - t);
     const p = Math.round(1000 * Math.max(0, 1 - err / 2.5));
     S.r.push({ x, err, p, truth: Math.pow(10, t), truthLog10: t, qId: q.id, u: q.unit });
     save();
     pill();
-    reveal(q, { truth: Math.pow(10, t), truthLog10: t, errorOrders: err, points: p, explanation: "Local estimate calculated." });
+    reveal(q, { truth: Math.pow(10, t), truthLog10: t, errorOrders: err, points: p, explanation: (q && q.explanation) || "Local estimate calculated." });
   }
 }
 

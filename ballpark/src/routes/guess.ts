@@ -107,8 +107,8 @@ export async function handleGuessRoute(
   }
 
   let currentQIndex = session.current_question_index;
-  // If session was completed or past the last question, but user is submitting for question 1, reset session
-  if (question.question_index === 1 && (currentQIndex > 5 || session.completed_at !== null)) {
+  // If session was completed or past the last question, reset session to start cleanly at question 1
+  if (currentQIndex > 5 || session.completed_at !== null) {
     await env.DB.prepare(
       'UPDATE sessions SET current_question_index = 1, question_served_at = ?, total_points = 0, total_error_orders = 0, completed_at = NULL WHERE session_id = ?'
     ).bind(now - 3000, sessionId).run();
@@ -137,13 +137,12 @@ export async function handleGuessRoute(
     );
   }
 
-  // Enforce one guess per question per session
+  // Enforce one guess per question per session; if repeated (replay/retry), delete old record
   const previousGuesses = await getGuessesForSession(env.DB, sessionId);
   if (previousGuesses.some((g) => g.question_id === questionId)) {
-    return new Response(
-      JSON.stringify({ error: `Question ${questionId} has already been answered in this session.` }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
+    await env.DB.prepare('DELETE FROM guesses WHERE session_id = ? AND question_id = ?')
+      .bind(sessionId, questionId)
+      .run();
   }
 
   const durationMs = now - session.question_served_at;

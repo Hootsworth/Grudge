@@ -60,9 +60,11 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px}
 @keyframes flash{50%{filter:brightness(1.5) drop-shadow(0 0 8px var(--brass));transform:rotate(var(--r)) scale(1.25)}}@keyframes pen{to{transform:translateY(24px);opacity:0}}
 @keyframes peel{to{height:0;opacity:0;transform:rotate(var(--r)) translateY(-16px) scale(.5)}}@keyframes slam{0%{opacity:0;transform:translate(-50%,-50%) rotate(-11deg) scale(3)}60%{opacity:.95;transform:translate(-50%,-50%) rotate(-11deg) scale(.92)}to{opacity:.9;transform:translate(-50%,-50%) rotate(-11deg) scale(1)}}
 @keyframes conf{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rr))}}
+.back{display:inline-flex;align-items:center;padding:5px 12px;border-radius:14px;border:1.5px solid #34504b;color:var(--paper);text-decoration:none;font-size:.75rem;font-weight:700;transition:all .2s;text-transform:none}
+.back:hover{border-color:var(--brass);color:var(--brass)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.stamp{opacity:.9}}
 </style></head><body><main>
-<header><div class="logo" id="lg"></div><div class="tags"><div class="tag" id="stk"><small>Streak</small>0</div><div class="tag" id="tmt"><small>Time</small><span id="tm">0:00</span></div></div></header>
+<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back" title="Back to Oddly">← Oddly</a><div class="logo" id="lg"></div></div><div class="tags"><div class="tag" id="stk"><small>Streak</small>0</div><div class="tag" id="tmt"><small>Time</small><span id="tm">0:00</span></div></div></header>
 <div class="prog"><span id="pn">Placed 0/0</span><div class="holes" id="hl"></div></div>
 <section class="note" id="note"><div class="dl"><span id="dl"></span><span class="cl">Classified</span></div><div class="tape" id="tp"></div><div class="sig" id="sig"><span class="rd">— ▇▇▇▇▇▇▇▇▇▇▇ ▇▇▇▇▇▇▇▇▇</span></div></section>
 <section id="game"><div class="msg" id="ms"></div><div class="spool" id="fq"></div><div class="acts"><button class="st" id="hn">Informant <em>+0:45</em></button><button class="st" id="ck">Cross-check <em>+0:20</em></button></div><div class="kb" id="kb"></div></section>
