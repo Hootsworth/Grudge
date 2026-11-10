@@ -562,6 +562,26 @@
       40%, 80% { transform: translateX(8px); }
     }
     .shake { animation: shakeNope 0.4s ease; }
+    .briefing-btn {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-edge);
+      color: var(--ink);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+      transition: all 0.15s;
+    }
+    .briefing-btn:hover {
+      background: var(--ink);
+      color: #fff;
+    }
+    .briefing-btn:active {
+      transform: scale(0.95);
+    }
     @media (prefers-reduced-motion: reduce) {
       * { animation: none !important; transition: none !important; }
     }
@@ -570,18 +590,65 @@
 <body>
   <main>
     <div class="nav">
-      <a href="index.html" class="back-link">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Oddly Hub
-      </a>
+      <div style="display:flex;align-items:center;gap:10px">
+        <a href="index.html" class="back-link">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Oddly Hub
+        </a>
+        <button id="briefing-toggle" class="briefing-btn" title="Mission Briefing">Briefing</button>
+      </div>
       <div class="pill">
         <span class="dot"></span>
         <span id="plate-label">BLACKOUT #313</span>
       </div>
     </div>
 
-    <!-- The Dossier Manila Folder -->
-    <div class="dossier-folder">
+    <!-- Intro Briefing Manila Folder -->
+    <div class="dossier-folder" id="intro-folder" style="display:none">
+      <div class="folder-tab">
+        <div class="tab-left">
+          <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+          <span id="intro-file-code">BRIEFING // ARCHIVE</span>
+        </div>
+        <span>EYES ONLY</span>
+      </div>
+
+      <div class="dossier-header">
+        <div class="classification-bar">TOP SECRET // MISSION BRIEFING</div>
+        <div class="dossier-title-row">
+          <div>
+            <h1 style="font-size:clamp(1.8rem,5.5vw,2.5rem);margin:4px 0 6px">Classified Dossier. <em>Declassify the truth.</em></h1>
+            <div class="meta-tags">
+              <span class="meta-tag">Historical Intelligence</span>
+              <span class="meta-tag">Daily Dossier</span>
+            </div>
+          </div>
+          <div class="stamp-badge">TOP SECRET</div>
+        </div>
+      </div>
+
+      <div style="padding:28px 24px;background:#faf7f0;color:#1c1e24;font-size:1rem;line-height:1.6">
+        <p style="margin:0 0 16px;color:#454854">An authentic historical intelligence file has been blacked out by military censors. Key names, dates, locations, and events are hidden beneath classified redaction bars.</p>
+        <div style="display:grid;gap:14px;margin:20px 0 28px;font-size:.92rem;font-family:'Space Grotesk',sans-serif">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <b style="color:var(--stamp-red);font-family:monospace;font-size:1.15rem">01</b>
+            <span><b>Probe Words:</b> Enter words you suspect appear in the text. Every matching occurrence will be instantly unredacted.</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <b style="color:var(--stamp-red);font-family:monospace;font-size:1.15rem">02</b>
+            <span><b>Analyze Context:</b> Read around newly unredacted keywords to deduce the era, participants, location, and subject.</span>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <b style="color:var(--stamp-red);font-family:monospace;font-size:1.15rem">03</b>
+            <span><b>Declassify Title:</b> When confident, switch tabs to <i>Declassify Title</i> and guess the identity of the classified subject. Solves in fewer probes achieve higher intelligence ranks!</span>
+          </div>
+        </div>
+        <button class="btn" id="start-mission-btn" style="width:100%;padding:14px;font-size:1.05rem;border-radius:12px">Open Dossier</button>
+      </div>
+    </div>
+
+    <!-- Active Dossier Manila Folder -->
+    <div class="dossier-folder" id="game-folder">
       <div class="folder-tab">
         <div class="tab-left">
           <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
@@ -806,6 +873,31 @@
           rankTitle: getRank(totalGuesses, true)
         });
       }
+
+      const hasStarted = totalGuesses > 0 || isSolved || Object.keys(probedWords).length > 0;
+      if (!hasStarted) {
+        $("intro-folder").style.display = "block";
+        $("game-folder").style.display = "none";
+      } else {
+        $("intro-folder").style.display = "none";
+        $("game-folder").style.display = "block";
+      }
+
+      $("start-mission-btn").onclick = () => {
+        $("intro-folder").style.display = "none";
+        $("game-folder").style.display = "block";
+      };
+
+      $("briefing-toggle").onclick = () => {
+        if ($("intro-folder").style.display === "none") {
+          $("intro-folder").style.display = "block";
+          $("game-folder").style.display = "none";
+          $("start-mission-btn").textContent = "Resume Dossier";
+        } else {
+          $("intro-folder").style.display = "none";
+          $("game-folder").style.display = "block";
+        }
+      };
     }
 
     function buildClientTodayData(dossier) {
@@ -840,6 +932,7 @@
     function renderDossierView() {
       $("plate-label").textContent = `BLACKOUT #${todayData.plate || 313}`;
       $("file-code").textContent = `DOSSIER-${todayData.plate || 313} // RESTRICTED`;
+      if ($("intro-file-code")) $("intro-file-code").textContent = `DOSSIER-${todayData.plate || 313} // BRIEFING`;
       $("date-label").textContent = todayData.date;
       $("classification-badge").textContent = todayData.classification;
       $("category-tag").textContent = todayData.category;

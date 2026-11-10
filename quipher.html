@@ -62,10 +62,14 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px}
 @keyframes conf{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rr))}}
 .back{display:inline-flex;align-items:center;padding:5px 12px;border-radius:14px;border:1.5px solid #34504b;color:var(--paper);text-decoration:none;font-size:.75rem;font-weight:700;transition:all .2s;text-transform:none}
 .back:hover{border-color:var(--brass);color:var(--brass)}
+.brief-btn{background:var(--paper);color:var(--ink);padding:5px 14px;border-radius:999px;border:none;font:inherit;font-size:.78rem;font-weight:700;box-shadow:0 2px 0 rgba(0,0,0,.4);cursor:pointer;transition:transform .12s,background .2s}
+.brief-btn:hover{background:var(--brass)}
+.brief-btn:active{transform:scale(.95)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.stamp{opacity:.9}}
 </style></head><body><main>
-<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back" title="Back to Oddly">← Oddly</a><div class="logo" id="lg"></div></div><div class="tags"><div class="tag" id="stk"><small>Streak</small>0</div><div class="tag" id="tmt"><small>Time</small><span id="tm">0:00</span></div></div></header>
-<div class="prog"><span id="pn">Placed 0/0</span><div class="holes" id="hl"></div></div>
+<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back" title="Back to Oddly">← Oddly</a><div class="logo" id="lg"></div></div><div class="tags"><button class="brief-btn" id="ibtn" title="Operational Briefing">Briefing</button><div class="tag" id="stk"><small>Streak</small>0</div><div class="tag" id="tmt"><small>Time</small><span id="tm">0:00</span></div></div></header>
+<section id="intro" hidden></section>
+<div class="prog" id="prog"><span id="pn">Placed 0/0</span><div class="holes" id="hl"></div></div>
 <section class="note" id="note"><div class="dl"><span id="dl"></span><span class="cl">Classified</span></div><div class="tape" id="tp"></div><div class="sig" id="sig"><span class="rd">— ▇▇▇▇▇▇▇▇▇▇▇ ▇▇▇▇▇▇▇▇▇</span></div></section>
 <section id="game"><div class="msg" id="ms"></div><div class="spool" id="fq"></div><div class="acts"><button class="st" id="hn">Informant <em>+0:45</em></button><button class="st" id="ck">Cross-check <em>+0:20</em></button></div><div class="kb" id="kb"></div></section>
 <section id="end"></section>
@@ -370,6 +374,57 @@ function finish(rev) {
   setInterval(tick, 1000);
 }
 
+function showIntro() {
+  $("intro").hidden = false;
+  $("prog").hidden = true;
+  $("note").hidden = true;
+  $("game").hidden = true;
+  $("intro").innerHTML = `
+    <div class="tk" style="animation:rise .5s both;margin-top:14px">
+      <p class="kk">Intercept #${String(num).padStart(3, "0")} · Operational Briefing</p>
+      <h1 style="font:400 clamp(2.3rem,8.5vw,3.3rem)/1.05 'Abril Fatface',Georgia,serif;margin:8px 0 16px;color:var(--ink)">Crack the <em>cipher.</em></h1>
+      <p style="font-size:1rem;line-height:1.5;margin:0 0 16px;color:#3b3830">A historical quote has been intercepted and encrypted with a monoalphabetic substitution cipher. Every letter is disguised — but no letter ever maps to itself.</p>
+      <div style="display:grid;gap:12px;margin:18px 0 24px;font-size:.88rem;color:#4f4c42">
+        <div style="display:flex;gap:10px"><b>01</b><span><b>Select & Replace:</b> Tap any encrypted clipping in the message, then strike a letter on the typewriter keys to substitute.</span></div>
+        <div style="display:flex;gap:10px"><b>02</b><span><b>Informant (+45s):</b> Summons an informant to uncover the most frequent unmapped letter.</span></div>
+        <div style="display:flex;gap:10px"><b>03</b><span><b>Cross-Check (+20s):</b> Verifies your current mappings and shakes any incorrect substitutions in red.</span></div>
+      </div>
+      <button class="cpb" id="start-btn" style="background:var(--ink);color:var(--paper);border:none;padding:14px;font-weight:700;font-size:1rem;border-radius:4px">Start Decoding</button>
+    </div>
+  `;
+  $("start-btn").onclick = () => {
+    $("intro").hidden = true;
+    $("prog").hidden = false;
+    $("note").hidden = false;
+    $("game").hidden = false;
+    started = true;
+  };
+}
+
+function checkIntro() {
+  const hasStarted = started || S.done || Object.keys(S.m).length > 0 || S.el > 0;
+  if (!hasStarted) {
+    showIntro();
+  } else {
+    $("intro").hidden = true;
+    $("prog").hidden = false;
+    $("note").hidden = false;
+    $("game").hidden = false;
+  }
+}
+
+$("ibtn").onclick = () => {
+  if ($("intro").hidden) {
+    showIntro();
+    $("start-btn").textContent = "Resume Decoding";
+  } else {
+    $("intro").hidden = true;
+    $("prog").hidden = false;
+    $("note").hidden = false;
+    $("game").hidden = false;
+  }
+};
+
 // Load daily intercept from Cloudflare Worker
 fetch(`${API_BASE}/api/today?session=${sessionId}&date=${localDateStr}`)
   .then(r => r.ok ? r.json() : null)
@@ -394,12 +449,14 @@ fetch(`${API_BASE}/api/today?session=${sessionId}&date=${localDateStr}`)
           build();
           sel = present.find(c => !S.m[c]) || present[0];
           refresh();
+          checkIntro();
           if (S.done) { sel = null; finish(S.revealed); }
         });
     } else {
       build();
       sel = present.find(c => !S.m[c]) || present[0];
       refresh();
+      checkIntro();
       if (S.done) { sel = null; finish(S.revealed); }
     }
   });
