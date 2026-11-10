@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oddly — Official Motion Design Video Ad</title>
+<link rel="icon" type="image/svg+xml" href="oddly_logo.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800;900&family=Space+Mono:wght@700&display=swap">
+<style>
+:root {
+  --bg: #121118;
+  --card-bg: #1c1a24;
+  --ink: #F7F4EC;
+  --mute: #9e9aa8;
+  --line: #2e2a3b;
+  --coral: #FF756D;
+  --gold: #FFC936;
+  --blue: #4389F5;
+  --purple: #A982F5;
+  --mint: #2EC4A0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  padding: 32px 20px 80px;
+}
+main {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.04em;
+}
+.brand svg {
+  width: 36px;
+  height: 36px;
+  transition: transform 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.brand:hover svg {
+  transform: rotate(15deg) scale(1.1);
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.back-link:hover {
+  border-color: var(--coral);
+  transform: translateY(-2px);
+}
+.hero-header {
+  margin-bottom: 24px;
+}
+.badge-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.pill {
+  font-family: "Space Mono", monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+}
+.pill.gold { color: var(--gold); border-color: rgba(255, 201, 54, 0.4); }
+.pill.coral { color: var(--coral); border-color: rgba(255, 117, 109, 0.4); }
+.pill.blue { color: var(--blue); border-color: rgba(67, 137, 245, 0.4); }
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 12px;
+}
+h1 span {
+  color: var(--coral);
+}
+.desc {
+  font-size: 1.15rem;
+  color: var(--mute);
+  max-width: 680px;
+}
+
+/* Video Stage */
+.video-stage {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #000000;
+  border: 3px solid var(--line);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  margin-bottom: 32px;
+  aspect-ratio: 16 / 9;
+}
+video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Video Actions */
+.video-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+.btn-group {
+  display: flex;
+  gap: 12px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--coral);
+  color: #121118;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 12px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 117, 109, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 117, 109, 0.5);
+}
+.btn.secondary {
+  background: var(--card-bg);
+  color: var(--ink);
+  border: 2px solid var(--line);
+  box-shadow: none;
+}
+.btn.secondary:hover {
+  border-color: var(--ink);
+}
+
+/* Storyboard Beats */
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+.beats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 48px;
+}
+.beat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.beat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--coral);
+}
+.beat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--coral);
+}
+.beat-card:nth-child(2)::before { background: var(--gold); }
+.beat-card:nth-child(3)::before { background: var(--blue); }
+.beat-card:nth-child(4)::before { background: var(--purple); }
+.beat-card:nth-child(5)::before { background: var(--mint); }
+
+.beat-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--mute);
+  margin-bottom: 8px;
+}
+.beat-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.beat-body {
+  font-size: 0.9rem;
+  color: var(--mute);
+  line-height: 1.4;
+}
+
+/* Palette Card */
+.palette-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 54px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+.palette-swatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #121118;
+}
+</style>
+</head>
+<body>
+<main>
+  <nav>
+    <a href="index.html" class="brand">
+      <svg viewBox="0 0 1024 1024">
+        <path fill="#FF756D" d="M164 112 C205 67 274 58 354 63 C430 66 476 98 472 167 C469 230 447 305 409 357 C372 408 307 431 222 427 C149 424 111 392 112 326 C113 248 127 156 164 112 Z"/>
+        <path fill="#FFC936" d="M566 91 C618 58 703 61 770 72 C837 84 874 124 870 194 C866 269 846 344 806 386 C768 427 701 433 627 423 C558 414 525 376 528 309 C531 224 530 125 566 91 Z"/>
+        <path fill="#4389F5" d="M112 572 C151 522 219 507 292 511 C365 515 414 545 416 611 C418 680 397 760 359 812 C322 863 255 886 180 880 C109 875 72 840 75 773 C78 692 80 613 112 572 Z"/>
+        <path fill="#A982F5" d="M565 561 C613 520 683 509 757 514 C832 519 868 557 864 626 C860 704 837 781 797 831 C758 881 691 900 617 891 C548 883 513 845 516 779 C520 696 527 594 565 561 Z"/>
+      </svg>
+      Oddly
+    </a>
+    <a href="index.html" class="back-link">
+      <span>←</span> Back to Games
+    </a>
+  </nav>
+
+  <div class="hero-header">
+    <div class="badge-row">
+      <span class="pill coral">1080p HD · 30 FPS</span>
+      <span class="pill gold">18-Second Motion Ad</span>
+      <span class="pill blue">Stereo Foley & Synth Beat</span>
+    </div>
+    <h1>The Daily Dose of <span>Nerd.</span></h1>
+    <p class="desc">A snappy, kinetic motion design video ad celebrating the games, the attitude, and the daily intellectual curiosity of Oddly.</p>
+  </div>
+
+  <!-- Video Player Stage -->
+  <div class="video-stage">
+    <video id="adVideo" playsinline autoplay loop muted controls>
+      <source src="oddly_motion_ad.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <div class="video-actions">
+    <div class="btn-group">
+      <button class="btn" id="unmuteBtn">
+        🔊 Unmute Sound
+      </button>
+      <a href="oddly_motion_ad.mp4" download="oddly_motion_ad.mp4" class="btn secondary">
+        ↓ Download MP4 (1080p)
+      </a>
+    </div>
+    <a href="index.html" class="btn secondary">
+      Play the 9 Daily Games ➔
+    </a>
+  </div>
+
+  <h2 class="section-title">Brand Color Palette</h2>
+  <div class="palette-bar">
+    <div class="palette-swatch" style="background:#FF756D;">#FF756D Coral</div>
+    <div class="palette-swatch" style="background:#FFC936;">#FFC936 Gold</div>
+    <div class="palette-swatch" style="background:#4389F5; color:#FFF;">#4389F5 Azure</div>
+    <div class="palette-swatch" style="background:#A982F5;">#A982F5 Lavender</div>
+  </div>
+
+  <h2 class="section-title">Motion Storyboard Architecture</h2>
+  <div class="beats-grid">
+    <div class="beat-card">
+      <div class="beat-meta">
+        <span>BEAT 01</span>
+        <span>0.0s – 3.2s</span>
+      </div>
+      <div class="beat-title">The Kinetic Hook</div>
+      <div class="beat-body">The 4 organic quadrants of the Oddly symbol spring in from the corners with elastic physics. Kinetic typography slams: <em>"Tired of the same 5-letter word? Meet Oddly."</em></div>
+    </div>
+
+    <div class="beat-card">
+      <div class="beat-meta">
+        <span>BEAT 02</span>
+        <span>3.2s – 6.1s</span>
+      </div>
+      <div class="beat-title">Fibber & Strata</div>
+      <div class="beat-body">Fibber news card drops with a massive red rubber stamp slam: <strong>FAKE NEWS!</strong> Strata timeline strata snap chronologically into place: <em>"Chronology Locked!"</em></div>
+    </div>
+
+    <div class="beat-card">
+      <div class="beat-meta">
+        <span>BEAT 03</span>
+        <span>6.1s – 9.1s</span>
+      </div>
+      <div class="beat-title">Pinpoint & Ballpark</div>
+      <div class="beat-body">Rotating radar sweeps across mystery coastlines; crosshair drops at 12 km off. Ballpark logarithm scale whips across orders of magnitude to lock on $10^{13}$.</div>
+    </div>
+
+    <div class="beat-card">
+      <div class="beat-meta">
+        <span>BEAT 04</span>
+        <span>9.1s – 12.8s</span>
+      </div>
+      <div class="beat-title">Quipher & Blackout</div>
+      <div class="beat-body">Substitution cipher blocks cascade into clean golden plaintext. Manila espionage dossier slams on desk, sensor tape sizzles off with <em>"Declassified"</em> stamp.</div>
+    </div>
+
+    <div class="beat-card">
+      <div class="beat-meta">
+        <span>BEAT 05</span>
+        <span>12.8s – 18.0s</span>
+      </div>
+      <div class="beat-title">Host Sarcasm & Finale</div>
+      <div class="beat-body">Sarcastic host badges pop across screen: <em>"Reality is rude"</em>, <em>"Fermi would weep"</em>. Confetti shower erupts as the Oddly emblem blooms with the call to action: <em>fibber.singulr.tech</em>.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const video = document.getElementById("adVideo");
+const unmuteBtn = document.getElementById("unmuteBtn");
+
+if (unmuteBtn && video) {
+  unmuteBtn.onclick = () => {
+    video.muted = !video.muted;
+    if (!video.muted) {
+      video.play();
+      unmuteBtn.textContent = "🔇 Mute Sound";
+    } else {
+      unmuteBtn.textContent = "🔊 Unmute Sound";
+    }
+  };
+}
+</script>
+</body>
+</html>
