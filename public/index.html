@@ -23,9 +23,6 @@ h1 span{display:inline-block;overflow:hidden;vertical-align:bottom}
 h1 span b{display:inline-block;animation:up .9s cubic-bezier(.2,.9,.2,1) both;animation-delay:calc(var(--i)*110ms)}
 h1 .hl{color:var(--c0)}
 .sub{max-width:540px;margin:20px 0 0;font-size:1.1rem;line-height:1.45;color:var(--mute);font-weight:400;animation:fade .8s .6s both}
-.tick{margin:0 -20px 34px;background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap;padding:12px 0;font-weight:800;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase}
-.tick div{display:inline-block;animation:slide 32s linear infinite}
-.tick span{margin:0 22px}.tick i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:22px;background:var(--c1)}
 .lab{font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 16px}
 .live{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(310px,1fr))}
 .g{--bgc:var(--c3);display:flex;flex-direction:column;background:var(--bgc);color:#14131a;border-radius:28px;padding:24px;text-decoration:none;min-height:430px;position:relative;overflow:hidden;
@@ -103,7 +100,6 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <h1><span><b style="--i:0">One</b></span> <span><b style="--i:1">shot.</b></span><br><span><b style="--i:2">Every</b></span> <span><b style="--i:3" class="hl">day.</b></span></h1>
 <p class="sub">Small daily puzzles with a host who judges every move. Play once, share the result, come back tomorrow.</p>
 </section>
-<div class="tick"><div id="tk"></div></div>
 <p class="lab">Playable today</p>
 <section class="live">
 <!-- Game 1: Fibber -->
@@ -315,8 +311,7 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <footer><span>Fresh puzzles at midnight, local time.</span><span id="footer-secret" style="cursor:default;user-select:none">Made with spite.</span></footer>
 </main>
 <script>
-const $=id=>document.getElementById(id),q=["Wrong. Again.","You already tried that","One away. Pity.","Fooled by a goose","Fine. Correct.","Don’t get cocky","Reality is rude","That was a choice"];
-$("tk").innerHTML=[...q,...q].map(t=>`<i></i><span>${t}</span>`).join("");
+const $=id=>document.getElementById(id);
 const tick=()=>{const n=new Date(),r=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1)-n,p=x=>String(x).padStart(2,"0");$("cd").textContent=p(Math.floor(r/36e5))+":"+p(Math.floor(r/6e4)%60)+":"+p(Math.floor(r/1e3)%60)};tick();setInterval(tick,1000);
 
 // Dynamic manifest hydration for new/custom games added via Admin Studio
