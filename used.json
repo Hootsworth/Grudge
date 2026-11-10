@@ -1,47 +1,79 @@
 [
   {
-    "t": "Inflatable festival moon breaks loose and rolls down a six-lane highway",
+    "t": "Florida man hurls a live alligator through a Wendy’s drive-thru window",
     "real": true,
-    "s": "Fuzhou, China, 2016. Mid-Autumn Festival installation blown by Typhoon Meranti."
+    "s": "Lake City, Florida, 2016. Widely reported.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "Australia sends soldiers with machine guns to fight emus, and loses",
     "real": true,
-    "s": "The Great Emu War, Western Australia, 1932."
+    "s": "The Great Emu War, Western Australia, 1932.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "A Minnesota town elects a dog as its mayor",
     "real": true,
-    "s": "Cormorant, Minnesota elected Duke the dog in 2014."
+    "s": "Cormorant, Minnesota elected Duke the dog in 2014.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "A penguin is knighted by the Norwegian King’s Guard",
     "real": true,
-    "s": "Sir Nils Olav, Edinburgh Zoo’s king penguin, holds rank of brigadier."
+    "s": "Sir Nils Olav, Edinburgh Zoo’s king penguin, holds rank of brigadier.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "Thieves steal millions of dollars of maple syrup from a Quebec reserve",
     "real": true,
-    "s": "The Great Canadian Maple Syrup Heist, 2011 to 2012."
+    "s": "The Great Canadian Maple Syrup Heist, 2011 to 2012.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "A laughter epidemic closes schools across a region of Tanzania",
     "real": true,
-    "s": "The 1962 Tanganyika laughter epidemic."
+    "s": "The 1962 Tanganyika laughter epidemic.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "Alaska town keeps a cat as honorary mayor for two decades",
     "real": true,
-    "s": "Stubbs of Talkeetna, Alaska."
+    "s": "Stubbs of Talkeetna, Alaska.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "A 130-tonne fatberg clogs a London sewer, and gets put in a museum",
     "real": true,
-    "s": "Whitechapel, 2017. A chunk went to the Museum of London."
+    "s": "Whitechapel, 2017. A chunk went to the Museum of London.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
   },
   {
     "t": "Hundreds of people dance for days in a French city and cannot stop",
     "real": true,
-    "s": "The Dancing Plague of 1518, Strasbourg."
+    "s": "The Dancing Plague of 1518, Strasbourg.",
+    "used_date": "2026-11-10",
+    "lastUsedTimestamp": 1794310050781,
+    "expiresAt": 1825846050781
+  },
+  {
+    "t": "Inflatable festival moon breaks loose and rolls down a six-lane highway",
+    "real": true,
+    "s": "Fuzhou, China, 2016. Mid-Autumn Festival installation blown by Typhoon Meranti."
   }
 ]

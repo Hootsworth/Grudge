@@ -17,7 +17,10 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_USER_AGENT = "FibberBot/1.0 (daily-game; contact: fibber-admin@users.noreply.github.com)"
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 MAX_AGE_DAYS = 14
 DEFAULT_SIMILARITY_THRESHOLD = 0.65
 

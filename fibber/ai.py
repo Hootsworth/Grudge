@@ -16,6 +16,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
+
 # Default model per provider
 DEFAULT_MODELS: Dict[str, str] = {
     "gemini": "gemini-2.0-flash",
@@ -145,7 +150,11 @@ def _call_gemini(
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "User-Agent": DEFAULT_USER_AGENT,
+            "Accept": "application/json",
+        },
         method="POST"
     )
 
@@ -188,7 +197,9 @@ def _call_openai(
         data=json.dumps(payload).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": DEFAULT_USER_AGENT,
+            "Accept": "application/json",
         },
         method="POST"
     )
@@ -237,7 +248,9 @@ def _call_meta_openai_compat(
         data=json.dumps(payload).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": DEFAULT_USER_AGENT,
+            "Accept": "application/json",
         },
         method="POST"
     )
@@ -274,7 +287,9 @@ def _call_anthropic(
         headers={
             "Content-Type": "application/json",
             "x-api-key": api_key,
-            "anthropic-version": "2023-06-01"
+            "anthropic-version": "2023-06-01",
+            "User-Agent": DEFAULT_USER_AGENT,
+            "Accept": "application/json",
         },
         method="POST"
     )

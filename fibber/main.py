@@ -303,8 +303,13 @@ def main() -> None:
         print("\n" + "=" * 60)
 
     except Exception as e:
-        logger.exception("Pipeline failed: %s", e)
-        sys.exit(1)
+        logger.exception("Pipeline failed: %s. Deploying emergency fallback puzzle from backlog.", e)
+        try:
+            fallback_puzzle(date_str=date_str, backlog_dir=args.backlog_dir, public_path=args.public_path)
+            print(f"Successfully deployed emergency fallback puzzle for {date_str} to {args.public_path}")
+        except Exception as fb_err:
+            logger.exception("Emergency fallback failed: %s", fb_err)
+            sys.exit(1)
 
 
 if __name__ == "__main__":

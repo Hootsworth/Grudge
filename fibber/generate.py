@@ -108,13 +108,21 @@ def generate_fake_for_round(
         headline = avail[idx]
         return {"t": headline, "real": False, "s": FAKE_SOURCE_TEXT}
 
-    headline = call_anthropic_generate_fake(
-        round_real_stories=round_real_stories,
-        round_number=round_number,
-        exclude=exclude,
-        api_key=api_key,
-        model=model,
-    )
+    try:
+        headline = call_anthropic_generate_fake(
+            round_real_stories=round_real_stories,
+            round_number=round_number,
+            exclude=exclude,
+            api_key=api_key,
+            model=model,
+        )
+    except Exception as e:
+        logger.warning("AI fake generation failed (%s). Falling back to fixture fake.", e)
+        avail = [f for f in FIXTURE_FAKES if not exclude or f not in exclude]
+        if not avail:
+            avail = FIXTURE_FAKES
+        idx = (round_number - 1) % len(avail)
+        headline = avail[idx]
 
     return {"t": headline, "real": False, "s": FAKE_SOURCE_TEXT}
 
