@@ -321,9 +321,9 @@ export async function handleRoundGuess(
   // If session was completed or past round 5, reset session cleanly
   if (session.status === 'finished' || session.current_round > 5) {
     await env.DB.prepare(
-      'UPDATE sessions SET current_round = 1, round_started_at = ?, hints_used = 0, total_score = 0, status = "active", finished_at = NULL WHERE id = ?'
-    ).bind(now - 3000, sessionId).run();
-    session.current_round = 1;
+      'UPDATE sessions SET current_round = ?, round_started_at = ?, hints_used = 0, total_score = 0, status = "active", finished_at = NULL WHERE id = ?'
+    ).bind(roundNum, now - 3000, sessionId).run();
+    session.current_round = roundNum;
     session.status = 'active';
   }
 

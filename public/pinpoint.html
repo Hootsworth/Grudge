@@ -71,14 +71,23 @@ const T = Math.floor(Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate()) / 8
 let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
 const KEY = "pinpoint:" + todayStr;
 
-// Anonymous Session UUID scoped to today
-let sessionId = localStorage.getItem("pinpoint:session_id:" + todayStr) || (() => {
-  const id = (typeof crypto !== "undefined" && crypto.randomUUID)
+let S = { r: [] };
+try {
+  const s = localStorage.getItem(KEY);
+  if (s) S = JSON.parse(s);
+} catch(e) {}
+
+function makePinpointSessionId() {
+  return (typeof crypto !== "undefined" && crypto.randomUUID)
     ? crypto.randomUUID()
     : "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
-  try { localStorage.setItem("pinpoint:session_id:" + todayStr, id); } catch(e) {}
-  return id;
-})();
+}
+
+// Anonymous Session UUID scoped to today
+let sessionId = (!S.r || S.r.length === 0)
+  ? makePinpointSessionId()
+  : (localStorage.getItem("pinpoint:session_id:" + todayStr) || makePinpointSessionId());
+try { localStorage.setItem("pinpoint:session_id:" + todayStr, sessionId); } catch(e) {}
 
 // Fallback spots & procedural windows for offline play
 const FALLBACK_SPOTS = [
@@ -89,7 +98,6 @@ const FALLBACK_SPOTS = [
   { n: "Cape of Good Hope", la: -34.35, lo: 18.49, f: "The Cape of Good Hope marks where ships begin to travel more eastward than southward.", vb: "0 0 90 67.5", kpu: 9.17, shapes: [{ cls: "c0", d: "M10,0 L50,45 L80,0 L90,0 L90,67.5 L0,67.5 L0,0 Z" }] }
 ];
 
-let S = { r: [] };
 let g = null;
 let hh = 0;
 let ph = "g";
@@ -222,7 +230,13 @@ function mapEvents() {
 
 function intro() {
   $("v").innerHTML = `<div class="card"><p class="mono" style="color:var(--mute);margin:0 0 12px">Pinpoint #${String(num).padStart(3, "0")}</p><h1>Where on <em>Earth</em> is this?</h1><p class="lede">Five mystery spots, shown as a tiny unlabeled window of a real map. Read the coastlines, the borders and the shape of the land. Then drop a pin on the world map. If you’re stuck, zoom the mystery view out, at a cost.</p><button class="btn" id="go">Start</button></div>`;
-  $("go").onclick = round;
+  $("go").onclick = () => {
+    if (!S.r || S.r.length === 0) {
+      sessionId = makePinpointSessionId();
+      try { localStorage.setItem("pinpoint:session_id:" + todayStr, sessionId); } catch(e) {}
+    }
+    round();
+  };
 }
 
 function hintUI() {

@@ -69,13 +69,22 @@ const T = Math.floor(Date.UTC(d0.getFullYear(), d0.getMonth(), d0.getDate()) / 8
 let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
 const KEY = "ballpark:" + todayStr;
 
-let sessionId = localStorage.getItem("ballpark:session_id:" + todayStr) || (() => {
-  const id = (typeof crypto !== "undefined" && crypto.randomUUID)
+let S = { r: [] };
+try {
+  const s = localStorage.getItem(KEY);
+  if (s) S = JSON.parse(s);
+} catch(e) {}
+
+function makeSessionId() {
+  return (typeof crypto !== "undefined" && crypto.randomUUID)
     ? crypto.randomUUID()
     : "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
-  try { localStorage.setItem("ballpark:session_id:" + todayStr, id); } catch(e) {}
-  return id;
-})();
+}
+
+let sessionId = (!S.r || S.r.length === 0)
+  ? makeSessionId()
+  : (localStorage.getItem("ballpark:session_id:" + todayStr) || makeSessionId());
+try { localStorage.setItem("ballpark:session_id:" + todayStr, sessionId); } catch(e) {}
 
 const U=[[1e24,"septillion"],[1e21,"sextillion"],[1e18,"quintillion"],[1e15,"quadrillion"],[1e12,"trillion"],[1e9,"billion"],[1e6,"million"],[1e3,"thousand"]];
 const $=id=>document.getElementById(id);
@@ -83,16 +92,10 @@ function sig(n){if(n<=0)return 0;const f=Math.pow(10,Math.floor(Math.log10(n))-1
 function fmt(v){const u=U.find(x=>v>=x[0]*.995);if(!u)return String(+sig(v).toFixed(1));return +(sig(v/u[0])).toFixed(1)+" "+u[1]}
 
 let QUESTIONS = [];
-let S = { r: [] };
 let x = 9;
 let ph = "g";
 let drag = false;
 let questionServeTime = Date.now();
-
-try {
-  const s = localStorage.getItem(KEY);
-  if (s) S = JSON.parse(s);
-} catch(e) {}
 
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} };
 const total = () => S.r.reduce((a, r) => a + (r.p || 0), 0);
@@ -138,7 +141,13 @@ function setX(v) {
 
 function intro() {
   $("v").innerHTML = `<div class="card"><p class="kick mono">Ballpark #${String(num).padStart(3, "0")}</p><h1>Close enough <em>counts.</em></h1><p class="lede">Five absurd quantities. Slide the cursor to your best guess on a scale from one to a septillion. You’re scored on how many orders of magnitude you’re off. Being 10 times too high or too low still stings, but being right to within a factor of 2 earns almost full marks.</p><button class="btn" id="go">Start estimating</button></div>`;
-  $("go").onclick = round;
+  $("go").onclick = () => {
+    if (!S.r || S.r.length === 0) {
+      sessionId = makeSessionId();
+      try { localStorage.setItem("ballpark:session_id:" + todayStr, sessionId); } catch(e) {}
+    }
+    round();
+  };
 }
 
 function round() {
@@ -194,10 +203,12 @@ async function lockGuess() {
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       if (err.error && (err.error.includes("Out-of-order") || err.error.includes("already been answered") || err.error.includes("too fast"))) {
-        sessionId = "p_" + Math.random().toString(36).substring(2) + Date.now().toString(36);
-        try { localStorage.setItem("ballpark:session_id:" + todayStr, sessionId); } catch(e) {}
-        await new Promise(r => setTimeout(r, 1600));
-        return lockGuess();
+        if (i === 0) {
+          sessionId = makeSessionId();
+          try { localStorage.setItem("ballpark:session_id:" + todayStr, sessionId); } catch(e) {}
+          await new Promise(r => setTimeout(r, 1600));
+          return lockGuess();
+        }
       }
       throw new Error(err.error || "Failed to submit estimate.");
     }

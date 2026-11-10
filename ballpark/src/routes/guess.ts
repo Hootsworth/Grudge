@@ -107,14 +107,14 @@ export async function handleGuessRoute(
   }
 
   let currentQIndex = session.current_question_index;
-  // If session was completed or past the last question, reset session to start cleanly at question 1
+  // If session was completed or past the last question, reset session to start cleanly at the question being answered
   if (currentQIndex > 5 || session.completed_at !== null) {
     await env.DB.prepare(
-      'UPDATE sessions SET current_question_index = 1, question_served_at = ?, total_points = 0, total_error_orders = 0, completed_at = NULL WHERE session_id = ?'
-    ).bind(now - 3000, sessionId).run();
-    session.current_question_index = 1;
+      'UPDATE sessions SET current_question_index = ?, question_served_at = ?, total_points = 0, total_error_orders = 0, completed_at = NULL WHERE session_id = ?'
+    ).bind(question.question_index, now - 3000, sessionId).run();
+    session.current_question_index = question.question_index;
     session.question_served_at = now - 3000;
-    currentQIndex = 1;
+    currentQIndex = question.question_index;
   }
 
   // Enforce question sequence order (Questions are answered in order)
