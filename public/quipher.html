@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quipher — intercept the daily quip</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bebas+Neue&family=Rubik+Mono+One&family=Special+Elite&display=swap">
+<style>
+:root{--desk:#14201f;--paper:#f4ecd8;--ink:#1b1a17;--brass:#e2a93b;--red:#e8453c;--mute:#8fa09b;box-sizing:border-box}
+* {box-sizing:border-box;-webkit-tap-highlight-color:transparent}[hidden]{display:none!important}
+body{margin:0;min-height:100vh;color:var(--paper);font-family:"Special Elite",Courier,monospace;background:radial-gradient(90% 45% at 50% 0,#2b4743,transparent 70%),repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 2px,transparent 2px 7px),var(--desk)}
+main{max-width:560px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top,0px)) 14px 0}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{display:flex;gap:4px;--s:clamp(22px,6.6vw,30px)}.logo .k{animation:pop .5s calc(var(--i)*70ms) backwards}.logo .k:hover{transform:rotate(0) scale(1.2) translateY(-3px)}
+.tags{display:flex;gap:8px}
+.tag{position:relative;background:var(--paper);color:var(--ink);padding:5px 10px 5px 22px;border-radius:4px 10px 10px 4px;font-size:.82rem;line-height:1.1;box-shadow:0 2px 0 rgba(0,0,0,.4);font-variant-numeric:tabular-nums}
+.tag::before{content:"";position:absolute;left:7px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--desk);box-shadow:inset 0 1px 2px rgba(0,0,0,.7)}
+.tag small{display:block;font-size:.54rem;letter-spacing:.16em;opacity:.55;text-transform:uppercase}
+.pen{position:absolute;right:2px;top:100%;color:var(--brass);font-size:.85rem;pointer-events:none;animation:pen 1.3s ease-out forwards}
+.prog{display:flex;align-items:center;gap:10px;margin:16px 2px 14px;font-size:.66rem;letter-spacing:.16em;color:var(--mute);text-transform:uppercase}
+.holes{display:flex;gap:4px;flex:1;flex-wrap:wrap}.holes b{width:10px;height:10px;border-radius:50%;border:2px solid #3b4f4b;transition:background .3s,transform .3s,border-color .3s}.holes b.f{background:var(--brass);border-color:var(--brass);transform:scale(1.2)}
+.note{position:relative;background:var(--paper) radial-gradient(rgba(0,0,0,.06) 1px,transparent 1px) 0 0/7px 7px;color:var(--ink);border-radius:6px;padding:28px 16px 18px;transform:rotate(-.4deg);box-shadow:0 16px 34px rgba(0,0,0,.5);animation:drop .9s cubic-bezier(.2,1.2,.3,1) both;--s:clamp(22px,6.3vw,32px)}
+.note::before,.note::after{content:"";position:absolute;top:-10px;width:72px;height:22px;background:rgba(255,216,77,.8);box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.note::before{left:11%;transform:rotate(-5deg)}.note::after{right:11%;transform:rotate(4deg)}
+.dl{display:flex;justify-content:space-between;align-items:center;font-size:.66rem;letter-spacing:.16em;margin-bottom:16px;color:#6b6556;text-transform:uppercase}.dl .cl{color:var(--red);border:2px solid var(--red);padding:1px 7px;transform:rotate(2deg)}
+.tape{display:flex;flex-wrap:wrap;gap:14px 16px}.w{display:flex;gap:3px;align-items:flex-end}
+.c{width:var(--s);padding:0;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;gap:3px;font:inherit;scroll-margin:100px 0 290px}
+.k{width:var(--s);height:calc(var(--s)*1.15);display:grid;place-items:center;background:var(--bg);color:var(--fg);font:400 calc(var(--s)*.62)/1 var(--f);text-transform:uppercase;border-radius:2px;transform:rotate(var(--r));box-shadow:1px 2px 0 rgba(0,0,0,.3);transition:transform .2s,box-shadow .2s}
+.c .k{animation:pop .45s calc(var(--i)*14ms) backwards}
+.g{height:var(--s);display:grid;place-items:end center;font:400 calc(var(--s)*.78)/1 "Special Elite",monospace;color:var(--ink);border-bottom:2px solid #b9b19b;background:linear-gradient(rgba(255,216,77,.85),rgba(255,216,77,.85)) bottom/100% 0 no-repeat;transition:background-size .25s,border-color .2s}
+.c.on .g{background-size:100% 72%;border-color:var(--ink)}.c.on .k{transform:rotate(var(--r)) translateY(-4px) scale(1.12);box-shadow:2px 6px 0 rgba(0,0,0,.3)}
+.c.on .g:empty::after{content:"";width:2px;height:65%;background:var(--ink);animation:blink 1s steps(2) infinite}
+.c.lk .g{color:#8a5d00;border-color:var(--brass);border-bottom-width:4px}.c.fl .k{animation:flash .9s}
+.c.bad .g{color:var(--red);border-color:var(--red);animation:shake .45s}.g.hit{animation:stampin .22s cubic-bezier(.2,1.8,.4,1)}
+.p{align-self:flex-end;font-size:calc(var(--s)*.8);height:var(--s);line-height:1;display:grid;place-items:end;color:#6b6556;margin-left:-2px}
+.sig{margin-top:18px;font-size:.85rem;color:#6b6556;min-height:1.4em}.sig .rd{background:var(--ink);color:var(--ink);border-radius:2px;padding:0 4px;user-select:none}.sig .rv{animation:rise .6s 1.4s both}
+.note.win .k{animation:peel .5s calc(var(--i)*12ms) forwards}.note.win .g{border-color:transparent;background-size:100% 0}
+.stamp{position:absolute;left:50%;top:48%;font-size:clamp(2.2rem,12vw,3.6rem);letter-spacing:.08em;color:var(--red);border:6px solid var(--red);border-radius:10px;padding:2px 18px;transform:translate(-50%,-50%) rotate(-11deg);opacity:0;mix-blend-mode:multiply;pointer-events:none;animation:slam .7s 1.3s cubic-bezier(.2,1.6,.4,1) forwards;z-index:3}
+.conf{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:4}.conf i{position:absolute;left:50%;top:46%;width:9px;height:14px;background:var(--cc);animation:conf 1.7s ease-out forwards}
+#game{position:sticky;bottom:0;margin:20px -14px 0;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--desk);border-top:2px solid #2b3f3b;box-shadow:0 -12px 26px rgba(0,0,0,.45);z-index:5}
+.msg{min-height:1.3em;font-size:.76rem;color:var(--mute);text-align:center;margin:0 0 6px}
+.spool{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}.spool::-webkit-scrollbar{display:none}
+.sp{flex:none;display:flex;align-items:center;gap:5px;padding:2px 8px 2px 2px;border-radius:8px;border:2px solid #34504b;background:none;color:var(--paper);font:inherit;font-size:.72rem;cursor:pointer;transition:border-color .2s,transform .15s,opacity .2s}
+.sp .k{--s:20px}.sp.on{border-color:var(--brass);transform:translateY(-3px)}.sp.dn{opacity:.4}
+.acts{display:flex;gap:10px;margin-bottom:9px}
+.st{flex:1;border:2px solid var(--brass);color:var(--brass);background:none;border-radius:6px;padding:7px 6px;font:inherit;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transform:rotate(-.8deg);transition:transform .12s,background .2s,color .2s}
+.st+.st{transform:rotate(.8deg);border-color:#7fd1b9;color:#7fd1b9}.st:active{transform:scale(.95)}.st em{font-style:normal;opacity:.65}
+.kb{display:grid;gap:6px}.kr{display:flex;gap:5px;justify-content:center}
+.ky{position:relative;flex:1;max-width:40px;aspect-ratio:1;border-radius:50%;border:2px solid #cdbf9a;background:radial-gradient(circle at 35% 28%,#54544d,#1d1d1b 70%);color:var(--paper);font:inherit;font-size:.95rem;cursor:pointer;padding:0;box-shadow:0 3px 0 #090b0b;transition:transform .06s,box-shadow .06s,opacity .2s,border-color .2s}
+.ky:active,.ky.dn{transform:translateY(3px);box-shadow:0 0 0 #090b0b}.ky.u{opacity:.5}.ky.cur{border-color:var(--brass)}.ky.wide{max-width:64px;aspect-ratio:auto;border-radius:20px;flex:1.7;font-size:.66rem}
+.ky i{position:absolute;top:-6px;right:-6px;width:17px;height:17px;border-radius:3px;display:grid;place-items:center;background:var(--bg);color:var(--fg);font:400 .6rem/1 var(--f);font-style:normal;box-shadow:0 1px 0 rgba(0,0,0,.5);animation:pop .25s}.ky i:empty{display:none}
+#end{margin:22px 0 40px}.tk{background:var(--paper);color:var(--ink);border-radius:6px;padding:20px 18px 18px;position:relative;box-shadow:0 14px 30px rgba(0,0,0,.45);animation:rise .7s 2.1s both}
+.tk::before{content:"";position:absolute;left:-8px;right:-8px;top:96px;border-top:3px dotted var(--desk)}
+.kk{font-size:.66rem;letter-spacing:.18em;color:#6b6556;text-transform:uppercase;margin:0 0 4px}
+.big{font:400 clamp(3.4rem,17vw,5.2rem)/1 "Abril Fatface",Georgia,serif;margin:0 0 18px;font-variant-numeric:tabular-nums}
+.tk h2{font:400 1.5rem "Abril Fatface",Georgia,serif;margin:0 0 10px;color:var(--red)}
+.rw{display:flex;justify-content:space-between;font-size:.85rem;margin:4px 0;color:#6b6556}.rw b{color:var(--ink);font-weight:400}
+.cpb{width:100%;margin-top:16px;padding:12px;border:3px solid var(--ink);background:none;font:inherit;text-transform:uppercase;letter-spacing:.12em;cursor:pointer;border-radius:4px;color:var(--ink);transition:background .2s,color .2s}.cpb:hover{background:var(--ink);color:var(--paper)}
+.cdn{margin:12px 0 0;font-size:.7rem;letter-spacing:.14em;color:#6b6556;text-transform:uppercase}
+@keyframes drop{from{opacity:0;transform:translateY(-40px) rotate(3deg)}}@keyframes pop{from{opacity:0;transform:rotate(var(--r)) scale(.4) translateY(8px)}}@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+@keyframes shake{20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}@keyframes stampin{from{transform:scale(1.7);opacity:.2}}@keyframes blink{50%{opacity:0}}
+@keyframes flash{50%{filter:brightness(1.5) drop-shadow(0 0 8px var(--brass));transform:rotate(var(--r)) scale(1.25)}}@keyframes pen{to{transform:translateY(24px);opacity:0}}
+@keyframes peel{to{height:0;opacity:0;transform:rotate(var(--r)) translateY(-16px) scale(.5)}}@keyframes slam{0%{opacity:0;transform:translate(-50%,-50%) rotate(-11deg) scale(3)}60%{opacity:.95;transform:translate(-50%,-50%) rotate(-11deg) scale(.92)}to{opacity:.9;transform:translate(-50%,-50%) rotate(-11deg) scale(1)}}
+@keyframes conf{to{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rr))}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.stamp{opacity:.9}}
+</style></head><body><main>
+<header><div class="logo" id="lg"></div><div class="tags"><div class="tag" id="stk"><small>Streak</small>0</div><div class="tag" id="tmt"><small>Time</small><span id="tm">0:00</span></div></div></header>
+<div class="prog"><span id="pn">Placed 0/0</span><div class="holes" id="hl"></div></div>
+<section class="note" id="note"><div class="dl"><span id="dl"></span><span class="cl">Classified</span></div><div class="tape" id="tp"></div><div class="sig" id="sig"><span class="rd">— ▇▇▇▇▇▇▇▇▇▇▇ ▇▇▇▇▇▇▇▇▇</span></div></section>
+<section id="game"><div class="msg" id="ms"></div><div class="spool" id="fq"></div><div class="acts"><button class="st" id="hn">Informant <em>+0:45</em></button><button class="st" id="ck">Cross-check <em>+0:20</em></button></div><div class="kb" id="kb"></div></section>
+<section id="end"></section>
+</main>
+<script>
+const API_BASE = "https://quipher-backend.adityapdixit.workers.dev";
+const $=id=>document.getElementById(id),A=[..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"],vib=v=>{try{navigator.vibrate&&navigator.vibrate(v)}catch(e){}};
+
+// Calculate client local date string (midnight reset guarantee)
+const _d = new Date();
+const localDateStr = `${_d.getFullYear()}-${String(_d.getMonth() + 1).padStart(2, '0')}-${String(_d.getDate()).padStart(2, '0')}`;
+const T = Math.floor(Date.UTC(_d.getFullYear(), _d.getMonth(), _d.getDate()) / 864e5);
+let num = Math.max(1, T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1);
+const KEY = "quipher:" + localDateStr;
+
+// Anonymous session UUID
+const sessionKey = "quipher_session_uuid";
+let sessionId = localStorage.getItem(sessionKey);
+if (!sessionId) {
+  sessionId = (crypto.randomUUID ? crypto.randomUUID() : "sess_" + Math.random().toString(36).slice(2) + Date.now().toString(36));
+  try { localStorage.setItem(sessionKey, sessionId); } catch(e) {}
+}
+
+let CT = "BLW IEE, ZWD BLW VW GBA VZIEHRE. ALE VIOAEGRAVEG IO RMAHP.";
+const L = c => /[A-Z]/.test(c);
+let present = [];
+let cnt = {};
+
+/* every cipher letter gets its own "magazine clipping": font, paper colour and tilt */
+const FN = ["'Abril Fatface',Georgia,serif","'Bebas Neue',Impact,sans-serif","'Rubik Mono One',sans-serif","'Special Elite',Courier,monospace"],
+CL = [["#f7f1de","#1b1a17"],["#ffd84d","#1b1a17"],["#e8453c","#fff"],["#1b1a17","#f7f1de"],["#2f6df6","#fff"],["#ff9ec0","#1b1a17"],["#3dbb7a","#0d2a1a"],["#fff","#e8453c"]],
+sty = c => { const i = c.charCodeAt(0) - 65, k = CL[(i * 3 + (i >> 2)) % 8]; return `--f:${FN[i % 4]};--bg:${k[0]};--fg:${k[1]};--r:${((i * 7) % 9 - 4) * .9}deg`; };
+
+let S = { m: {}, lock: [], h: 0, c: 0, el: 0, done: false, revealed: null }, sel = null, bad = [], started = false, hold = 0, hz = 0;
+try {
+  const x = localStorage.getItem(KEY);
+  if (x) {
+    S = JSON.parse(x);
+    started = S.el > 0 || Object.keys(S.m).length > 0;
+  }
+} catch(e) {}
+
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} };
+const stk = () => { try { return JSON.parse(localStorage.getItem("quipher:streak") || "{}"); } catch(e) { return {}; } };
+function bump() {
+  const s = stk();
+  if (s.t === T) return;
+  s.n = s.last === T - 1 ? (s.n || 0) + 1 : 1;
+  s.last = T;
+  s.t = T;
+  try { localStorage.setItem("quipher:streak", JSON.stringify(s)); } catch(e) {}
+}
+
+const tot = () => S.el / 1000 + 20 * S.c + 45 * S.h;
+const mmss = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
+const cells = {}, chips = {}, keys = {};
+
+function initPuzzleData(ciphertext, plateNum) {
+  CT = ciphertext.toUpperCase();
+  if (plateNum) num = plateNum;
+  present = [...new Set([...CT].filter(L))];
+  cnt = {};
+  [...CT].forEach(c => L(c) && (cnt[c] = (cnt[c] || 0) + 1));
+}
+
+function build() {
+  $("lg").innerHTML = [..."QUIPHER"].map((ch, i) => `<span class="k" style="${sty(String.fromCharCode(65 + (i * 5 + 3) % 26))};--i:${i}">${ch}</span>`).join("");
+  $("dl").textContent = "Intercept №" + String(num).padStart(3, "0");
+  let n = 0;
+  $("tp").innerHTML = CT.split(" ").map(w => `<div class="w">${[...w].map(c => { n++; return L(c) ? `<button class="c" data-c="${c}" style="${sty(c)};--i:${n}"><span class="k">${c}</span><span class="g"></span></button>` : `<span class="p">${c}</span>`; }).join("")}</div>`).join("");
+  document.querySelectorAll(".c").forEach(e => (cells[e.dataset.c] = cells[e.dataset.c] || []).push(e));
+  $("fq").innerHTML = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]).map(c => `<button class="sp" data-c="${c}" style="${sty(c)}"><span class="k">${c}</span>${cnt[c]}</button>`).join("");
+  document.querySelectorAll(".sp").forEach(e => chips[e.dataset.c] = e);
+  $("kb").innerHTML = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"].map((r, ri) => `<div class="kr">${[...r].map(k => `<button class="ky" data-k="${k}">${k}<i></i></button>`).join("")}${ri == 2 ? `<button class="ky wide" data-k="DEL">DEL</button>` : ""}</div>`).join("");
+  document.querySelectorAll(".ky").forEach(e => keys[e.dataset.k] = e);
+  $("hl").innerHTML = present.map(() => "<b></b>").join("");
+  $("stk").innerHTML = "<small>Streak</small>" + (stk().n || 0);
+
+  $("tp").onclick = e => { const b = e.target.closest(".c"); if (b) pick(b.dataset.c); };
+  $("fq").onclick = e => { const b = e.target.closest(".sp"); if (b) pick(b.dataset.c); };
+  $("kb").onclick = e => { const b = e.target.closest(".ky"); if (!b) return; b.dataset.k === "DEL" ? del() : assign(b.dataset.k); };
+}
+
+function refresh() {
+  const inv = {};
+  for (const c in S.m) inv[S.m[c]] = c;
+  for (const c of present) {
+    const g = S.m[c] || "";
+    cells[c] && cells[c].forEach(e => {
+      e.classList.toggle("on", sel === c);
+      e.classList.toggle("lk", S.lock.includes(c));
+      e.classList.toggle("bad", bad.includes(c));
+      const x = e.querySelector(".g");
+      if (x && x.textContent !== g) x.textContent = g;
+    });
+    chips[c] && chips[c].classList.toggle("on", sel === c);
+    chips[c] && chips[c].classList.toggle("dn", !!S.m[c]);
+  }
+  for (const k in keys) {
+    const e = keys[k];
+    if (k === "DEL") continue;
+    const c = inv[k], i = e.querySelector("i");
+    e.classList.toggle("u", !!c);
+    e.classList.toggle("cur", !!sel && S.m[sel] === k);
+    if (c) {
+      if (i.textContent !== c) { i.setAttribute("style", sty(c)); i.textContent = c; }
+    } else if (i.textContent) {
+      i.textContent = ""; i.removeAttribute("style");
+    }
+  }
+  const placed = present.filter(c => S.m[c]).length;
+  $("pn").textContent = "Placed " + placed + "/" + present.length;
+  [...$("hl").children].forEach((b, i) => b.classList.toggle("f", i < placed));
+  $("tm").textContent = mmss(tot());
+  if (!hold) $("ms").textContent = S.done ? "" : !started ? "Tap any clipping to start the clock." : sel ? "Type the letter you think " + sel + " stands for." : "Tap a clipping to pick a cipher letter.";
+}
+
+function say(t, ms = 2400) { $("ms").textContent = t; hold = 1; clearTimeout(hz); hz = setTimeout(() => { hold = 0; refresh(); }, ms); }
+function pen(t) { const e = document.createElement("span"); e.className = "pen"; e.textContent = t; $("tmt").appendChild(e); setTimeout(() => e.remove(), 1300); }
+function kick(c) { cells[c] && cells[c].forEach(e => { const g = e.querySelector(".g"); g.classList.remove("hit"); void g.offsetWidth; g.classList.add("hit"); }); }
+function nextOpen(from) { const k = present.indexOf(from); for (let j = 1; j <= present.length; j++) { const c = present[(k + j) % present.length]; if (!S.m[c]) return c; } return from; }
+function pick(c) { if (S.done) return; sel = c; started = true; refresh(); cells[c] && cells[c][0].scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+function move(d) { if (S.done) return; const k = present.indexOf(sel); pick(present[(k + d + present.length) % present.length]); }
+
+function assign(Lt) {
+  if (S.done || !sel) return;
+  started = true;
+  if (S.lock.includes(sel)) { say("The informant already locked that one in."); return; }
+  if (S.lock.some(c => S.m[c] === Lt)) { say(Lt + " is already locked in by the informant."); return; }
+  let moved = null;
+  for (const c in S.m) if (S.m[c] === Lt && c !== sel) { moved = c; delete S.m[c]; }
+  S.m[sel] = Lt;
+  kick(sel);
+  const e = keys[Lt];
+  if (e) { e.classList.add("dn"); setTimeout(() => e.classList.remove("dn"), 120); }
+  if (moved) { say(Lt + " moved here from " + moved + "."); }
+  sel = nextOpen(sel);
+  vib(8);
+  save();
+  refresh();
+  checkIfComplete();
+  if (!S.done && sel && cells[sel]) cells[sel][0].scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function del() { if (S.done || !sel || S.lock.includes(sel)) return; delete S.m[sel]; save(); refresh(); }
+
+function checkIfComplete() {
+  const allPlaced = present.length > 0 && present.every(c => S.m[c]);
+  if (allPlaced) {
+    trySolve();
+  }
+}
+
+// Check with backend
+$("ck").onclick = async () => {
+  if (S.done) return;
+  started = true;
+  $("ck").disabled = true;
+  try {
+    const res = await fetch(`${API_BASE}/api/check`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session: sessionId, mapping: S.m, date: localDateStr })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      bad = data.wrong || [];
+      S.c = data.checks;
+      save();
+      pen("+0:20");
+      say(bad.length ? bad.length + " wrong. Flagged in red." : "Everything you’ve placed so far checks out.");
+      if (bad.length) vib([50, 40, 50]);
+      refresh();
+      setTimeout(() => { bad = []; refresh(); }, 1700);
+      if (data.solved) trySolve();
+    } else if (res.status === 429) {
+      say("Hold on: cross-check is limited to once every 3 seconds.");
+    }
+  } catch(e) {
+    say("Network error cross-checking cipher.");
+  } finally {
+    $("ck").disabled = false;
+  }
+};
+
+// Hint from backend
+$("hn").onclick = async () => {
+  if (S.done) return;
+  started = true;
+  $("hn").disabled = true;
+  try {
+    const res = await fetch(`${API_BASE}/api/hint`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session: sessionId, mapping: S.m, date: localDateStr })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (!data.cipherLetter) {
+        say("All letters are already correctly assigned.");
+        return;
+      }
+      const c = data.cipherLetter, Lt = data.plainLetter;
+      for (const k in S.m) if (S.m[k] === Lt) delete S.m[k];
+      S.m[c] = Lt;
+      if (!S.lock.includes(c)) S.lock.push(c);
+      S.h = data.hints;
+      save();
+      cells[c] && cells[c].forEach(e => { e.classList.add("fl"); setTimeout(() => e.classList.remove("fl"), 950); });
+      pen("+0:45");
+      vib(30);
+      say("The informant whispers: " + c + " is " + Lt + ".");
+      cells[c] && cells[c][0].scrollIntoView({ block: "nearest", behavior: "smooth" });
+      refresh();
+      checkIfComplete();
+    }
+  } catch(e) {
+    say("Network error consulting informant.");
+  } finally {
+    $("hn").disabled = false;
+  }
+};
+
+// Solve with backend
+async function trySolve() {
+  try {
+    const res = await fetch(`${API_BASE}/api/solve`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ session: sessionId, mapping: S.m, date: localDateStr })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.solved) {
+        S.done = true;
+        S.revealed = {
+          plaintext: data.plaintext,
+          author: data.author,
+          source: data.source,
+          year: data.year,
+          score: data.score,
+          solveSeconds: data.solveSeconds,
+          checks: data.checks,
+          hints: data.hints,
+          rank: data.rank,
+          percentile: data.percentile
+        };
+        bump();
+        sel = null;
+        save();
+        refresh();
+        finish(S.revealed);
+      }
+    }
+  } catch(e) {}
+}
+
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey || e.altKey || S.done) return;
+  if (/^[a-zA-Z]$/.test(e.key)) { assign(e.key.toUpperCase()); e.preventDefault(); }
+  else if (e.key === "Backspace") del();
+  else if (e.key === "ArrowRight" || e.key === "Tab" && !e.shiftKey && sel) { move(1); e.preventDefault(); }
+  else if (e.key === "ArrowLeft") { move(-1); e.preventDefault(); }
+});
+
+setInterval(() => { if (started && !S.done && !document.hidden) { S.el += 1000; save(); refresh(); } }, 1000);
+
+function finish(rev) {
+  const t = rev?.score ?? tot();
+  const ttl = rev?.rank || (t < 120 ? "Codebreaker" : t < 240 ? "Cryptanalyst" : t < 420 ? "Bletchley intern" : "Rot13 enjoyer");
+  const author = rev?.author || "Arthur Conan Doyle";
+  const source = rev?.source ? `${rev.source}, ${rev.year || ''}` : "A Scandal in Bohemia";
+  const sh = "Quipher #" + num + "  " + mmss(t) + "  (" + S.h + " informant" + (S.h === 1 ? "" : "s") + ", " + S.c + " check" + (S.c === 1 ? "" : "s") + ")";
+
+  $("game").hidden = true;
+  const nt = $("note");
+  nt.classList.add("win");
+  $("sig").innerHTML = `<span class="rv">— ${author}, <i>${source}</i></span>`;
+  const st = document.createElement("div");
+  st.className = "stamp";
+  st.textContent = "DECODED";
+  nt.appendChild(st);
+  setTimeout(() => {
+    const c = document.createElement("div");
+    c.className = "conf";
+    const cc = ["#e8453c", "#ffd84d", "#2f6df6", "#3dbb7a", "#ff9ec0", "#fff"];
+    for (let j = 0; j < 46; j++) {
+      const i = document.createElement("i");
+      i.style.cssText = `--cc:${cc[j % 6]};--dx:${(Math.random() - .5) * 480}px;--dy:${(Math.random() - .3) * 340}px;--rr:${Math.random() * 720}deg`;
+      c.appendChild(i);
+    }
+    nt.appendChild(c);
+    setTimeout(() => c.remove(), 1800);
+    vib([30, 40, 30, 40, 120]);
+  }, 1450);
+
+  const pctText = rev?.percentile ? `<div class="rw"><span>Percentile</span><b>Top ${101 - rev.percentile}%</b></div>` : "";
+  $("end").innerHTML = `<div class="tk"><p class="kk">Decoded in</p><p class="big">${mmss(t)}</p><h2>${ttl}.</h2><div class="rw"><span>Solving time</span><b>${mmss(rev?.solveSeconds || (S.el / 1000))}</b></div><div class="rw"><span>Cross-checks × 0:20</span><b>${S.c}</b></div><div class="rw"><span>Informant × 0:45</span><b>${S.h}</b></div>${pctText}<button class="cpb" id="cp">Copy result</button><p class="cdn" id="cdn"></p></div>`;
+  $("cp").onclick = () => { try { navigator.clipboard.writeText(sh).then(() => $("cp").textContent = "Copied", () => prompt("Copy:", sh)); } catch(e) { prompt("Copy:", sh); } };
+  const tick = () => { const a = new Date(), r = new Date(a.getFullYear(), a.getMonth(), a.getDate() + 1) - a, q = x => String(x).padStart(2, "0"); $("cdn").textContent = "Next intercept in " + q(Math.floor(r / 36e5)) + ":" + q(Math.floor(r / 6e4) % 60) + ":" + q(Math.floor(r / 1e3) % 60); };
+  tick();
+  setInterval(tick, 1000);
+}
+
+// Load daily intercept from Cloudflare Worker
+fetch(`${API_BASE}/api/today?session=${sessionId}&date=${localDateStr}`)
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (data && data.ciphertext) {
+      initPuzzleData(data.ciphertext, data.plate);
+    }
+  })
+  .catch(() => {})
+  .finally(() => {
+    if (!CT || present.length === 0) {
+      fetch("quipher_today.json")
+        .then(r => r.ok ? r.json() : null)
+        .then(fallback => {
+          if (fallback && fallback.ciphertext) {
+            initPuzzleData(fallback.ciphertext, fallback.plate);
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          if (present.length === 0) initPuzzleData(CT, num);
+          build();
+          sel = present.find(c => !S.m[c]) || present[0];
+          refresh();
+          if (S.done) { sel = null; finish(S.revealed); }
+        });
+    } else {
+      build();
+      sel = present.find(c => !S.m[c]) || present[0];
+      refresh();
+      if (S.done) { sel = null; finish(S.revealed); }
+    }
+  });
+</script></body></html>

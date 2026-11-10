@@ -96,12 +96,13 @@ test('Route POST /api/submit-word: validates word, enforces dictionary lookup, t
   const mockDb = new MockD1();
   const env: Env = { DB: mockDb as any };
   const session = 'sprint-session-001';
+  const date = '2026-11-09';
 
   // 1. Invalid word: not in dictionary
   const req1 = new Request('https://sprint.local/api/submit-word', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, word: 'xyz' }),
+    body: JSON.stringify({ session, word: 'xyz', date }),
   });
   const res1 = await worker.fetch(req1, env);
   assert.equal(res1.status, 200);
@@ -112,7 +113,7 @@ test('Route POST /api/submit-word: validates word, enforces dictionary lookup, t
   const req2 = new Request('https://sprint.local/api/submit-word', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, word: 'cat' }), // 'c' is not in STREAM
+    body: JSON.stringify({ session, word: 'cat', date }), // 'c' is not in STREAM
   });
   const res2 = await worker.fetch(req2, env);
   const json2: any = await res2.json();
@@ -123,7 +124,7 @@ test('Route POST /api/submit-word: validates word, enforces dictionary lookup, t
   const req3 = new Request('https://sprint.local/api/submit-word', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, word: 'mat' }),
+    body: JSON.stringify({ session, word: 'mat', date }),
   });
   const res3 = await worker.fetch(req3, env);
   const json3: any = await res3.json();
@@ -137,7 +138,7 @@ test('Route POST /api/submit-word: validates word, enforces dictionary lookup, t
   const req4 = new Request('https://sprint.local/api/submit-word', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, word: 'mat' }),
+    body: JSON.stringify({ session, word: 'mat', date }),
   });
   const res4 = await worker.fetch(req4, env);
   const json4: any = await res4.json();
@@ -148,7 +149,7 @@ test('Route POST /api/submit-word: validates word, enforces dictionary lookup, t
   const req5 = new Request('https://sprint.local/api/submit-word', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, word: 'stream' }),
+    body: JSON.stringify({ session, word: 'stream', date }),
   });
   const res5 = await worker.fetch(req5, env);
   const json5: any = await res5.json();
@@ -161,18 +162,19 @@ test('Route POST /api/finish: finishes game and reveals complete accounted-for m
   const mockDb = new MockD1();
   const env: Env = { DB: mockDb as any };
   const session = 'sprint-session-002';
+  const date = '2026-11-09';
 
   // Submit one word first
   await worker.fetch(new Request('https://sprint.local/api/submit-word', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, word: 'star' }),
+    body: JSON.stringify({ session, word: 'star', date }),
   }), env);
 
   const req = new Request('https://sprint.local/api/finish', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session }),
+    body: JSON.stringify({ session, date }),
   });
   const res = await worker.fetch(req, env);
   assert.equal(res.status, 200);

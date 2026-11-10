@@ -118,6 +118,19 @@
       "artType": "blackout",
       "backend": "worker-d1",
       "status": "live"
+    },
+    {
+      "id": "quipher",
+      "title": "Quipher",
+      "url": "quipher.html",
+      "tags": ["Cryptogram", "Intercept"],
+      "desc": "A famous quote encrypted with a substitution cipher. Intercept, decode, and expose the transmission.",
+      "cta": "Decode intercept",
+      "color": "var(--c4)",
+      "bgHex": "#2b4743",
+      "artType": "quipher",
+      "backend": "worker-d1",
+      "status": "live"
     }
   ],
   "lab": [

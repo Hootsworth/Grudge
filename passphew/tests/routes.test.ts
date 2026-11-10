@@ -12,9 +12,10 @@ function createMockD1() {
   const ipLimits: Map<string, IpLimitRecord> = new Map();
 
   // Seed sample puzzle
+  const todayStr = new Date().toISOString().split('T')[0];
   const samplePuzzle: Puzzle = {
     id: 'test_puzzle_01',
-    date: '2026-11-09',
+    date: todayStr,
     plate: 42,
     username: 'root_admin',
     clue: 'Opener of locks, then the error for a missing page',
@@ -173,7 +174,7 @@ test('Route GET /api/today: returns sanitized plate, username, clue without reve
   const mockD1 = createMockD1();
   const env: Env = { DB: mockD1 };
 
-  const req = new Request('https://passphew.app/api/today?date=2026-11-09', { method: 'GET' });
+  const req = new Request('https://passphew.app/api/today', { method: 'GET' });
   const res = await app.fetch(req, env, mockCtx());
 
   assert.equal(res.status, 200);

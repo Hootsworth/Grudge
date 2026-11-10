@@ -119,12 +119,13 @@ test('Route POST /api/step: validates against dictionary, checks 1-letter diff, 
   const mockDb = new MockD1();
   const env: Env = { DB: mockDb as any };
   const session = 'test-session-001';
+  const date = '2026-11-09';
 
   // 1. Invalid word not in word database
   const req1 = new Request('https://rungs.local/api/step', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, word: 'zzzz' }),
+    body: JSON.stringify({ session, round: 1, word: 'zzzz', date }),
   });
   const res1 = await worker.fetch(req1, env);
   assert.equal(res1.status, 200);
@@ -136,7 +137,7 @@ test('Route POST /api/step: validates against dictionary, checks 1-letter diff, 
   const req2 = new Request('https://rungs.local/api/step', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, word: 'warm' }),
+    body: JSON.stringify({ session, round: 1, word: 'warm', date }),
   });
   const res2 = await worker.fetch(req2, env);
   const json2: any = await res2.json();
@@ -147,7 +148,7 @@ test('Route POST /api/step: validates against dictionary, checks 1-letter diff, 
   const req3 = new Request('https://rungs.local/api/step', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, word: 'cord' }),
+    body: JSON.stringify({ session, round: 1, word: 'cord', date }),
   });
   const res3 = await worker.fetch(req3, env);
   const json3: any = await res3.json();
@@ -160,7 +161,7 @@ test('Route POST /api/step: validates against dictionary, checks 1-letter diff, 
   const req4 = new Request('https://rungs.local/api/step', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, word: 'cold' }),
+    body: JSON.stringify({ session, round: 1, word: 'cold', date }),
   });
   const res4 = await worker.fetch(req4, env);
   const json4: any = await res4.json();
@@ -171,17 +172,17 @@ test('Route POST /api/step: validates against dictionary, checks 1-letter diff, 
   await worker.fetch(new Request('https://rungs.local/api/step', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, word: 'card' }),
+    body: JSON.stringify({ session, round: 1, word: 'card', date }),
   }), env);
   await worker.fetch(new Request('https://rungs.local/api/step', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, word: 'ward' }),
+    body: JSON.stringify({ session, round: 1, word: 'ward', date }),
   }), env);
   const resWin = await worker.fetch(new Request('https://rungs.local/api/step', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, word: 'warm' }),
+    body: JSON.stringify({ session, round: 1, word: 'warm', date }),
   }), env);
   const jsonWin: any = await resWin.json();
   assert.equal(jsonWin.valid, true);
@@ -197,7 +198,7 @@ test('Route POST /api/hint: provides optimal BFS hint and applies penalty stroke
   const req = new Request('https://rungs.local/api/hint', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session, round: 1, currentWord: 'cold' }),
+    body: JSON.stringify({ session, round: 1, currentWord: 'cold', date: '2026-11-09' }),
   });
   const res = await worker.fetch(req, env);
   assert.equal(res.status, 200);
