@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oddly Admin — Game Manager & AI Studio</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root {
+  --bg: #f6f3ec;
+  --ink: #14131a;
+  --mute: #76706a;
+  --line: #e4dfd3;
+  --card: #ffffff;
+  --c0: #ff7a6b;
+  --c1: #ffc933;
+  --c2: #4d8dff;
+  --c3: #a98bff;
+  --c4: #2ec4a0;
+  --danger: #ff4d4d;
+  box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15141a;
+    --ink: #f6f3ec;
+    --mute: #9a94a3;
+    --line: #2a2833;
+    --card: #1f1d26;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15141a;
+  --ink: #f6f3ec;
+  --mute: #9a94a3;
+  --line: #2a2833;
+  --card: #1f1d26;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  padding: 20px 16px 80px;
+}
+.mono { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; }
+main { max-width: 1040px; margin: 0 auto; }
+
+/* Top Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 28px;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.back {
+  display: inline-flex;
+  align-items: center;
+  color: var(--mute);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  transition: all .2s;
+}
+.back:hover { color: var(--ink); border-color: var(--ink); }
+.logo {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -.04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo span.badge {
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  background: var(--c0);
+  color: #14131a;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+}
+.actions-top { display: flex; align-items: center; gap: 10px; }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 28px;
+  border-bottom: 2px solid var(--line);
+}
+.tab-btn {
+  background: transparent;
+  border: 0;
+  padding: 10px 18px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--mute);
+  cursor: pointer;
+  border-radius: 12px 12px 0 0;
+  position: relative;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active {
+  color: var(--ink);
+  background: var(--card);
+}
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--c0);
+}
+
+/* Sections / Panels */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fade .3s both; }
+
+/* Grid Cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* Game Card */
+.card {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform .2s, border-color .2s;
+}
+.card:hover { border-color: var(--ink); }
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.card-pill {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+}
+.status-badge {
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #14131a;
+}
+.status-badge.live { background: var(--c4); }
+.status-badge.lab { background: var(--c1); }
+.status-badge.draft { background: var(--mute); color: #fff; }
+
+.card-title { font-size: 1.8rem; font-weight: 800; letter-spacing: -.04em; margin-bottom: 6px; }
+.card-desc { font-size: .92rem; color: var(--mute); line-height: 1.4; margin-bottom: 18px; flex: 1; }
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  margin-top: 6px;
+  font-size: .8rem;
+}
+.card-actions { display: flex; gap: 8px; }
+
+/* Buttons */
+.btn {
+  font-family: inherit;
+  font-weight: 800;
+  font-size: .88rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform .15s, opacity .15s, background .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-primary:hover { opacity: .9; }
+.btn-secondary { background: var(--card); color: var(--ink); border: 2px solid var(--line); }
+.btn-secondary:hover { border-color: var(--ink); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-sm { padding: 6px 14px; font-size: .78rem; border-radius: 999px; }
+
+/* Forms */
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 8px;
+}
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  background: var(--card);
+  color: var(--ink);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  outline: none;
+  transition: border-color .2s;
+}
+.form-control:focus { border-color: var(--ink); }
+textarea.form-control { min-height: 100px; resize: vertical; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+/* Color Swatches */
+.swatches { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform .2s, border-color .2s;
+}
+.swatch:hover { transform: scale(1.15); }
+.swatch.selected { border-color: var(--ink); transform: scale(1.1); }
+
+/* Live Card Preview Box */
+.preview-box {
+  background: var(--card);
+  border: 2px dashed var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  margin-top: 16px;
+}
+.preview-label {
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin-bottom: 12px;
+}
+
+/* Prompt Box */
+.prompt-box {
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 14px;
+  position: relative;
+}
+.prompt-box pre {
+  font-family: "JetBrains Mono", monospace;
+  font-size: .84rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 380px;
+  overflow-y: auto;
+  color: var(--ink);
+}
+
+/* Modal Dialog */
+dialog {
+  border: 2px solid var(--ink);
+  border-radius: 24px;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 28px;
+  max-width: 680px;
+  width: 90vw;
+  margin: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,.3);
+}
+dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
+
+/* Toast Notification */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: .88rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,.3);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all .3s cubic-bezier(.2,.8,.2,1);
+  z-index: 1000;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Auth Gate */
+#auth-gate {
+  display: flex;
+  min-height: 85vh;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 28px;
+  padding: 38px 32px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+  text-align: center;
+  animation: rise .4s both;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.shake { animation: shake .4s cubic-bezier(.36,.07,.19,.97) both; }
+</style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="auth-card">
+    <div style="display:flex;justify-content:center;align-items:center;margin-bottom:18px">
+      <img src="logo.png" alt="Oddly" style="width:58px;height:58px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.15)">
+    </div>
+    <div class="mono" style="font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:6px">Restricted Access</div>
+    <h1 style="font-size:1.85rem;font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-bottom:8px">Oddly Studio</h1>
+    <p style="color:var(--mute);font-size:.9rem;line-height:1.45;margin-bottom:24px">Passphrase protected. Enter your passphrase to manage daily games and AI generators.</p>
+    
+    <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+      <div class="form-group" style="text-align:left;margin-bottom:14px">
+        <label for="admin-pass" class="form-label">Studio Passphrase</label>
+        <div style="position:relative">
+          <input type="password" id="admin-pass" class="form-control mono" placeholder="Enter passphrase..." style="padding-right:44px;font-size:1rem;height:46px" autofocus required autocomplete="current-password">
+          <button type="button" id="btn-toggle-pass" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mute);padding:6px;font-size:1.1rem;line-height:1" title="Show/Hide Passphrase">👁️</button>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:.84rem">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--mute);user-select:none">
+          <input type="checkbox" id="auth-remember" style="accent-color:var(--ink);width:16px;height:16px">
+          <span>Remember on this browser</span>
+        </label>
+      </div>
+
+      <div id="auth-error" class="mono" style="display:none;color:var(--danger);background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.3);padding:10px 14px;border-radius:10px;font-size:.8rem;margin-bottom:16px;line-height:1.4;text-align:left"></div>
+
+      <button type="submit" id="btn-auth-unlock" class="btn btn-primary" style="width:100%;height:48px;font-size:1rem;font-weight:800;justify-content:center">Unlock Studio →</button>
+      
+      <div style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--mute)">
+        <a href="index.html" class="mono" style="color:var(--mute);text-decoration:none;font-weight:700">← Back to Oddly</a>
+        <span class="mono" id="lockout-timer" style="display:none;color:var(--danger);font-weight:700"></span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<main id="admin-main" style="display:none">
+  <header>
+    <div class="brand">
+      <a href="index.html" class="back">← Oddly Hub</a>
+      <div class="logo">
+        <img src="logo.png" alt="Oddly" style="width:34px;height:34px;border-radius:8px;vertical-align:middle;margin-right:2px"> Oddly <span class="badge">Admin & AI Studio</span>
+      </div>
+    </div>
+    <div class="actions-top">
+      <button class="btn btn-secondary btn-sm" id="btn-export-quick">Export games.json</button>
+      <button class="btn btn-primary btn-sm" id="btn-sync-git">Sync with GitHub</button>
+      <button class="btn btn-secondary btn-sm" id="btn-lock-studio" title="Lock Admin Studio">🔒 Lock</button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="tab-games" role="tab">🎮 Live & Lab Games</button>
+    <button class="tab-btn" data-tab="tab-automation" role="tab">⏰ Midnight Automation</button>
+    <button class="tab-btn" data-tab="tab-add" role="tab">➕ Add New Game</button>
+    <button class="tab-btn" data-tab="tab-ai" role="tab">🤖 AI Game Studio</button>
+    <button class="tab-btn" data-tab="tab-content" role="tab">🧩 Daily Content & Backlog</button>
+    <button class="tab-btn" data-tab="tab-settings" role="tab">⚙️ Settings & GitHub</button>
+    <button class="tab-btn" data-tab="tab-firebase" role="tab">🔥 Firebase & 365d Cooldown</button>
+  </nav>
+
+  <!-- TAB 1: Live & Lab Games -->
+  <section id="tab-games" class="tab-panel active">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h2 style="font-size:1.6rem;font-weight:800;letter-spacing:-.04em">Active Games Manifest</h2>
+      <span class="mono" style="font-size:.8rem;color:var(--mute)" id="games-count">Loading...</span>
+    </div>
+
+    <div class="grid" id="games-container"></div>
+  </section>
+
+  <!-- TAB: Midnight Automation & Health -->
+  <section id="tab-automation" class="tab-panel">
+    <div style="max-width:860px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:24px">
+        <div>
+          <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">⏰ Midnight Automation & Health</h2>
+          <p style="color:var(--mute)">How Oddly games automatically rotate at 12:00, and how you double-check their health.</p>
+            <div class="mono" style="font-size:.82rem;opacity:.75">Epoch Day <b id="auto-epoch" style="color:#fff">--</b> · Oddly Puzzle <b id="auto-day-num" style="color:var(--c1)">#--</b></div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-badge live" id="system-health-badge">● Systems Active</span>
+          <div class="mono" style="font-size:.78rem;color:var(--mute);margin-top:4px" id="admin-utc-time">--:--:-- UTC</div>
+        </div>
+      </div>
+
+      <!-- Live Clock & Rollover Counter -->
+      <div class="card" style="background:var(--ink);color:var(--bg);margin-bottom:24px;border:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px">
+          <div>
+            <div class="mono" style="font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--c1)">Next Daily Drop (Midnight UTC)</div>
+            <div style="font-size: clamp(2.4rem, 8vw, 3.8rem);font-weight:800;letter-spacing:-.06em;font-variant-numeric:tabular-nums;line-height:1;margin:8px 0" id="auto-cd">--:--:--</div>
+            <div class="mono" style="font-size:.82rem;opacity:.75">Epoch Day <b id="auto-epoch" style="color:#fff">--</b> · Oddly Puzzle <b id="auto-day-num" style="color:var(--c1)">#--</b></div>
+          </div>
+          <div style="text-align:right">
+            <button class="btn btn-secondary btn-sm" id="btn-recheck-auto" style="color:#14131a;background:#fff;border:0">🔄 Re-check Status</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Mechanisms Detailed Breakdown -->
+      <h3 style="font-size:1.3rem;font-weight:800;margin-bottom:14px">Active 12:00 Rollover Mechanisms</h3>
+      <div class="grid" style="margin-bottom:28px">
+
+        <!-- Mechanism 1: Fibber (GitHub Actions & Review Gate) -->
+        <div class="card" style="border-top:6px solid var(--c3)">
+          <div class="card-header">
+            <div class="card-pill"><span>News Fake · Python</span></div>
+            <span class="status-badge" id="fibber-freshness-badge">Checking...</span>
+          </div>
+          <div class="card-title" style="font-size:1.4rem">Fibber Daily Pipeline</div>
+          <p class="card-desc" style="font-size:.88rem">
+            <strong>The Automated Process:</strong><br>
+            • <code>03:00 UTC</code>: GitHub Actions runs <code>.github/workflows/daily.yml</code>. Scrapes weird news from Reddit/UPI, filters harmless absurdities with Claude Sonnet, generates 1 fake, verifies via search, and writes <code>pending/today.json</code>.<br>
+            • Opens a <strong>GitHub Review Issue</strong> for manual sign-off.<br>
+            • <code>06:00 UTC Deadline</code>: If unapproved, automatically deploys pre-approved fallback from <code>/backlog/</code> to <code>today.json</code>.<br>
+            • GitHub Pages automatically rebuilds on commit.
+          </p>
+          <div class="card-meta" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;justify-content:space-between;font-size:.82rem">
+              <span style="color:var(--mute)">Active File:</span>
+              <span class="mono" id="fibber-file-status">Checking today.json...</span>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <a href="https://github.com/Hootsworth/Grudge/actions/workflows/daily.yml" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="flex:1;justify-content:center;text-decoration:none">View Runs ↗</a>
+              <a href="https://github.com/Hootsworth/Grudge/issues?q=label%3Aneeds-approval" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="flex:1;justify-content:center;text-decoration:none">Review Issues ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mechanism 2: Strata (Epoch Rotation) -->
+        <div class="card" style="border-top:6px solid var(--c1)">
+          <div class="card-header">
+            <div class="card-pill"><span>Timeline · Deterministic</span></div>
+            <span class="status-badge live">Automatic 00:00 UTC</span>
+          </div>
+          <div class="card-title" style="font-size:1.4rem">Strata Epoch Engine</div>
+          <p class="card-desc" style="font-size:.88rem">
+            <strong>The Automated Process:</strong><br>
+            • <code>00:00 UTC</code>: Local/UTC day math increments <code>T = Math.floor(Date.UTC(...) / 864e5)</code>.<br>
+            • The puzzle rotates deterministically to <code>P[((T % 3) + 3) % 3]</code>. No server call required for players to get a brand new chronological stack at midnight.<br>
+            • Storage resets on <code>strata:T</code>, wiping previous day’s locks and attempts cleanly.<br>
+            • Cloudflare Worker (optional) runs <code>05:00 UTC</code> cron for D1 storage.
+          </p>
+          <div class="card-meta" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;justify-content:space-between;font-size:.82rem">
+              <span style="color:var(--mute)">Today's Stack:</span>
+              <span class="mono" id="strata-today-preview">Loading...</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="previewGameTomorrow('strata')">Preview Tomorrow's Stack (+1 Day)</button>
+          </div>
+        </div>
+
+        <!-- Mechanism 3: Kin (Evolutionary Triplet Rotation) -->
+        <div class="card" style="border-top:6px solid var(--c4)">
+          <div class="card-header">
+            <div class="card-pill"><span>Evolution · Deterministic</span></div>
+            <span class="status-badge live">Automatic 00:00 UTC</span>
+          </div>
+          <div class="card-title" style="font-size:1.4rem">Kin Deep-Time Engine</div>
+          <p class="card-desc" style="font-size:.88rem">
+            <strong>The Automated Process:</strong><br>
+            • <code>00:00 UTC</code>: Rollover updates plate index to <code>PZ[((T % 2) + 2) % 2]</code>.<br>
+            • Serves 5 verified phylogenetic triplets based on real TimeTree divergence ages.<br>
+            • Storage resets on <code>kin:T</code> so player scores and streaks reset at midnight.<br>
+            • Cloudflare Worker (optional) runs <code>05:00 UTC</code> cron for D1 storage.
+          </p>
+          <div class="card-meta" style="flex-direction:column;align-items:stretch;gap:10px">
+            <div style="display:flex;justify-content:space-between;font-size:.82rem">
+              <span style="color:var(--mute)">Today's Triplets:</span>
+              <span class="mono" id="kin-today-preview">Loading...</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="previewGameTomorrow('kin')">Preview Tomorrow's Triplets (+1 Day)</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rollover Simulator & Health Verification Checklist -->
+      <div class="card">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:10px">Double-Check & Rollover Simulator</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:16px">Simulate how puzzles shift into the future without modifying your browser's clock or local save data:</p>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="0">Today (Normal)</button>
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="1">Tomorrow (+1 Day)</button>
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="2">In 2 Days (+2 Days)</button>
+          <button class="btn btn-secondary btn-sm sim-day-btn" data-offset="3">In 3 Days (+3 Days)</button>
+        </div>
+
+        <div class="prompt-box" style="margin-top:0">
+          <pre id="sim-output" style="max-height:220px">// Select a day above to inspect simulated puzzle rotation</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: Add New Game -->
+  <section id="tab-add" class="tab-panel">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">Register a New Game</h2>
+      <p style="color:var(--mute);margin-bottom:24px">Define your game's identity. Once registered, it immediately appears on the Oddly hub and can be scaffolded by AI.</p>
+
+      <form id="form-add-game">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="game-title">Game Title</label>
+            <input type="text" id="game-title" class="form-control" placeholder="e.g. Petty" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="game-url">Slug / URL</label>
+            <input type="text" id="game-url" class="form-control" placeholder="e.g. petty.html" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="game-tags">Tags (Comma-separated)</label>
+            <input type="text" id="game-tags" class="form-control" placeholder="e.g. Feuds, 3 rounds" value="Daily, 3 rounds" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="game-cta">Button CTA Text</label>
+            <input type="text" id="game-cta" class="form-control" placeholder="e.g. Rate today's pettiness" value="Play today’s game" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="game-desc">Spiteful Hook / One-line Description</label>
+          <textarea id="game-desc" class="form-control" rows="2" placeholder="e.g. Rate trivial neighborhood feuds. Judge who is right before the HOA arrives." required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Theme Color</label>
+            <div class="swatches" id="swatches-container">
+              <div class="swatch selected" style="background:#ff7a6b" data-color="var(--c0)" data-hex="#ff7a6b"></div>
+              <div class="swatch" style="background:#ffc933" data-color="var(--c1)" data-hex="#ffc933"></div>
+              <div class="swatch" style="background:#4d8dff" data-color="var(--c2)" data-hex="#4d8dff"></div>
+              <div class="swatch" style="background:#a98bff" data-color="var(--c3)" data-hex="#a98bff"></div>
+              <div class="swatch" style="background:#2ec4a0" data-color="var(--c4)" data-hex="#2ec4a0"></div>
+            </div>
+            <input type="hidden" id="game-color" value="var(--c0)">
+            <input type="hidden" id="game-hex" value="#ff7a6b">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="game-status">Launch Status</label>
+            <select id="game-status" class="form-control">
+              <option value="live">Live (Front page card)</option>
+              <option value="lab">In the Lab (Coming Soon row)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="game-art">Card Art Preset</label>
+          <select id="game-art" class="form-control">
+            <option value="fibber">Headline Cards (Fibber style)</option>
+            <option value="strata">Layered Geological Strata (Strata style)</option>
+            <option value="kin">Evolutionary Discs (Kin style)</option>
+            <option value="badge">Minimalist Badge & Icon</option>
+          </select>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="preview-box">
+          <p class="preview-label">Live Oddly Hub Card Preview</p>
+          <div id="live-card-preview" style="max-width:360px;margin:0 auto"></div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:24px">
+          <button type="submit" class="btn btn-primary" style="flex:1">Save Game to Manifest</button>
+          <button type="button" class="btn btn-secondary" id="btn-seed-ai">Use with AI Studio 🤖</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- TAB 3: AI Game Studio -->
+  <section id="tab-ai" class="tab-panel">
+    <div style="max-width:800px;margin:0 auto">
+      <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">🤖 AI Game Studio</h2>
+      <p style="color:var(--mute);margin-bottom:20px">Configure your game concept and let AI scaffold the rest — full system prompt, frontend template, and daily pipeline specifications.</p>
+
+      <div class="card" style="margin-bottom:24px">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:12px">Step 1: Choose or Describe Your Game Idea</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="btn btn-secondary btn-sm preset-idea" data-title="Petty" data-hook="Rate trivial grievances and neighborhood vendettas. Spot who overreacted." data-tag="Feuds, 3 rounds" data-color="var(--c3)" data-hex="#a98bff">Idea: Petty</button>
+          <button class="btn btn-secondary btn-sm preset-idea" data-title="Wordy Golf" data-hook="Change one letter at a time to reach the target word. Beat daily par." data-tag="Wordplay, 4 holes" data-color="var(--c0)" data-hex="#ff7a6b">Idea: Wordy Golf</button>
+          <button class="btn btn-secondary btn-sm preset-idea" data-title="Rank It Rage" data-hook="Sort 5 items by a hidden metric in 3 guesses." data-tag="Numbers, 3 guesses" data-color="var(--c2)" data-hex="#4d8dff">Idea: Rank It Rage</button>
+          <button class="btn btn-secondary btn-sm preset-idea" data-title="Counterfeit" data-hook="Four artifacts from museum archives. Three are authentic, one is forged." data-tag="Antiques, 3 rounds" data-color="var(--c1)" data-hex="#ffc933">Idea: Counterfeit</button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ai-concept">Custom Game Concept</label>
+          <input type="text" id="ai-concept" class="form-control" placeholder="e.g. A game where players guess the absurd cause of historic flight delays">
+        </div>
+
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="ai-provider-select">Target AI Provider</label>
+            <select id="ai-provider-select" class="form-control">
+              <option value="gemini">Google Gemini (gemini-2.0-flash / 1.5-pro)</option>
+              <option value="openai">OpenAI (gpt-4o / gpt-4o-mini)</option>
+              <option value="anthropic">Anthropic Claude (Claude 3.5 Sonnet)</option>
+              <option value="meta">Meta Llama (Llama 3.3 70B via Groq/Together)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label" for="ai-model-select">Model Override</label>
+            <input type="text" id="ai-model-select" class="form-control" placeholder="e.g. gemini-2.0-flash, gpt-4o">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" id="btn-gen-spec">Generate Complete AI Implementation Spec</button>
+          <button class="btn btn-secondary" id="btn-gen-html">Generate Frontend HTML Template</button>
+        </div>
+      </div>
+
+      <div id="ai-output-container" style="display:none">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 id="ai-output-title" style="font-size:1.2rem;font-weight:800">Generated AI Blueprint</h3>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary btn-sm" id="btn-copy-ai">Copy to Clipboard</button>
+              <button class="btn btn-primary btn-sm" id="btn-download-ai" style="display:none">Download File</button>
+            </div>
+          </div>
+          <div class="prompt-box">
+            <pre id="ai-output-text"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: Daily Content & Backlog -->
+  <section id="tab-content" class="tab-panel">
+    <div style="max-width:820px;margin:0 auto">
+      <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">🧩 Daily Content & Backlog Manager</h2>
+      <p style="color:var(--mute);margin-bottom:24px">Inspect, validate, or override today’s daily puzzle and backlog rotation files.</p>
+
+      <div class="card" style="margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h3 style="font-size:1.2rem;font-weight:800">Today's Active Puzzle (Fibber: today.json)</h3>
+          <button class="btn btn-secondary btn-sm" id="btn-load-today">Reload from Server</button>
+        </div>
+        <textarea id="today-json-editor" class="form-control mono" style="min-height:220px"></textarea>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button class="btn btn-primary btn-sm" id="btn-validate-today">Validate Schema</button>
+          <button class="btn btn-secondary btn-sm" id="btn-download-today">Download today.json</button>
+          <button class="btn btn-secondary btn-sm" id="btn-save-today-local">Save Locally</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:8px">Quick Backlog Rotator</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:14px">Choose a pre-approved emergency puzzle to replace today's rounds:</p>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary btn-sm backlog-select" data-id="1">Backlog #1 (Florida Man & Emus)</button>
+          <button class="btn btn-secondary btn-sm backlog-select" data-id="2">Backlog #2 (Penguins & Syrup)</button>
+          <button class="btn btn-secondary btn-sm backlog-select" data-id="3">Backlog #3 (Fatberg & Dancing)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: Settings & Direct GitHub Sync -->
+  <section id="tab-settings" class="tab-panel">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">⚙️ Sync & GitHub Integration</h2>
+      <p style="color:var(--mute);margin-bottom:24px">Sync your manifest directly to the repository or download files manually.</p>
+
+      <div class="card" style="margin-bottom:20px">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:10px">Direct GitHub Commit (No Terminal Required)</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:16px">Enter a fine-grained GitHub Personal Access Token (PAT) with <code>Contents: Write</code> permission to commit directly to <code>Hootsworth/Grudge</code>.</p>
+
+        <div class="form-group">
+          <label class="form-label" for="gh-token">GitHub Token (Stored only in local browser)</label>
+          <input type="password" id="gh-token" class="form-control mono" placeholder="ghp_xxxxxxxxxxxx">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="gh-repo">Target Repository</label>
+            <input type="text" id="gh-repo" class="form-control mono" value="Hootsworth/Grudge" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="gh-branch">Target Branch</label>
+            <input type="text" id="gh-branch" class="form-control mono" value="main">
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="btn-gh-push">🚀 Commit games.json to GitHub</button>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:10px">Manual JSON Export</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:14px">Prefer manual commits? Download the updated manifest or copy its contents.</p>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-secondary" id="btn-download-manifest">Download games.json</button>
+          <button class="btn btn-secondary" id="btn-copy-manifest">Copy JSON</button>
+          <button class="btn btn-danger btn-sm" id="btn-reset-defaults" style="margin-left:auto">Reset to Defaults</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:10px">🔐 Studio Passphrase & Access Control</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:16px">Change your Studio access passphrase. Verified using cryptographic SHA-256 hashing. Default is <code>oddly-admin</code>.</p>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="current-pass">Current Passphrase</label>
+            <input type="password" id="current-pass" class="form-control mono" placeholder="Current passphrase">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-pass">New Passphrase</label>
+            <input type="password" id="new-pass" class="form-control mono" placeholder="New strong passphrase">
+          </div>
+        </div>
+        
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="btn-change-pass">Update Passphrase</button>
+          <button class="btn btn-secondary btn-sm" id="btn-reset-pass">Reset to Default (oddly-admin)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 6: Firebase Backend & 365-Day Cooldown Registry -->
+  <section id="tab-firebase" class="tab-panel">
+    <div style="max-width:920px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div>
+          <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">🔥 Firebase Cloud Firestore & 365-Day Cooldown</h2>
+          <p style="color:var(--mute)">Verified non-repetition backend for project <span class="mono" style="color:var(--c2);font-weight:700">teapot-201d2</span>.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span id="fb-status-badge" class="badge" style="background:#e6f8f3;color:#137a5b;border:1px solid #99e2cf;padding:6px 14px;font-weight:700;border-radius:999px;font-size:.85rem">
+            ● Connected to teapot-201d2
+          </span>
+          <button class="btn btn-secondary btn-sm" id="btn-sync-all-fb">🔄 Sync Backlogs to Firestore</button>
+        </div>
+      </div>
+
+      <!-- Cooldown Tester Card -->
+      <div class="card" style="margin-bottom:24px">
+        <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:8px">🛡️ 365-Day Cooldown & Deduplication Validator</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:16px">Test candidate headlines, quotes, events, quantities, passwords, or words against the 365-day non-repetition rule before publishing.</p>
+        
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group" style="flex:1">
+            <label>Arcade Game</label>
+            <select id="fb-check-game" class="form-control">
+              <option value="fibber">Fibber (Headlines)</option>
+              <option value="quipher">Quipher (Quotes)</option>
+              <option value="ballpark">Ballpark (Quantities)</option>
+              <option value="rungs">Rungs (Word Ladders)</option>
+              <option value="sprint">Sprint (Anagrams)</option>
+              <option value="passphew">PassPhew (Passwords)</option>
+              <option value="kin">Kin (Species / Clades)</option>
+              <option value="strata">Strata (Historical Events)</option>
+              <option value="pinpoint">Pinpoint (Locations / Coordinates)</option>
+              <option value="blackout">Blackout (Redacted Dossiers)</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1">
+            <label>Cooldown Window</label>
+            <input type="text" class="form-control" value="365 Days Strict" readonly style="opacity:.8">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Candidate Content / Key to Verify</label>
+          <textarea id="fb-check-key" class="form-control" rows="2" placeholder="e.g. Inflatable festival moon breaks loose... OR quote text OR password..."></textarea>
+        </div>
+
+        <div id="fb-key-preview" class="mono" style="font-size:.78rem;color:var(--mute);background:var(--bg);padding:8px 12px;border-radius:8px;margin-bottom:14px;word-break:break-all">
+          Normalized Key: <span id="fb-norm-key" style="color:var(--ink)">-</span><br>
+          Deterministic DocID: <span id="fb-doc-id" style="color:var(--c2)">-</span>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="btn-run-check">🔍 Check 365-Day Cooldown</button>
+          <button class="btn btn-secondary btn-sm" id="btn-record-usage">📝 Mark As Used in Firestore</button>
+        </div>
+
+        <!-- Result Box -->
+        <div id="fb-check-result" style="display:none;margin-top:16px;padding:14px 16px;border-radius:10px;font-size:.92rem;line-height:1.5"></div>
+      </div>
+
+      <!-- Cooldown Registry Browser -->
+      <div class="card" style="margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="font-size:1.25rem;font-weight:800">📋 Active 365-Day Cooldown Registry</h3>
+            <p style="color:var(--mute);font-size:.85rem">Real-time items protected by the 365-day reuse barrier in Cloud Firestore (<span class="mono">used_items</span>).</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <select id="fb-filter-game" class="form-control form-control-sm" style="width:auto">
+              <option value="">All Games</option>
+              <option value="fibber">Fibber</option>
+              <option value="quipher">Quipher</option>
+              <option value="ballpark">Ballpark</option>
+              <option value="rungs">Rungs</option>
+              <option value="sprint">Sprint</option>
+              <option value="passphew">PassPhew</option>
+              <option value="kin">Kin</option>
+              <option value="strata">Strata</option>
+              <option value="pinpoint">Pinpoint</option>
+              <option value="blackout">Blackout</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" id="btn-refresh-used">🔄 Refresh Registry</button>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:.85rem;text-align:left">
+            <thead>
+              <tr style="border-bottom:2px solid var(--line);color:var(--mute)">
+                <th style="padding:8px 6px">Game</th>
+                <th style="padding:8px 6px">Key / Snippet</th>
+                <th style="padding:8px 6px">Last Used</th>
+                <th style="padding:8px 6px">Cooldown Expiry</th>
+                <th style="padding:8px 6px">Status</th>
+              </tr>
+            </thead>
+            <tbody id="fb-used-table-body">
+              <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--mute)">Click "Refresh Registry" to query live from Cloud Firestore...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Cloud Daily Puzzles Browser -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="font-size:1.25rem;font-weight:800">☁️ Cloud Firestore Daily Puzzles (<span class="mono">daily_puzzles</span>)</h3>
+            <p style="color:var(--mute);font-size:.85rem">Puzzles synchronized and stored for worldwide play.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-refresh-puzzles">🔄 Fetch Daily Puzzles</button>
+        </div>
+
+        <div id="fb-puzzles-list" style="display:flex;flex-direction:column;gap:10px">
+          <p style="color:var(--mute);font-size:.9rem">Click "Fetch Daily Puzzles" to load active puzzle archives from Firestore.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Playtest Modal Dialog -->
+<dialog id="playtest-dialog">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <h3 id="playtest-title" style="font-size:1.4rem;font-weight:800">Playtest Game</h3>
+    <button class="btn btn-secondary btn-sm" id="btn-close-playtest">Close</button>
+  </div>
+  <iframe id="playtest-frame" style="width:100%;height:580px;border:2px solid var(--line);border-radius:16px;background:var(--bg)"></iframe>
+</dialog>
+
+<!-- Toast Notification -->
+<div id="toast">Changes saved</div>
+
+<script>
+const DEFAULT_MANIFEST = {
+  version: "1.0.0",
+  updated: new Date().toISOString().split("T")[0],
+  live: [
+    {
+      id: "fibber",
+      title: "Fibber",
+      url: "fibber.html",
+      tags: ["News", "3 rounds"],
+      desc: "Three strange-but-true headlines and one invention. Spot the fake before it fools you.",
+      cta: "Play today’s rounds",
+      color: "var(--c3)",
+      bgHex: "#a98bff",
+      artType: "fibber",
+      status: "live"
+    },
+    {
+      id: "strata",
+      title: "Strata",
+      url: "strata.html",
+      tags: ["History", "4 digs"],
+      desc: "Drag six historical events into chronological order. Newest on surface, oldest on bedrock.",
+      cta: "Dig today’s layers",
+      color: "var(--c1)",
+      bgHex: "#ffc933",
+      artType: "strata",
+      status: "live"
+    },
+    {
+      id: "kin",
+      title: "Kin",
+      url: "kin.html",
+      tags: ["Evolution", "5 rounds"],
+      desc: "Three living things. Pick the two most closely related. Evolutionary deep time decoded.",
+      cta: "Check kinship",
+      color: "var(--c4)",
+      bgHex: "#2ec4a0",
+      artType: "kin",
+      status: "live"
+    }
+  ],
+  lab: [
+    {
+      id: "wordy-golf",
+      num: "01",
+      title: "Wordy Golf",
+      desc: "Change one letter at a time. Beat the daily par.",
+      color: "var(--c0)",
+      bgHex: "#ff7a6b",
+      status: "Soon",
+      url: ""
+    },
+    {
+      id: "rank-it-rage",
+      num: "02",
+      title: "Rank It Rage",
+      desc: "Sort five things by a hidden number in three guesses.",
+      color: "var(--c2)",
+      bgHex: "#4d8dff",
+      status: "Soon",
+      url: ""
+    },
+    {
+      id: "petty",
+      num: "03",
+      title: "Petty",
+      desc: "A daily game of trivial grievances and minor vendettas.",
+      color: "var(--c3)",
+      bgHex: "#a98bff",
+      status: "Soon",
+      url: ""
+    }
+  ]
+};
+
+// Storage helper
+function loadManifest() {
+  try {
+    const raw = localStorage.getItem("grudge:games_manifest");
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return DEFAULT_MANIFEST;
+}
+
+function saveManifest(data) {
+  data.updated = new Date().toISOString().split("T")[0];
+  localStorage.setItem("grudge:games_manifest", JSON.stringify(data, null, 2));
+  localStorage.setItem("grudge:custom_games", JSON.stringify(data));
+  renderGamesList();
+  showToast("Manifest updated!");
+}
+
+let manifest = loadManifest();
+
+// Toast helper
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+// Tab navigation
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    const target = document.getElementById(btn.dataset.tab);
+    if (target) target.classList.add("active");
+  });
+});
+
+// Render Games Grid
+function renderGamesList() {
+  const container = document.getElementById("games-container");
+  const count = document.getElementById("games-count");
+  if (!container) return;
+
+  const live = manifest.live || [];
+  const lab = manifest.lab || [];
+  count.textContent = `${live.length} Live · ${lab.length} In Lab`;
+
+  let html = "";
+
+  live.forEach((g, idx) => {
+    html += `
+      <div class="card" style="border-top: 6px solid ${g.bgHex || '#ff7a6b'}">
+        <div class="card-header">
+          <div class="card-pill"><span>${(g.tags || []).join(" · ")}</span></div>
+          <span class="status-badge live">Live</span>
+        </div>
+        <div class="card-title">${g.title}</div>
+        <div class="card-desc">${g.desc}</div>
+        <div class="card-meta">
+          <span class="mono" style="color:var(--mute)">${g.url || 'embedded'}</span>
+          <div class="card-actions">
+            <button class="btn btn-secondary btn-sm" onclick="playtestGame('${g.url}', '${g.title}')">Play</button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleStatus('${g.id}', 'live')">To Lab</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteGame('${g.id}', 'live')">✕</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  lab.forEach((g, idx) => {
+    html += `
+      <div class="card" style="border-top: 6px solid ${g.bgHex || '#76706a'}; opacity: .88">
+        <div class="card-header">
+          <div class="card-pill"><span>${g.num ? '#' + g.num : 'Lab'}</span></div>
+          <span class="status-badge lab">In Lab</span>
+        </div>
+        <div class="card-title">${g.title}</div>
+        <div class="card-desc">${g.desc}</div>
+        <div class="card-meta">
+          <span class="mono" style="color:var(--mute)">Status: ${g.status || 'Soon'}</span>
+          <div class="card-actions">
+            <button class="btn btn-secondary btn-sm" onclick="toggleStatus('${g.id}', 'lab')">Make Live</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteGame('${g.id}', 'lab')">✕</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// Status toggling
+window.toggleStatus = function(id, from) {
+  if (from === "live") {
+    const idx = manifest.live.findIndex(g => g.id === id);
+    if (idx !== -1) {
+      const g = manifest.live.splice(idx, 1)[0];
+      manifest.lab = manifest.lab || [];
+      manifest.lab.push({
+        id: g.id,
+        num: String(manifest.lab.length + 1).padStart(2, "0"),
+        title: g.title,
+        desc: g.desc,
+        color: g.color || "var(--c0)",
+        bgHex: g.bgHex || "#ff7a6b",
+        status: "Soon",
+        url: g.url
+      });
+      saveManifest(manifest);
+    }
+  } else {
+    const idx = manifest.lab.findIndex(g => g.id === id);
+    if (idx !== -1) {
+      const g = manifest.lab.splice(idx, 1)[0];
+      manifest.live = manifest.live || [];
+      manifest.live.push({
+        id: g.id,
+        title: g.title,
+        url: g.url || (g.id + ".html"),
+        tags: ["Daily", "New"],
+        desc: g.desc,
+        cta: "Play now",
+        color: g.color || "var(--c3)",
+        bgHex: g.bgHex || "#a98bff",
+        artType: "badge",
+        status: "live"
+      });
+      saveManifest(manifest);
+    }
+  }
+};
+
+window.deleteGame = function(id, from) {
+  if (!confirm(`Delete game ${id}?`)) return;
+  if (from === "live") {
+    manifest.live = manifest.live.filter(g => g.id !== id);
+  } else {
+    manifest.lab = manifest.lab.filter(g => g.id !== id);
+  }
+  saveManifest(manifest);
+};
+
+window.playtestGame = function(url, title) {
+  if (!url) {
+    alert("This game does not have an active HTML page yet. Use the AI Studio to generate one!");
+    return;
+  }
+  const dialog = document.getElementById("playtest-dialog");
+  document.getElementById("playtest-title").textContent = `Playtest: ${title}`;
+  document.getElementById("playtest-frame").src = url;
+  dialog.showModal();
+};
+
+document.getElementById("btn-close-playtest").onclick = () => {
+  document.getElementById("playtest-dialog").close();
+  document.getElementById("playtest-frame").src = "";
+};
+
+// Swatch selector
+document.querySelectorAll(".swatch").forEach(s => {
+  s.addEventListener("click", () => {
+    document.querySelectorAll(".swatch").forEach(x => x.classList.remove("selected"));
+    s.classList.add("selected");
+    document.getElementById("game-color").value = s.dataset.color;
+    document.getElementById("game-hex").value = s.dataset.hex;
+    updateLivePreview();
+  });
+});
+
+// Live Preview Form Sync
+function updateLivePreview() {
+  const title = document.getElementById("game-title").value || "Game Title";
+  const desc = document.getElementById("game-desc").value || "Your game's spiteful hook will appear right here.";
+  const tags = document.getElementById("game-tags").value || "Daily, 3 rounds";
+  const cta = document.getElementById("game-cta").value || "Play today’s game";
+  const bg = document.getElementById("game-hex").value || "#ff7a6b";
+
+  const prev = document.getElementById("live-card-preview");
+  prev.innerHTML = `
+    <div style="background:${bg};color:#14131a;border-radius:24px;padding:22px;display:flex;flex-direction:column;min-height:300px;box-shadow:0 8px 20px rgba(0,0,0,.15)">
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        ${tags.split(",").map(t => `<span style="border:2px solid #14131a;border-radius:999px;padding:2px 8px;font-size:.68rem;font-weight:800;text-transform:uppercase">${t.trim()}</span>`).join("")}
+      </div>
+      <h2 style="font-size:2rem;font-weight:800;letter-spacing:-.04em;margin:0 0 6px">${title}</h2>
+      <p style="font-size:.9rem;font-weight:600;margin:0 0 16px;line-height:1.35;flex:1">${desc}</p>
+      <div style="background:#14131a;color:#fff;border-radius:999px;padding:8px 16px;font-weight:800;font-size:.85rem;display:flex;justify-content:space-between;align-items:center">
+        <span>${cta}</span>
+        <span style="width:24px;height:24px;border-radius:50%;background:${bg};color:#14131a;display:grid;place-items:center">→</span>
+      </div>
+    </div>
+  `;
+}
+
+["game-title", "game-desc", "game-tags", "game-cta"].forEach(id => {
+  document.getElementById(id).addEventListener("input", updateLivePreview);
+});
+
+// Add game form submit
+document.getElementById("form-add-game").addEventListener("submit", e => {
+  e.preventDefault();
+  const title = document.getElementById("game-title").value.trim();
+  const url = document.getElementById("game-url").value.trim();
+  const desc = document.getElementById("game-desc").value.trim();
+  const tags = document.getElementById("game-tags").value.split(",").map(s => s.trim()).filter(Boolean);
+  const cta = document.getElementById("game-cta").value.trim();
+  const color = document.getElementById("game-color").value;
+  const bgHex = document.getElementById("game-hex").value;
+  const status = document.getElementById("game-status").value;
+  const artType = document.getElementById("game-art").value;
+  const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+  if (status === "live") {
+    manifest.live = manifest.live || [];
+    manifest.live.push({ id, title, url, tags, desc, cta, color, bgHex, artType, status: "live" });
+  } else {
+    manifest.lab = manifest.lab || [];
+    manifest.lab.push({
+      id,
+      num: String(manifest.lab.length + 1).padStart(2, "0"),
+      title,
+      desc,
+      color,
+      bgHex,
+      status: "Soon",
+      url
+    });
+  }
+
+  saveManifest(manifest);
+  document.getElementById("form-add-game").reset();
+  updateLivePreview();
+  // Switch to Games tab
+  document.querySelector('.tab-btn[data-tab="tab-games"]').click();
+});
+
+// AI Studio
+document.querySelectorAll(".preset-idea").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.getElementById("game-title").value = btn.dataset.title;
+    document.getElementById("game-url").value = btn.dataset.title.toLowerCase() + ".html";
+    document.getElementById("game-desc").value = btn.dataset.hook;
+    document.getElementById("game-tags").value = btn.dataset.tag;
+    document.getElementById("game-color").value = btn.dataset.color;
+    document.getElementById("game-hex").value = btn.dataset.hex;
+    document.getElementById("ai-concept").value = `${btn.dataset.title}: ${btn.dataset.hook}`;
+    updateLivePreview();
+    showToast(`Loaded ${btn.dataset.title} preset`);
+  });
+});
+
+document.getElementById("btn-seed-ai").onclick = () => {
+  const title = document.getElementById("game-title").value;
+  const desc = document.getElementById("game-desc").value;
+  document.getElementById("ai-concept").value = `${title}: ${desc}`;
+  document.querySelector('.tab-btn[data-tab="tab-ai"]').click();
+};
+
+// Generate Spec Prompt
+document.getElementById("btn-gen-spec").addEventListener("click", () => {
+  const concept = document.getElementById("ai-concept").value.trim() || "Petty: Guess which trivial neighborhood complaint escalated to police";
+  const provider = document.getElementById("ai-provider-select").value || "gemini";
+  const modelOverride = document.getElementById("ai-model-select").value.trim();
+  const modelName = modelOverride || (provider === "gemini" ? "gemini-2.0-flash" : provider === "openai" ? "gpt-4o" : provider === "meta" ? "llama-3.3-70b-versatile" : "claude-3-5-sonnet");
+
+  const spec = `Build the daily game and backend pipeline for "${concept}".
+
+GOAL
+A daily one-shot game for the Oddly platform (https://github.com/Hootsworth/Grudge.git) where players face a daily challenge judged with spite and snark.
+
+AI PROVIDER & MODEL
+- Provider: ${provider.toUpperCase()}
+- Model: ${modelName}
+- Secret / Env Var: AI_PROVIDER="${provider}", AI_MODEL="${modelName}", AI_API_KEY / ${provider.toUpperCase()}_API_KEY
+
+REQUIREMENTS
+1. MECHANICS:
+   - Exactly one puzzle per day for all players, refreshing at midnight UTC.
+   - Snarky commentary on every attempt/guess.
+   - Shareable emoji scoreboard (e.g. "[Game] #123 3/3 ■■■").
+
+2. TECH CONSTRAINTS:
+   - Standalone single-page frontend (HTML5/CSS3/Vanilla JS) with zero dependencies.
+   - Styling must match Oddly aesthetic: "Bricolage Grotesque", bold borders, dark/light mode variables.
+   - Must include top back button: <a href="index.html" class="back">← Oddly</a>.
+   - Offline fallback: deterministically seeds daily puzzles from epoch date math so it runs 100% on GitHub Pages without external server dependencies.
+
+3. DELIVERABLES:
+   - Single HTML file (e.g. petty.html)
+   - Daily puzzle JSON schema definition
+   - Integration into Oddly games.json manifest`;
+
+  document.getElementById("ai-output-title").textContent = "AI Prompt Specification (Copy to Gemini / Claude / Antigravity)";
+  document.getElementById("ai-output-text").textContent = spec;
+  document.getElementById("ai-output-container").style.display = "block";
+  document.getElementById("btn-download-ai").style.display = "none";
+  showToast("Generated AI Spec Prompt");
+});
+
+// Generate HTML Template
+document.getElementById("btn-gen-html").addEventListener("click", () => {
+  const concept = document.getElementById("ai-concept").value.trim() || "Petty";
+  const gameName = concept.split(":")[0].trim();
+  const slug = gameName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+  const template = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${gameName} — daily spite game</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f6f3ec;--ink:#14131a;--mute:#76706a;--line:#e4dfd3;--c0:#ff7a6b;--c1:#ffc933;--c2:#4d8dff;--c3:#a98bff;--c4:#2ec4a0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15141a;--ink:#f6f3ec;--mute:#9a94a3;--line:#2a2833}}
+:root[data-theme="dark"]{--bg:#15141a;--ink:#f6f3ec;--mute:#9a94a3;--line:#2a2833}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;min-height:100vh}
+main{max-width:640px;margin:0 auto;padding:20px 18px 48px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.back{display:inline-flex;align-items:center;color:var(--mute);text-decoration:none;font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border:2px solid var(--line);border-radius:999px;transition:all .2s}
+.back:hover{color:var(--ink);border-color:var(--ink)}
+.logo{font-weight:800;font-size:1.6rem;letter-spacing:-.04em}
+.card{background:#fff;color:#14131a;border:2px solid var(--ink);border-radius:24px;padding:24px;margin-bottom:16px}
+.btn{font:inherit;font-weight:800;border:0;border-radius:999px;background:var(--ink);color:var(--bg);padding:14px 28px;cursor:pointer}
+</style></head>
+<body><main>
+<header><div style="display:flex;align-items:center;gap:12px"><a href="index.html" class="back">← Oddly</a><div class="logo">${gameName}</div></div><div id="meta" style="font-weight:700;color:var(--mute)">Daily #1</div></header>
+<div class="card">
+  <h2>Today’s Challenge</h2>
+  <p style="color:var(--mute)">Puzzles reload daily at midnight. Can you beat the host?</p>
+  <button class="btn" id="play-btn">Submit Answer</button>
+</div>
+</main>
+<script>
+const d=new Date(),T=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
+document.getElementById("play-btn").onclick=()=>alert("Fine. Correct. Don't get cocky.");
+<\/script></body></html>`;
+
+  document.getElementById("ai-output-title").textContent = `Generated Template: ${slug}.html`;
+  document.getElementById("ai-output-text").textContent = template;
+  document.getElementById("ai-output-container").style.display = "block";
+
+  const dl = document.getElementById("btn-download-ai");
+  dl.style.display = "inline-flex";
+  dl.onclick = () => {
+    const blob = new Blob([template], { type: "text/html" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${slug}.html`;
+    a.click();
+  };
+  showToast("Generated Frontend HTML");
+});
+
+document.getElementById("btn-copy-ai").onclick = () => {
+  const text = document.getElementById("ai-output-text").textContent;
+  navigator.clipboard.writeText(text).then(() => showToast("Copied to clipboard!"));
+};
+
+// Daily Content Tab
+const BACKLOG_SAMPLES = {
+  1: { date: "2026-11-08", rounds: [[{ t: "Florida man hurls a live alligator through a Wendy’s window", real: true, s: "Widely reported." }, { t: "Vermont fines residents who fail to wave at snowplows", real: false, s: "Invented for this puzzle." }, { t: "Australia loses war against emus", real: true, s: "1932." }, { t: "Minnesota town elects dog mayor", real: true, s: "2014." }]] },
+  2: { date: "2026-11-08", rounds: [[{ t: "Dutch railway offers free rides for sourdough starter", real: false, s: "Invented for this puzzle." }, { t: "Penguin knighted by Norwegian Guard", real: true, s: "Sir Nils Olav." }, { t: "Millions stolen in Canadian syrup heist", real: true, s: "2012." }, { t: "Laughter epidemic closes schools in Tanzania", real: true, s: "1962." }]] },
+  3: { date: "2026-11-08", rounds: [[{ t: "Ohio library lends retired librarians as search engines", real: false, s: "Invented for this puzzle." }, { t: "Alaska town keeps cat as mayor for 20 years", real: true, s: "Stubbs." }, { t: "130-tonne fatberg put in museum", real: true, s: "London." }, { t: "Hundreds dance uncontrollably for days in Strasbourg", real: true, s: "1518." }]] }
+};
+
+function loadTodayJson() {
+  fetch("today.json")
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById("today-json-editor").value = JSON.stringify(data, null, 2);
+    })
+    .catch(() => {
+      document.getElementById("today-json-editor").value = JSON.stringify(BACKLOG_SAMPLES[1], null, 2);
+    });
+}
+document.getElementById("btn-load-today").onclick = loadTodayJson;
+loadTodayJson();
+
+document.querySelectorAll(".backlog-select").forEach(b => {
+  b.addEventListener("click", () => {
+    const s = BACKLOG_SAMPLES[b.dataset.id];
+    document.getElementById("today-json-editor").value = JSON.stringify(s, null, 2);
+    showToast(`Loaded Backlog #${b.dataset.id}`);
+  });
+});
+
+document.getElementById("btn-validate-today").onclick = () => {
+  try {
+    const data = JSON.parse(document.getElementById("today-json-editor").value);
+    if (!data.rounds || !Array.isArray(data.rounds)) throw new Error("Missing 'rounds' array");
+    showToast("Schema is Valid JSON!");
+  } catch (e) {
+    alert("JSON Schema Error: " + e.message);
+  }
+};
+
+document.getElementById("btn-download-today").onclick = () => {
+  const val = document.getElementById("today-json-editor").value;
+  const blob = new Blob([val], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "today.json";
+  a.click();
+};
+
+// Settings & Exports
+function exportManifest() {
+  const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "games.json";
+  a.click();
+}
+
+document.getElementById("btn-export-quick").onclick = exportManifest;
+document.getElementById("btn-download-manifest").onclick = exportManifest;
+document.getElementById("btn-copy-manifest").onclick = () => {
+  navigator.clipboard.writeText(JSON.stringify(manifest, null, 2)).then(() => showToast("Copied games.json to clipboard"));
+};
+
+document.getElementById("btn-reset-defaults").onclick = () => {
+  if (confirm("Reset manifest to standard 3 live games?")) {
+    manifest = JSON.parse(JSON.stringify(DEFAULT_MANIFEST));
+    saveManifest(manifest);
+  }
+};
+
+// GitHub Direct Push
+document.getElementById("btn-sync-git").onclick = () => {
+  document.querySelector('.tab-btn[data-tab="tab-settings"]').click();
+};
+
+document.getElementById("btn-gh-push").onclick = async () => {
+  const token = document.getElementById("gh-token").value.trim();
+  const repo = document.getElementById("gh-repo").value.trim();
+  const branch = document.getElementById("gh-branch").value.trim() || "main";
+
+  if (!token) {
+    alert("Please enter a GitHub Personal Access Token with repo/contents:write permissions.");
+    return;
+  }
+
+  showToast("Connecting to GitHub API...");
+  try {
+    // 1. Get current SHA of games.json
+    let sha = null;
+    const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/games.json?ref=${branch}`, {
+      headers: { Authorization: `token ${token}`, Accept: "application/vnd.github.v3+json" }
+    });
+    if (getRes.ok) {
+      const data = await getRes.json();
+      sha = data.sha;
+    }
+
+    // 2. Put updated games.json
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(manifest, null, 2))));
+    const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/games.json`, {
+      method: "PUT",
+      headers: {
+        Authorization: `token ${token}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: "feat(admin): update games.json via Oddly Admin Studio",
+        content,
+        sha,
+        branch
+      })
+    });
+
+    if (putRes.ok) {
+      showToast("Committed to GitHub successfully!");
+      alert("Success! games.json was committed to main branch. GitHub Actions will auto-deploy to Pages.");
+    } else {
+      const err = await putRes.json();
+      alert("GitHub API Error: " + (err.message || JSON.stringify(err)));
+    }
+  } catch (err) {
+    alert("Network Error: " + err.message);
+  }
+};
+
+// --- Midnight Automation & Rollover Health Monitor ---
+const STRATA_PLATES = [
+  "Plate 1: Gutenberg to WWW (1440 - 1991)",
+  "Plate 2: Great Fire of London to Penicillin (1666 - 1928)",
+  "Plate 3: Great Pyramid to Modern Olympics (-2560 - 1896)"
+];
+const KIN_PLATES = [
+  "Plate 1: Afrotheria, Archosaurs & Fungi (65 - 1550 Mya)",
+  "Plate 2: Glires, Flightless Birds & Deuterostomes (70 - 700 Mya)"
+];
+
+function updateAutomationClock() {
+  const now = new Date();
+  const utcYear = now.getUTCFullYear();
+  const utcMonth = now.getUTCMonth();
+  const utcDate = now.getUTCDate();
+
+  const nextMidnightUtc = new Date(Date.UTC(utcYear, utcMonth, utcDate + 1));
+  const diff = nextMidnightUtc - now;
+
+  const pad = n => String(n).padStart(2, "0");
+  const hours = Math.floor(diff / 36e5);
+  const mins = Math.floor((diff % 36e5) / 6e4);
+  const secs = Math.floor((diff % 6e4) / 1e3);
+
+  const cdEl = document.getElementById("auto-cd");
+  if (cdEl) cdEl.textContent = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+
+  const utcTimeEl = document.getElementById("admin-utc-time");
+  if (utcTimeEl) utcTimeEl.textContent = now.toUTCString().replace("GMT", "UTC");
+
+  const T = Math.floor(Date.UTC(utcYear, utcMonth, utcDate) / 864e5);
+  const dayNum = T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1;
+
+  const epochEl = document.getElementById("auto-epoch");
+  if (epochEl) epochEl.textContent = T;
+
+  const dayNumEl = document.getElementById("auto-day-num");
+  if (dayNumEl) dayNumEl.textContent = `#${dayNum}`;
+
+  const strataPreview = document.getElementById("strata-today-preview");
+  if (strataPreview) strataPreview.textContent = STRATA_PLATES[((T % 3) + 3) % 3];
+
+  const kinPreview = document.getElementById("kin-today-preview");
+  if (kinPreview) kinPreview.textContent = KIN_PLATES[((T % 2) + 2) % 2];
+}
+
+setInterval(updateAutomationClock, 1000);
+updateAutomationClock();
+
+// Check Fibber today.json health
+function checkFibberFreshness() {
+  const badge = document.getElementById("fibber-freshness-badge");
+  const statusText = document.getElementById("fibber-file-status");
+  if (!badge || !statusText) return;
+
+  const todayUtcStr = new Date().toISOString().split("T")[0];
+
+  fetch("today.json")
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data) throw new Error("today.json not reachable");
+      const fileDate = data.date || "Unknown";
+      const isToday = fileDate === todayUtcStr;
+      const roundCount = (data.rounds || []).length;
+
+      statusText.textContent = `Date: ${fileDate} (${roundCount} rounds)`;
+      if (isToday) {
+        badge.className = "status-badge live";
+        badge.textContent = "🟢 Live & Current";
+      } else {
+        badge.className = "status-badge lab";
+        badge.textContent = `🟡 Date: ${fileDate}`;
+      }
+    })
+    .catch(() => {
+      statusText.textContent = "Offline / Using Fallback";
+      badge.className = "status-badge draft";
+      badge.textContent = "Offline Fallback";
+    });
+}
+
+checkFibberFreshness();
+const btnRecheck = document.getElementById("btn-recheck-auto");
+if (btnRecheck) {
+  btnRecheck.onclick = () => {
+    checkFibberFreshness();
+    showToast("Re-checked automated systems");
+  };
+}
+
+// Preview Game Tomorrow
+window.previewGameTomorrow = function(game) {
+  const now = new Date();
+  const T = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1) / 864e5);
+  if (game === "strata") {
+    alert(`Tomorrow at 00:00 UTC (T=${T}):\nStrata will automatically load:\n${STRATA_PLATES[((T % 3) + 3) % 3]}`);
+  } else {
+    alert(`Tomorrow at 00:00 UTC (T=${T}):\nKin will automatically load:\n${KIN_PLATES[((T % 2) + 2) % 2]}`);
+  }
+};
+
+// Rollover Simulation
+document.querySelectorAll(".sim-day-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const offset = parseInt(btn.dataset.offset, 10);
+    const now = new Date();
+    const simDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + offset));
+    const isoDate = simDate.toISOString().split("T")[0];
+    const T = Math.floor(Date.UTC(simDate.getUTCFullYear(), simDate.getUTCMonth(), simDate.getUTCDate()) / 864e5);
+    const dayNum = T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1;
+
+    const strataPlate = STRATA_PLATES[((T % 3) + 3) % 3];
+    const kinPlate = KIN_PLATES[((T % 2) + 2) % 2];
+
+    const out = `=== SIMULATION: ${offset === 0 ? "TODAY" : offset === 1 ? "TOMORROW" : `IN ${offset} DAYS`} ===
+Date: ${isoDate} (UTC)
+Epoch Day Index (T): ${T}
+Daily Oddly Day Number: #${dayNum}
+
+[Strata Historical Timeline]:
+  Active Stack: ${strataPlate}
+  Lock key: strata:${T}
+
+[Kin Evolutionary Kinship]:
+  Active Plate: ${kinPlate}
+  Streak key: kin:${T}
+
+[Fibber Headlines]:
+  GitHub Actions Cron: Runs at 03:00 UTC & 06:00 UTC
+  Target Date in today.json: ${isoDate}`;
+
+    document.getElementById("sim-output").textContent = out;
+  });
+});
+
+// --- Passphrase Security & Auth Gate ---
+const DEFAULT_PASS_HASH = "3708dd0974dcd4a1356102d2c5efd42ff36304d01cfdb4bd32785567b088c1d8"; // SHA-256('oddly-admin')
+const HASH_STORAGE_KEY = "oddly_admin_pass_hash";
+const AUTH_TOKEN_KEY = "oddly_admin_auth_token";
+const FAILED_ATTEMPTS_KEY = "oddly_failed_attempts";
+const LOCKOUT_KEY = "oddly_lockout_until";
+
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hashBuf = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function getExpectedHash() {
+  return localStorage.getItem(HASH_STORAGE_KEY) || DEFAULT_PASS_HASH;
+}
+
+let lockoutInterval = null;
+function checkLockout() {
+  const lockoutUntil = parseInt(sessionStorage.getItem(LOCKOUT_KEY) || "0", 10);
+  const now = Date.now();
+  const btnUnlock = document.getElementById("btn-auth-unlock");
+  const lockoutTimerEl = document.getElementById("lockout-timer");
+  const passInput = document.getElementById("admin-pass");
+
+  if (lockoutUntil > now) {
+    const remainingSecs = Math.ceil((lockoutUntil - now) / 1000);
+    if (btnUnlock) btnUnlock.disabled = true;
+    if (passInput) passInput.disabled = true;
+    if (lockoutTimerEl) {
+      lockoutTimerEl.style.display = "inline";
+      lockoutTimerEl.textContent = `Locked (${remainingSecs}s)`;
+    }
+    if (!lockoutInterval) {
+      lockoutInterval = setInterval(checkLockout, 1000);
+    }
+    return true;
+  } else {
+    if (lockoutInterval) {
+      clearInterval(lockoutInterval);
+      lockoutInterval = null;
+    }
+    if (btnUnlock) btnUnlock.disabled = false;
+    if (passInput) passInput.disabled = false;
+    if (lockoutTimerEl) lockoutTimerEl.style.display = "none";
+    sessionStorage.removeItem(LOCKOUT_KEY);
+    return false;
+  }
+}
+
+function showAuthError(msg) {
+  const errEl = document.getElementById("auth-error");
+  if (errEl) {
+    errEl.textContent = msg;
+    errEl.style.display = "block";
+  }
+  const authCard = document.querySelector(".auth-card");
+  if (authCard) {
+    authCard.classList.remove("shake");
+    void authCard.offsetWidth;
+    authCard.classList.add("shake");
+  }
+}
+
+window.handleAuthSubmit = async function(e) {
+  if (e) e.preventDefault();
+  if (checkLockout()) return;
+
+  const passInput = document.getElementById("admin-pass");
+  const val = (passInput ? passInput.value : "").trim();
+  const remember = document.getElementById("auth-remember")?.checked;
+  if (!val) return;
+
+  const inputHash = await sha256(val);
+  const expectedHash = getExpectedHash();
+
+  if (inputHash === expectedHash) {
+    const sessionToken = await sha256(expectedHash + "_oddly_session_key");
+    sessionStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    if (remember) {
+      localStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    }
+    sessionStorage.removeItem(FAILED_ATTEMPTS_KEY);
+    sessionStorage.removeItem(LOCKOUT_KEY);
+    const errEl = document.getElementById("auth-error");
+    if (errEl) errEl.style.display = "none";
+    revealStudio();
+    showToast("Admin Studio Unlocked 🔓");
+  } else {
+    let failed = parseInt(sessionStorage.getItem(FAILED_ATTEMPTS_KEY) || "0", 10) + 1;
+    sessionStorage.setItem(FAILED_ATTEMPTS_KEY, failed);
+    if (failed >= 5) {
+      sessionStorage.setItem(LOCKOUT_KEY, Date.now() + 30000);
+      sessionStorage.setItem(FAILED_ATTEMPTS_KEY, "0");
+      checkLockout();
+      showAuthError("Too many failed attempts. Locked for 30 seconds.");
+    } else {
+      showAuthError(`Incorrect passphrase. (${5 - failed} attempts remaining)`);
+    }
+  }
+};
+
+function lockStudio(showToastMsg = true) {
+  sessionStorage.removeItem(AUTH_TOKEN_KEY);
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  const mainEl = document.getElementById("admin-main");
+  const gateEl = document.getElementById("auth-gate");
+  if (mainEl) mainEl.style.display = "none";
+  if (gateEl) gateEl.style.display = "flex";
+  const passInput = document.getElementById("admin-pass");
+  if (passInput) {
+    passInput.value = "";
+    passInput.focus();
+  }
+  checkLockout();
+  if (showToastMsg) showToast("Admin Studio Locked 🔒");
+}
+
+function revealStudio() {
+  const gateEl = document.getElementById("auth-gate");
+  const mainEl = document.getElementById("admin-main");
+  if (gateEl) gateEl.style.display = "none";
+  if (mainEl) {
+    mainEl.style.display = "block";
+    renderGamesList();
+    updateLivePreview();
+    updateAutomationClock();
+    checkFibberFreshness();
+  }
+}
+
+async function checkAuth() {
+  const expectedToken = await sha256(getExpectedHash() + "_oddly_session_key");
+  const currentToken = sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+  if (currentToken && currentToken === expectedToken) {
+    revealStudio();
+  } else {
+    lockStudio(false);
+  }
+}
+
+// Wire Lock button in header
+document.getElementById("btn-lock-studio")?.addEventListener("click", () => lockStudio(true));
+
+// Password reveal toggle
+const toggleBtn = document.getElementById("btn-toggle-pass");
+if (toggleBtn) {
+  toggleBtn.onclick = () => {
+    const input = document.getElementById("admin-pass");
+    if (!input) return;
+    const isPass = input.type === "password";
+    input.type = isPass ? "text" : "password";
+    toggleBtn.textContent = isPass ? "🙈" : "👁️";
+  };
+}
+
+// Change Passphrase handlers
+document.getElementById("btn-change-pass")?.addEventListener("click", async () => {
+  const curVal = (document.getElementById("current-pass")?.value || "").trim();
+  const newVal = (document.getElementById("new-pass")?.value || "").trim();
+  if (!curVal || !newVal) {
+    showToast("Please enter current and new passphrase");
+    return;
+  }
+  const curHash = await sha256(curVal);
+  if (curHash !== getExpectedHash()) {
+    showToast("Current passphrase incorrect ❌");
+    return;
+  }
+  if (newVal.length < 6) {
+    showToast("New passphrase must be at least 6 characters");
+    return;
+  }
+  const newHash = await sha256(newVal);
+  localStorage.setItem(HASH_STORAGE_KEY, newHash);
+  // Re-issue session token
+  const sessionToken = await sha256(newHash + "_oddly_session_key");
+  sessionStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+  if (localStorage.getItem(AUTH_TOKEN_KEY)) {
+    localStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+  }
+  document.getElementById("current-pass").value = "";
+  document.getElementById("new-pass").value = "";
+  showToast("Passphrase updated successfully! 🔐");
+});
+
+document.getElementById("btn-reset-pass")?.addEventListener("click", async () => {
+  if (confirm("Reset admin passphrase back to default ('oddly-admin')?")) {
+    localStorage.removeItem(HASH_STORAGE_KEY);
+    const sessionToken = await sha256(DEFAULT_PASS_HASH + "_oddly_session_key");
+    sessionStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    if (localStorage.getItem(AUTH_TOKEN_KEY)) {
+      localStorage.setItem(AUTH_TOKEN_KEY, sessionToken);
+    }
+    showToast("Passphrase reset to default ('oddly-admin')");
+  }
+});
+
+// Run auth check on page boot
+checkAuth();
+</script>
+
+<script type="module">
+import {
+  normalizeItemKey,
+  getItemDocId,
+  checkItemReuse,
+  recordItemUsage,
+  getActiveCooldownItems,
+  getDailyPuzzlesList
+} from './firebase-client.js';
+
+const checkGame = document.getElementById('fb-check-game');
+const checkKey = document.getElementById('fb-check-key');
+const normKeySpan = document.getElementById('fb-norm-key');
+const docIdSpan = document.getElementById('fb-doc-id');
+const resultBox = document.getElementById('fb-check-result');
+const runCheckBtn = document.getElementById('btn-run-check');
+const recordUsageBtn = document.getElementById('btn-record-usage');
+const filterGame = document.getElementById('fb-filter-game');
+const refreshUsedBtn = document.getElementById('btn-refresh-used');
+const usedTableBody = document.getElementById('fb-used-table-body');
+const refreshPuzzlesBtn = document.getElementById('btn-refresh-puzzles');
+const puzzlesList = document.getElementById('fb-puzzles-list');
+const syncAllFbBtn = document.getElementById('btn-sync-all-fb');
+
+function updateKeyPreview() {
+  const raw = (checkKey?.value || '').trim();
+  const game = checkGame?.value || 'fibber';
+  if (!raw) {
+    if (normKeySpan) normKeySpan.textContent = '-';
+    if (docIdSpan) docIdSpan.textContent = '-';
+    return;
+  }
+  const norm = normalizeItemKey(raw);
+  const docId = getItemDocId(game, norm);
+  if (normKeySpan) normKeySpan.textContent = norm || '(empty)';
+  if (docIdSpan) docIdSpan.textContent = docId;
+}
+
+checkKey?.addEventListener('input', updateKeyPreview);
+checkGame?.addEventListener('change', updateKeyPreview);
+
+runCheckBtn?.addEventListener('click', async () => {
+  const raw = (checkKey?.value || '').trim();
+  const game = checkGame?.value || 'fibber';
+  if (!raw) {
+    showToast('Please enter text/headline to verify cooldown');
+    return;
+  }
+  if (!resultBox) return;
+  resultBox.style.display = 'block';
+  resultBox.style.background = '#f0f3fa';
+  resultBox.style.color = '#333';
+  resultBox.style.border = '1px solid #ccd5e5';
+  resultBox.innerHTML = `⏳ Verifying "${game}" candidate against 365-day Firestore cooldown...`;
+
+  try {
+    const res = await checkItemReuse(game, raw, 365);
+    if (res.canUse) {
+      resultBox.style.background = '#eafaf1';
+      resultBox.style.color = '#1e7e48';
+      resultBox.style.border = '1px solid #a3e9c0';
+      resultBox.innerHTML = `
+        <div style="font-weight:800;font-size:1.05rem;margin-bottom:4px">✅ SAFE TO USE (365-Day Cooldown Cleared)</div>
+        <div>${res.isNew ? 'This item has never been used before in Firestore.' : `Previously used on ${res.lastUsedDate} (${res.daysSinceUsed} days ago), which is &ge; 365 days.`}</div>
+        <div class="mono" style="font-size:.8rem;margin-top:6px;opacity:.85">Key: "${normalizeItemKey(raw)}"</div>
+      `;
+    } else {
+      resultBox.style.background = '#fdf2f2';
+      resultBox.style.color = '#d63031';
+      resultBox.style.border = '1px solid #f8b4b4';
+      resultBox.innerHTML = `
+        <div style="font-weight:800;font-size:1.05rem;margin-bottom:4px">⚠️ COOLDOWN VIOLATION: REUSED WITHIN 365 DAYS</div>
+        <div>${res.reason}</div>
+        <div style="margin-top:6px;font-weight:700">Days Remaining on Cooldown: ${res.daysRemaining} days</div>
+        <div class="mono" style="font-size:.8rem;margin-top:6px;opacity:.85">DocID: ${getItemDocId(game, normalizeItemKey(raw))}</div>
+      `;
+    }
+  } catch (err) {
+    resultBox.style.background = '#fff8e6';
+    resultBox.style.color = '#8a6d3b';
+    resultBox.style.border = '1px solid #faebcc';
+    resultBox.innerHTML = `⚠️ Firestore check warning: ${err.message}`;
+  }
+});
+
+recordUsageBtn?.addEventListener('click', async () => {
+  const raw = (checkKey?.value || '').trim();
+  const game = checkGame?.value || 'fibber';
+  if (!raw) {
+    showToast('Please enter text to record');
+    return;
+  }
+  const todayStr = new Date().toISOString().split('T')[0];
+  showToast(`Recording "${game}" item in Firestore...`);
+  const res = await recordItemUsage(game, raw, todayStr, { recordedVia: 'admin_dashboard' });
+  if (res?.success) {
+    showToast(`Recorded in Firestore with 365d cooldown! DocID: ${res.docId}`);
+    runCheckBtn?.click();
+    refreshUsedBtn?.click();
+  } else {
+    showToast('Failed to record: ' + (res?.error || 'Unknown error'));
+  }
+});
+
+async function loadUsedItems() {
+  const game = filterGame?.value || null;
+  if (!usedTableBody) return;
+  usedTableBody.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--mute)">Loading items from Cloud Firestore (used_items)...</td></tr>`;
+  const items = await getActiveCooldownItems(game);
+  if (!items || items.length === 0) {
+    usedTableBody.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--mute)">No tracked cooldown items found for ${game || 'any game'}.</td></tr>`;
+    return;
+  }
+  usedTableBody.innerHTML = items.map(item => {
+    const expDate = new Date(item.expiresAt).toISOString().split('T')[0];
+    const badge = item.isExpired
+      ? `<span class="badge" style="background:#e4e6eb;color:#555;padding:2px 8px;border-radius:6px;font-size:.75rem">Expired Cooldown</span>`
+      : `<span class="badge" style="background:#fde8e8;color:#c81e1e;padding:2px 8px;border-radius:6px;font-weight:700;font-size:.75rem">Active (${item.daysRemaining}d left)</span>`;
+    return `
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:10px 6px;font-weight:700">${item.gameId}</td>
+        <td style="padding:10px 6px;max-width:320px;word-break:break-word">
+          <div style="font-weight:600">${item.itemKey}</div>
+          <div class="mono" style="font-size:.75rem;color:var(--mute)">${item.normalizedKey || ''}</div>
+        </td>
+        <td style="padding:10px 6px;white-space:nowrap">${item.lastUsedDate || '-'}</td>
+        <td style="padding:10px 6px;white-space:nowrap">${expDate}</td>
+        <td style="padding:10px 6px">${badge}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+refreshUsedBtn?.addEventListener('click', loadUsedItems);
+filterGame?.addEventListener('change', loadUsedItems);
+
+async function loadDailyPuzzles() {
+  if (!puzzlesList) return;
+  puzzlesList.innerHTML = `<p style="color:var(--mute);font-size:.9rem">Loading daily puzzles from Firestore...</p>`;
+  const puzzles = await getDailyPuzzlesList();
+  if (!puzzles || puzzles.length === 0) {
+    puzzlesList.innerHTML = `<p style="color:var(--mute);font-size:.9rem">No daily puzzles stored in Firestore yet. Click "Sync Backlogs" to initialize.</p>`;
+    return;
+  }
+  puzzlesList.innerHTML = puzzles.map(p => `
+    <div style="padding:12px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--line)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-weight:800;color:var(--ink)">${p.gameId?.toUpperCase()} — ${p.puzzleDate}</span>
+        <span class="mono" style="font-size:.8rem;color:var(--mute)">Plate #${p.plate || 0}</span>
+      </div>
+      <pre class="mono" style="font-size:.75rem;color:var(--mute);overflow-x:auto;max-height:100px;background:var(--card);padding:8px;border-radius:6px">${JSON.stringify(p.payload, null, 2)}</pre>
+    </div>
+  `).join('');
+}
+
+refreshPuzzlesBtn?.addEventListener('click', loadDailyPuzzles);
+
+// Auto-trigger load when switching to Firebase tab
+document.querySelector('.tab-btn[data-tab="tab-firebase"]')?.addEventListener('click', () => {
+  loadUsedItems();
+  loadDailyPuzzles();
+});
+</script>
+</body>
+</html>

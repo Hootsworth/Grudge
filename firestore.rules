@@ -1,0 +1,403 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Application: Daily Nerd Arcade (teapot-201d2)
+// Games: Quipher, Fibber, Strata, Kin, PassPhew, Pinpoint,
+//        Ballpark, Rungs, Sprint, Blackout
+//
+// Collection: daily_puzzles
+// Document ID: {puzzleId} (format: {gameId}_{YYYY-MM-DD} or unique puzzleId)
+// Fields:
+//   - gameId: string (required, one of 10 arcade games, immutable)
+//   - puzzleDate: string (required, ISO date YYYY-MM-DD, immutable)
+//   - plate: int (required, daily plate index >= 0)
+//   - payload: map (required, game puzzle data, max 100 entries)
+//   - storedAt: number (required, publication epoch in ms > 0)
+//   - status: string (optional, 'published' | 'pending' | 'vetoed')
+//   - theme: string (optional, max 100 chars)
+//   - spread_type: string (optional, max 50 chars)
+//   - created_at: number (optional, epoch ms > 0)
+//   - published_at: number (optional, epoch ms > 0)
+//   - events: list (optional, puzzle event entries, max 50 items)
+//
+// Collection: used_items
+// Document ID: {itemDocId} (format: {gameId}_{normalizedSnippet}_{hash})
+// Fields:
+//   - gameId: string (required, one of 10 arcade games, immutable)
+//   - itemKey: string (required, raw item key, 1-1000 chars, immutable)
+//   - normalizedKey: string (required, normalized lookup key, 1-1000 chars, immutable)
+//   - lastUsedDate: string (required, ISO date YYYY-MM-DD)
+//   - lastUsedTimestamp: number (required, epoch ms > 0)
+//   - expiresAt: number (required, 365-day cooldown timestamp >= lastUsedTimestamp)
+//   - useCount: int (optional, total times used >= 1, non-decreasing on update)
+//   - history: list (optional, usage log entries, max 100 items)
+//   - metadata: map (optional, game-specific metadata, max 50 keys)
+//
+// Collection: sessions
+// Document ID: {sessionId} (UUID or {uid}_{timestamp})
+// Fields:
+//   - id / sessionId: string (optional, max 100 chars, immutable)
+//   - uid / userId: string (optional, must match request.auth.uid if present, immutable)
+//   - puzzle_id / puzzleId / puzzle_date / date: string (optional, max 100 chars, immutable)
+//   - gameId: string (optional, one of 10 arcade games, immutable)
+//   - created_at / createdAt / started_at: number (optional, epoch ms > 0, immutable)
+//   - last_guess_at / last_answer_at / lastGuessAt: number (optional, epoch ms > 0)
+//   - attempts_used / attemptsUsed / hints_used: int (optional, >= 0, monotonic non-decreasing)
+//   - locked_json: string (optional, JSON string of locked items, max 1000 chars)
+//   - order_json: string (optional, JSON string of guess order, max 1000 chars)
+//   - solved: int | bool (optional, 0 | 1 or true | false)
+//   - finished: int | bool (optional, 0 | 1 or true | false)
+//   - completed_at / finished_at: number (optional, epoch ms > 0)
+//   - score / total_score / total_points / score_total_mya / deepest_mya: number (optional, >= 0)
+//   - status: string (optional, max 30 chars)
+//   - current_round / current_question_index / failed_count: int (optional, >= 0)
+//   - metadata: map (optional, max 50 keys)
+//
+// Collection: game_stats
+// Document ID: {statId} ({gameId}_{YYYY-MM-DD} for global or {gameId}_{uid} for user)
+// Fields:
+//   - statId / id: string (optional, max 100 chars, immutable)
+//   - gameId: string (required, one of 10 arcade games, immutable)
+//   - date / puzzleDate: string (optional, ISO date YYYY-MM-DD, immutable)
+//   - puzzleId: string (optional, max 100 chars, immutable)
+//   - uid / userId: string (optional, user ownership link if personal stat, immutable)
+//   - totalPlayers: int (optional, >= 0)
+//   - totalSolves: int (optional, >= 0)
+//   - solveRate: number (optional, 0.0 to 1.0)
+//   - avgAttempts: number (optional, >= 0)
+//   - hardestPair: map (optional, max 10 keys)
+//   - distribution: list | map (optional, max 50 entries)
+//   - gamesPlayed: int (optional, >= 0)
+//   - gamesWon: int (optional, >= 0)
+//   - currentStreak: int (optional, >= 0)
+//   - maxStreak: int (optional, >= 0)
+//   - bestScore: number (optional, >= 0)
+//   - lastPlayedDate: string (optional, ISO date YYYY-MM-DD)
+//   - updatedAt / created_at: number (optional, epoch ms > 0)
+//   - metadata: map (optional, max 50 keys)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Global Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        ('admin' in request.auth.token && request.auth.token.admin == true) ||
+        ('email' in request.auth.token &&
+         request.auth.token.email in ['admin@teapot-201d2.firebaseapp.com', 'admin@teapot.games'] &&
+         request.auth.token.email_verified == true)
+      );
+    }
+
+    function isValidGameId(gameId) {
+      return gameId in [
+        'quipher', 'fibber', 'strata', 'kin', 'passphew',
+        'pinpoint', 'ballpark', 'rungs', 'sprint', 'blackout'
+      ];
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // ===============================================================
+    // Session Ownership Helpers
+    // ===============================================================
+
+    function isSessionDocOwner(sessionId) {
+      return isAuthenticated() && (
+        ('uid' in resource.data && resource.data.uid == request.auth.uid) ||
+        ('userId' in resource.data && resource.data.userId == request.auth.uid) ||
+        sessionId.matches('^' + request.auth.uid + '.*')
+      );
+    }
+
+    function isNewSessionOwner(sessionId) {
+      return isAuthenticated() && (
+        (!('uid' in request.resource.data) || request.resource.data.uid == request.auth.uid) &&
+        (!('userId' in request.resource.data) || request.resource.data.userId == request.auth.uid) &&
+        (('uid' in request.resource.data && request.resource.data.uid == request.auth.uid) ||
+         ('userId' in request.resource.data && request.resource.data.userId == request.auth.uid) ||
+         sessionId.matches('^' + request.auth.uid + '.*'))
+      );
+    }
+
+    // ===============================================================
+    // Game Stats Ownership Helpers
+    // ===============================================================
+
+    function isUserStat(data) {
+      return ('uid' in data) || ('userId' in data);
+    }
+
+    function isStatDocOwner() {
+      return isAuthenticated() && (
+        ('uid' in resource.data && resource.data.uid == request.auth.uid) ||
+        ('userId' in resource.data && resource.data.userId == request.auth.uid)
+      );
+    }
+
+    function isNewStatOwner() {
+      return isAuthenticated() && (
+        (!('uid' in request.resource.data) || request.resource.data.uid == request.auth.uid) &&
+        (!('userId' in request.resource.data) || request.resource.data.userId == request.auth.uid) &&
+        (('uid' in request.resource.data && request.resource.data.uid == request.auth.uid) ||
+         ('userId' in request.resource.data && request.resource.data.userId == request.auth.uid))
+      );
+    }
+
+    // ===============================================================
+    // Domain Validator Functions (MANDATORY Validator Function Pattern)
+    // ===============================================================
+
+    function isValidDailyPuzzle(data) {
+      let allowedFields = [
+        'gameId', 'puzzleDate', 'plate', 'payload', 'storedAt',
+        'status', 'theme', 'spread_type', 'created_at', 'published_at', 'events'
+      ];
+      let requiredFields = ['gameId', 'puzzleDate', 'plate', 'payload', 'storedAt'];
+      return hasOnlyAllowedFields(allowedFields) &&
+        hasRequiredFields(requiredFields) &&
+        isValidGameId(data.gameId) &&
+        isValidDateString(data.puzzleDate) &&
+        data.plate is int && data.plate >= 0 && data.plate <= 1000000 &&
+        data.payload is map && data.payload.keys().size() <= 100 &&
+        data.storedAt is number && data.storedAt > 0 &&
+        (!('status' in data) || data.status in ['published', 'pending', 'vetoed']) &&
+        (!('theme' in data) || (data.theme is string && data.theme.size() <= 100)) &&
+        (!('spread_type' in data) || (data.spread_type is string && data.spread_type.size() <= 50)) &&
+        (!('created_at' in data) || (data.created_at is number && data.created_at > 0)) &&
+        (!('published_at' in data) || (data.published_at == null || (data.published_at is number && data.published_at > 0))) &&
+        (!('events' in data) || (data.events is list && data.events.size() <= 50));
+    }
+
+    function isValidUsedItem(data) {
+      let allowedFields = [
+        'gameId', 'itemKey', 'normalizedKey', 'lastUsedDate',
+        'lastUsedTimestamp', 'expiresAt', 'useCount', 'history', 'metadata'
+      ];
+      let requiredFields = [
+        'gameId', 'itemKey', 'normalizedKey', 'lastUsedDate',
+        'lastUsedTimestamp', 'expiresAt'
+      ];
+      return hasOnlyAllowedFields(allowedFields) &&
+        hasRequiredFields(requiredFields) &&
+        isValidGameId(data.gameId) &&
+        data.itemKey is string && data.itemKey.size() >= 1 && data.itemKey.size() <= 1000 &&
+        data.normalizedKey is string && data.normalizedKey.size() >= 1 && data.normalizedKey.size() <= 1000 &&
+        isValidDateString(data.lastUsedDate) &&
+        data.lastUsedTimestamp is number && data.lastUsedTimestamp > 0 &&
+        data.expiresAt is number && data.expiresAt >= data.lastUsedTimestamp &&
+        (!('useCount' in data) || (data.useCount is int && data.useCount >= 1 && data.useCount <= 1000000)) &&
+        (!('history' in data) || (data.history is list && data.history.size() <= 100)) &&
+        (!('metadata' in data) || (data.metadata is map && data.metadata.keys().size() <= 50));
+    }
+
+    function isValidSession(data) {
+      let allowedFields = [
+        'id', 'sessionId', 'uid', 'userId', 'puzzle_id', 'puzzleId',
+        'puzzle_date', 'date', 'gameId', 'created_at', 'createdAt',
+        'started_at', 'last_guess_at', 'last_answer_at', 'lastGuessAt',
+        'attempts_used', 'attemptsUsed', 'hints_used', 'locked_json',
+        'order_json', 'solved', 'finished', 'completed_at', 'finished_at',
+        'score', 'total_score', 'total_points', 'score_total_mya',
+        'deepest_mya', 'failed_count', 'status', 'current_round',
+        'current_question_index', 'metadata'
+      ];
+      return hasOnlyAllowedFields(allowedFields) &&
+        (!('id' in data) || (data.id is string && data.id.size() <= 100)) &&
+        (!('sessionId' in data) || (data.sessionId is string && data.sessionId.size() <= 100)) &&
+        (!('uid' in data) || (data.uid is string && data.uid.size() <= 128)) &&
+        (!('userId' in data) || (data.userId is string && data.userId.size() <= 128)) &&
+        (!('puzzle_id' in data) || (data.puzzle_id is string && data.puzzle_id.size() <= 100)) &&
+        (!('puzzleId' in data) || (data.puzzleId is string && data.puzzleId.size() <= 100)) &&
+        (!('puzzle_date' in data) || (data.puzzle_date is string && data.puzzle_date.size() <= 50)) &&
+        (!('date' in data) || (data.date is string && data.date.size() <= 50)) &&
+        (!('gameId' in data) || isValidGameId(data.gameId)) &&
+        (!('created_at' in data) || (data.created_at is number && data.created_at > 0)) &&
+        (!('createdAt' in data) || (data.createdAt is number && data.createdAt > 0)) &&
+        (!('started_at' in data) || (data.started_at is number && data.started_at > 0)) &&
+        (!('last_guess_at' in data) || (data.last_guess_at == null || (data.last_guess_at is number && data.last_guess_at > 0))) &&
+        (!('last_answer_at' in data) || (data.last_answer_at == null || (data.last_answer_at is number && data.last_answer_at > 0))) &&
+        (!('lastGuessAt' in data) || (data.lastGuessAt == null || (data.lastGuessAt is number && data.lastGuessAt > 0))) &&
+        (!('attempts_used' in data) || (data.attempts_used is int && data.attempts_used >= 0 && data.attempts_used <= 1000)) &&
+        (!('attemptsUsed' in data) || (data.attemptsUsed is int && data.attemptsUsed >= 0 && data.attemptsUsed <= 1000)) &&
+        (!('hints_used' in data) || (data.hints_used is int && data.hints_used >= 0 && data.hints_used <= 1000)) &&
+        (!('locked_json' in data) || (data.locked_json is string && data.locked_json.size() <= 1000)) &&
+        (!('order_json' in data) || (data.order_json is string && data.order_json.size() <= 1000)) &&
+        (!('solved' in data) || (data.solved is bool || (data.solved is int && (data.solved == 0 || data.solved == 1)))) &&
+        (!('finished' in data) || (data.finished is bool || (data.finished is int && (data.finished == 0 || data.finished == 1)))) &&
+        (!('completed_at' in data) || (data.completed_at == null || (data.completed_at is number && data.completed_at > 0))) &&
+        (!('finished_at' in data) || (data.finished_at == null || (data.finished_at is number && data.finished_at > 0))) &&
+        (!('score' in data) || (data.score is number && data.score >= 0)) &&
+        (!('total_score' in data) || (data.total_score is number && data.total_score >= 0)) &&
+        (!('total_points' in data) || (data.total_points is number && data.total_points >= 0)) &&
+        (!('score_total_mya' in data) || (data.score_total_mya is number && data.score_total_mya >= 0)) &&
+        (!('deepest_mya' in data) || (data.deepest_mya is number && data.deepest_mya >= 0)) &&
+        (!('failed_count' in data) || (data.failed_count is int && data.failed_count >= 0 && data.failed_count <= 1000)) &&
+        (!('status' in data) || (data.status is string && data.status.size() <= 30)) &&
+        (!('current_round' in data) || (data.current_round is int && data.current_round >= 0 && data.current_round <= 100)) &&
+        (!('current_question_index' in data) || (data.current_question_index is int && data.current_question_index >= 0 && data.current_question_index <= 100)) &&
+        (!('metadata' in data) || (data.metadata is map && data.metadata.keys().size() <= 50));
+    }
+
+    function isValidGameStat(data) {
+      let allowedFields = [
+        'statId', 'id', 'gameId', 'date', 'puzzleDate', 'puzzleId',
+        'uid', 'userId', 'totalPlayers', 'totalSolves', 'solveRate',
+        'avgAttempts', 'hardestPair', 'distribution', 'gamesPlayed',
+        'gamesWon', 'currentStreak', 'maxStreak', 'bestScore',
+        'lastPlayedDate', 'updatedAt', 'created_at', 'metadata'
+      ];
+      return hasOnlyAllowedFields(allowedFields) &&
+        isValidGameId(data.gameId) &&
+        (!('statId' in data) || (data.statId is string && data.statId.size() <= 100)) &&
+        (!('id' in data) || (data.id is string && data.id.size() <= 100)) &&
+        (!('date' in data) || isValidDateString(data.date)) &&
+        (!('puzzleDate' in data) || isValidDateString(data.puzzleDate)) &&
+        (!('puzzleId' in data) || (data.puzzleId is string && data.puzzleId.size() <= 100)) &&
+        (!('uid' in data) || (data.uid is string && data.uid.size() <= 128)) &&
+        (!('userId' in data) || (data.userId is string && data.userId.size() <= 128)) &&
+        (!('totalPlayers' in data) || (data.totalPlayers is int && data.totalPlayers >= 0)) &&
+        (!('totalSolves' in data) || (data.totalSolves is int && data.totalSolves >= 0)) &&
+        (!('solveRate' in data) || (data.solveRate is number && data.solveRate >= 0 && data.solveRate <= 1.0)) &&
+        (!('avgAttempts' in data) || (data.avgAttempts is number && data.avgAttempts >= 0)) &&
+        (!('hardestPair' in data) || (data.hardestPair == null || (data.hardestPair is map && data.hardestPair.keys().size() <= 10))) &&
+        (!('distribution' in data) || ((data.distribution is list && data.distribution.size() <= 50) || (data.distribution is map && data.distribution.keys().size() <= 50))) &&
+        (!('gamesPlayed' in data) || (data.gamesPlayed is int && data.gamesPlayed >= 0)) &&
+        (!('gamesWon' in data) || (data.gamesWon is int && data.gamesWon >= 0)) &&
+        (!('currentStreak' in data) || (data.currentStreak is int && data.currentStreak >= 0)) &&
+        (!('maxStreak' in data) || (data.maxStreak is int && data.maxStreak >= 0)) &&
+        (!('bestScore' in data) || (data.bestScore is number && data.bestScore >= 0)) &&
+        (!('lastPlayedDate' in data) || isValidDateString(data.lastPlayedDate)) &&
+        (!('updatedAt' in data) || (data.updatedAt is number && data.updatedAt > 0)) &&
+        (!('created_at' in data) || (data.created_at is number && data.created_at > 0)) &&
+        (!('metadata' in data) || (data.metadata is map && data.metadata.keys().size() <= 50));
+    }
+
+    // ===============================================================
+    // Default Deny Rule
+    // ===============================================================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ===============================================================
+    // 1. Daily Puzzles: Read-only for authenticated clients, admin write
+    // ===============================================================
+
+    match /daily_puzzles/{puzzleId} {
+      allow read: if isAuthenticated();
+
+      allow create: if isAdmin() &&
+                       isValidDailyPuzzle(request.resource.data);
+
+      allow update: if isAdmin() &&
+                       isValidDailyPuzzle(request.resource.data) &&
+                       areImmutableFieldsUnchanged(['gameId', 'puzzleDate']);
+
+      allow delete: if isAdmin();
+    }
+
+    // ===============================================================
+    // 2. Used Items Registry: 365-day cooldown tracking
+    // ===============================================================
+
+    match /used_items/{itemDocId} {
+      // Authenticated clients can read/query cooldown registry for reuse checks
+      allow read: if isAuthenticated();
+
+      // Creates and updates must satisfy the domain validator
+      allow create: if isAuthenticated() &&
+                       isValidUsedItem(request.resource.data);
+
+      allow update: if isAuthenticated() &&
+                       isValidUsedItem(request.resource.data) &&
+                       areImmutableFieldsUnchanged(['gameId', 'normalizedKey', 'itemKey']) &&
+                       (!('useCount' in request.resource.data) ||
+                        !('useCount' in resource.data) ||
+                        request.resource.data.useCount >= resource.data.useCount);
+
+      // Only administrators can purge registry history
+      allow delete: if isAdmin();
+    }
+
+    // ===============================================================
+    // 3. Player Game Sessions: strictly scoped to session owners
+    // ===============================================================
+
+    match /sessions/{sessionId} {
+      allow read: if isAuthenticated() &&
+                     (isSessionDocOwner(sessionId) || isAdmin());
+
+      allow create: if isAuthenticated() &&
+                       isNewSessionOwner(sessionId) &&
+                       isValidSession(request.resource.data);
+
+      allow update: if isAuthenticated() &&
+                       (isSessionDocOwner(sessionId) || isAdmin()) &&
+                       isValidSession(request.resource.data) &&
+                       areImmutableFieldsUnchanged([
+                         'id', 'sessionId', 'uid', 'userId',
+                         'puzzle_id', 'puzzleId', 'puzzle_date', 'date',
+                         'gameId', 'created_at', 'createdAt', 'started_at'
+                       ]) &&
+                       (!('attempts_used' in request.resource.data) ||
+                        !('attempts_used' in resource.data) ||
+                        request.resource.data.attempts_used >= resource.data.attempts_used);
+
+      allow delete: if isAuthenticated() &&
+                       (isSessionDocOwner(sessionId) || isAdmin());
+    }
+
+    // ===============================================================
+    // 4. Game Stats: Community aggregates and personal user statistics
+    // ===============================================================
+
+    match /game_stats/{statId} {
+      // Community stats are readable by all authenticated players; user stats restricted to owner
+      allow read: if isAuthenticated() &&
+                     (!isUserStat(resource.data) || isStatDocOwner() || isAdmin());
+
+      allow create: if (isAdmin() && isValidGameStat(request.resource.data)) ||
+                       (isNewStatOwner() && isValidGameStat(request.resource.data));
+
+      allow update: if (isAdmin() &&
+                        isValidGameStat(request.resource.data) &&
+                        areImmutableFieldsUnchanged(['gameId', 'date', 'puzzleDate', 'puzzleId'])) ||
+                       (isStatDocOwner() &&
+                        isValidGameStat(request.resource.data) &&
+                        areImmutableFieldsUnchanged([
+                          'gameId', 'statId', 'id', 'uid', 'userId',
+                          'date', 'puzzleDate', 'puzzleId', 'created_at'
+                        ]));
+
+      allow delete: if isAdmin() || isStatDocOwner();
+    }
+  }
+}

@@ -261,7 +261,18 @@ def load_used_history(filepath: str = "used.json") -> List[Dict[str, Any]]:
 
 
 def save_used_history(filepath: str, new_stories: List[Dict[str, Any]], max_entries: int = 1500) -> None:
-    """Save used history, keeping the most recent max_entries."""
+    """Save used history, tracking used_date, timestamp, and 365-day expiration, keeping the most recent max_entries."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    now_iso = now.strftime("%Y-%m-%d")
+    now_ts = int(now.timestamp() * 1000)
+    for s in new_stories:
+        if "used_date" not in s:
+            s["used_date"] = now_iso
+        if "lastUsedTimestamp" not in s:
+            s["lastUsedTimestamp"] = now_ts
+        if "expiresAt" not in s:
+            s["expiresAt"] = now_ts + 365 * 86400 * 1000
+
     existing = load_used_history(filepath)
     combined = new_stories + existing
     # Deduplicate entries by normalized title signature
@@ -281,11 +292,34 @@ def save_used_history(filepath: str, new_stories: List[Dict[str, Any]], max_entr
         json.dump(pruned, f, indent=2, ensure_ascii=False)
 
 
-def is_title_in_used(title: str, used_history: List[Dict[str, Any]], threshold: float = DEFAULT_SIMILARITY_THRESHOLD) -> bool:
-    """Check if title matches any entry in used.json above similarity threshold."""
+def is_title_in_used(
+    title: str,
+    used_history: List[Dict[str, Any]],
+    threshold: float = DEFAULT_SIMILARITY_THRESHOLD,
+    min_cooldown_days: int = 365,
+) -> bool:
+    """Check if title matches any entry in used.json above similarity threshold within 365 days."""
+    now = datetime.datetime.now(datetime.timezone.utc)
     for entry in used_history:
         prev_title = entry.get("t") or entry.get("title") or ""
         if compute_title_similarity(title, prev_title) >= threshold:
+            # If the entry has a date or timestamp, check whether 365-day cooldown has elapsed
+            used_date_str = entry.get("used_date") or entry.get("date")
+            used_ts = entry.get("lastUsedTimestamp") or entry.get("timestamp")
+            if used_ts:
+                ts_sec = used_ts / 1000.0 if used_ts > 1e11 else float(used_ts)
+                days_since = (now.timestamp() - ts_sec) / 86400.0
+                if days_since >= min_cooldown_days:
+                    continue  # 365 days elapsed, permitted
+            elif used_date_str:
+                try:
+                    dt = datetime.datetime.strptime(used_date_str[:10], "%Y-%m-%d").replace(tzinfo=datetime.timezone.utc)
+                    days_since = (now - dt).total_seconds() / 86400.0
+                    if days_since >= min_cooldown_days:
+                        continue  # 365 days elapsed, permitted
+                except Exception:
+                    pass
+            # Within 365 days (or no date, assume recently used): reject
             return True
     return False
 

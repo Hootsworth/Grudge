@@ -427,6 +427,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
     <button class="tab-btn" data-tab="tab-ai" role="tab">🤖 AI Game Studio</button>
     <button class="tab-btn" data-tab="tab-content" role="tab">🧩 Daily Content & Backlog</button>
     <button class="tab-btn" data-tab="tab-settings" role="tab">⚙️ Settings & GitHub</button>
+    <button class="tab-btn" data-tab="tab-firebase" role="tab">🔥 Firebase & 365d Cooldown</button>
   </nav>
 
   <!-- TAB 1: Live & Lab Games -->
@@ -793,6 +794,128 @@ dialog::backdrop { background: rgba(0, 0, 0, .6); backdrop-filter: blur(4px); }
         <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
           <button class="btn btn-primary btn-sm" id="btn-change-pass">Update Passphrase</button>
           <button class="btn btn-secondary btn-sm" id="btn-reset-pass">Reset to Default (oddly-admin)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 6: Firebase Backend & 365-Day Cooldown Registry -->
+  <section id="tab-firebase" class="tab-panel">
+    <div style="max-width:920px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div>
+          <h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.04em;margin-bottom:6px">🔥 Firebase Cloud Firestore & 365-Day Cooldown</h2>
+          <p style="color:var(--mute)">Verified non-repetition backend for project <span class="mono" style="color:var(--c2);font-weight:700">teapot-201d2</span>.</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span id="fb-status-badge" class="badge" style="background:#e6f8f3;color:#137a5b;border:1px solid #99e2cf;padding:6px 14px;font-weight:700;border-radius:999px;font-size:.85rem">
+            ● Connected to teapot-201d2
+          </span>
+          <button class="btn btn-secondary btn-sm" id="btn-sync-all-fb">🔄 Sync Backlogs to Firestore</button>
+        </div>
+      </div>
+
+      <!-- Cooldown Tester Card -->
+      <div class="card" style="margin-bottom:24px">
+        <h3 style="font-size:1.25rem;font-weight:800;margin-bottom:8px">🛡️ 365-Day Cooldown & Deduplication Validator</h3>
+        <p style="color:var(--mute);font-size:.9rem;margin-bottom:16px">Test candidate headlines, quotes, events, quantities, passwords, or words against the 365-day non-repetition rule before publishing.</p>
+        
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group" style="flex:1">
+            <label>Arcade Game</label>
+            <select id="fb-check-game" class="form-control">
+              <option value="fibber">Fibber (Headlines)</option>
+              <option value="quipher">Quipher (Quotes)</option>
+              <option value="ballpark">Ballpark (Quantities)</option>
+              <option value="rungs">Rungs (Word Ladders)</option>
+              <option value="sprint">Sprint (Anagrams)</option>
+              <option value="passphew">PassPhew (Passwords)</option>
+              <option value="kin">Kin (Species / Clades)</option>
+              <option value="strata">Strata (Historical Events)</option>
+              <option value="pinpoint">Pinpoint (Locations / Coordinates)</option>
+              <option value="blackout">Blackout (Redacted Dossiers)</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1">
+            <label>Cooldown Window</label>
+            <input type="text" class="form-control" value="365 Days Strict" readonly style="opacity:.8">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Candidate Content / Key to Verify</label>
+          <textarea id="fb-check-key" class="form-control" rows="2" placeholder="e.g. Inflatable festival moon breaks loose... OR quote text OR password..."></textarea>
+        </div>
+
+        <div id="fb-key-preview" class="mono" style="font-size:.78rem;color:var(--mute);background:var(--bg);padding:8px 12px;border-radius:8px;margin-bottom:14px;word-break:break-all">
+          Normalized Key: <span id="fb-norm-key" style="color:var(--ink)">-</span><br>
+          Deterministic DocID: <span id="fb-doc-id" style="color:var(--c2)">-</span>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="btn-run-check">🔍 Check 365-Day Cooldown</button>
+          <button class="btn btn-secondary btn-sm" id="btn-record-usage">📝 Mark As Used in Firestore</button>
+        </div>
+
+        <!-- Result Box -->
+        <div id="fb-check-result" style="display:none;margin-top:16px;padding:14px 16px;border-radius:10px;font-size:.92rem;line-height:1.5"></div>
+      </div>
+
+      <!-- Cooldown Registry Browser -->
+      <div class="card" style="margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="font-size:1.25rem;font-weight:800">📋 Active 365-Day Cooldown Registry</h3>
+            <p style="color:var(--mute);font-size:.85rem">Real-time items protected by the 365-day reuse barrier in Cloud Firestore (<span class="mono">used_items</span>).</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <select id="fb-filter-game" class="form-control form-control-sm" style="width:auto">
+              <option value="">All Games</option>
+              <option value="fibber">Fibber</option>
+              <option value="quipher">Quipher</option>
+              <option value="ballpark">Ballpark</option>
+              <option value="rungs">Rungs</option>
+              <option value="sprint">Sprint</option>
+              <option value="passphew">PassPhew</option>
+              <option value="kin">Kin</option>
+              <option value="strata">Strata</option>
+              <option value="pinpoint">Pinpoint</option>
+              <option value="blackout">Blackout</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" id="btn-refresh-used">🔄 Refresh Registry</button>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:.85rem;text-align:left">
+            <thead>
+              <tr style="border-bottom:2px solid var(--line);color:var(--mute)">
+                <th style="padding:8px 6px">Game</th>
+                <th style="padding:8px 6px">Key / Snippet</th>
+                <th style="padding:8px 6px">Last Used</th>
+                <th style="padding:8px 6px">Cooldown Expiry</th>
+                <th style="padding:8px 6px">Status</th>
+              </tr>
+            </thead>
+            <tbody id="fb-used-table-body">
+              <tr><td colspan="5" style="padding:20px;text-align:center;color:var(--mute)">Click "Refresh Registry" to query live from Cloud Firestore...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Cloud Daily Puzzles Browser -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div>
+            <h3 style="font-size:1.25rem;font-weight:800">☁️ Cloud Firestore Daily Puzzles (<span class="mono">daily_puzzles</span>)</h3>
+            <p style="color:var(--mute);font-size:.85rem">Puzzles synchronized and stored for worldwide play.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-refresh-puzzles">🔄 Fetch Daily Puzzles</button>
+        </div>
+
+        <div id="fb-puzzles-list" style="display:flex;flex-direction:column;gap:10px">
+          <p style="color:var(--mute);font-size:.9rem">Click "Fetch Daily Puzzles" to load active puzzle archives from Firestore.</p>
         </div>
       </div>
     </div>
@@ -1709,6 +1832,170 @@ document.getElementById("btn-reset-pass")?.addEventListener("click", async () =>
 
 // Run auth check on page boot
 checkAuth();
+</script>
+
+<script type="module">
+import {
+  normalizeItemKey,
+  getItemDocId,
+  checkItemReuse,
+  recordItemUsage,
+  getActiveCooldownItems,
+  getDailyPuzzlesList
+} from './firebase-client.js';
+
+const checkGame = document.getElementById('fb-check-game');
+const checkKey = document.getElementById('fb-check-key');
+const normKeySpan = document.getElementById('fb-norm-key');
+const docIdSpan = document.getElementById('fb-doc-id');
+const resultBox = document.getElementById('fb-check-result');
+const runCheckBtn = document.getElementById('btn-run-check');
+const recordUsageBtn = document.getElementById('btn-record-usage');
+const filterGame = document.getElementById('fb-filter-game');
+const refreshUsedBtn = document.getElementById('btn-refresh-used');
+const usedTableBody = document.getElementById('fb-used-table-body');
+const refreshPuzzlesBtn = document.getElementById('btn-refresh-puzzles');
+const puzzlesList = document.getElementById('fb-puzzles-list');
+const syncAllFbBtn = document.getElementById('btn-sync-all-fb');
+
+function updateKeyPreview() {
+  const raw = (checkKey?.value || '').trim();
+  const game = checkGame?.value || 'fibber';
+  if (!raw) {
+    if (normKeySpan) normKeySpan.textContent = '-';
+    if (docIdSpan) docIdSpan.textContent = '-';
+    return;
+  }
+  const norm = normalizeItemKey(raw);
+  const docId = getItemDocId(game, norm);
+  if (normKeySpan) normKeySpan.textContent = norm || '(empty)';
+  if (docIdSpan) docIdSpan.textContent = docId;
+}
+
+checkKey?.addEventListener('input', updateKeyPreview);
+checkGame?.addEventListener('change', updateKeyPreview);
+
+runCheckBtn?.addEventListener('click', async () => {
+  const raw = (checkKey?.value || '').trim();
+  const game = checkGame?.value || 'fibber';
+  if (!raw) {
+    showToast('Please enter text/headline to verify cooldown');
+    return;
+  }
+  if (!resultBox) return;
+  resultBox.style.display = 'block';
+  resultBox.style.background = '#f0f3fa';
+  resultBox.style.color = '#333';
+  resultBox.style.border = '1px solid #ccd5e5';
+  resultBox.innerHTML = `⏳ Verifying "${game}" candidate against 365-day Firestore cooldown...`;
+
+  try {
+    const res = await checkItemReuse(game, raw, 365);
+    if (res.canUse) {
+      resultBox.style.background = '#eafaf1';
+      resultBox.style.color = '#1e7e48';
+      resultBox.style.border = '1px solid #a3e9c0';
+      resultBox.innerHTML = `
+        <div style="font-weight:800;font-size:1.05rem;margin-bottom:4px">✅ SAFE TO USE (365-Day Cooldown Cleared)</div>
+        <div>${res.isNew ? 'This item has never been used before in Firestore.' : `Previously used on ${res.lastUsedDate} (${res.daysSinceUsed} days ago), which is &ge; 365 days.`}</div>
+        <div class="mono" style="font-size:.8rem;margin-top:6px;opacity:.85">Key: "${normalizeItemKey(raw)}"</div>
+      `;
+    } else {
+      resultBox.style.background = '#fdf2f2';
+      resultBox.style.color = '#d63031';
+      resultBox.style.border = '1px solid #f8b4b4';
+      resultBox.innerHTML = `
+        <div style="font-weight:800;font-size:1.05rem;margin-bottom:4px">⚠️ COOLDOWN VIOLATION: REUSED WITHIN 365 DAYS</div>
+        <div>${res.reason}</div>
+        <div style="margin-top:6px;font-weight:700">Days Remaining on Cooldown: ${res.daysRemaining} days</div>
+        <div class="mono" style="font-size:.8rem;margin-top:6px;opacity:.85">DocID: ${getItemDocId(game, normalizeItemKey(raw))}</div>
+      `;
+    }
+  } catch (err) {
+    resultBox.style.background = '#fff8e6';
+    resultBox.style.color = '#8a6d3b';
+    resultBox.style.border = '1px solid #faebcc';
+    resultBox.innerHTML = `⚠️ Firestore check warning: ${err.message}`;
+  }
+});
+
+recordUsageBtn?.addEventListener('click', async () => {
+  const raw = (checkKey?.value || '').trim();
+  const game = checkGame?.value || 'fibber';
+  if (!raw) {
+    showToast('Please enter text to record');
+    return;
+  }
+  const todayStr = new Date().toISOString().split('T')[0];
+  showToast(`Recording "${game}" item in Firestore...`);
+  const res = await recordItemUsage(game, raw, todayStr, { recordedVia: 'admin_dashboard' });
+  if (res?.success) {
+    showToast(`Recorded in Firestore with 365d cooldown! DocID: ${res.docId}`);
+    runCheckBtn?.click();
+    refreshUsedBtn?.click();
+  } else {
+    showToast('Failed to record: ' + (res?.error || 'Unknown error'));
+  }
+});
+
+async function loadUsedItems() {
+  const game = filterGame?.value || null;
+  if (!usedTableBody) return;
+  usedTableBody.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--mute)">Loading items from Cloud Firestore (used_items)...</td></tr>`;
+  const items = await getActiveCooldownItems(game);
+  if (!items || items.length === 0) {
+    usedTableBody.innerHTML = `<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--mute)">No tracked cooldown items found for ${game || 'any game'}.</td></tr>`;
+    return;
+  }
+  usedTableBody.innerHTML = items.map(item => {
+    const expDate = new Date(item.expiresAt).toISOString().split('T')[0];
+    const badge = item.isExpired
+      ? `<span class="badge" style="background:#e4e6eb;color:#555;padding:2px 8px;border-radius:6px;font-size:.75rem">Expired Cooldown</span>`
+      : `<span class="badge" style="background:#fde8e8;color:#c81e1e;padding:2px 8px;border-radius:6px;font-weight:700;font-size:.75rem">Active (${item.daysRemaining}d left)</span>`;
+    return `
+      <tr style="border-bottom:1px solid var(--line)">
+        <td style="padding:10px 6px;font-weight:700">${item.gameId}</td>
+        <td style="padding:10px 6px;max-width:320px;word-break:break-word">
+          <div style="font-weight:600">${item.itemKey}</div>
+          <div class="mono" style="font-size:.75rem;color:var(--mute)">${item.normalizedKey || ''}</div>
+        </td>
+        <td style="padding:10px 6px;white-space:nowrap">${item.lastUsedDate || '-'}</td>
+        <td style="padding:10px 6px;white-space:nowrap">${expDate}</td>
+        <td style="padding:10px 6px">${badge}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+refreshUsedBtn?.addEventListener('click', loadUsedItems);
+filterGame?.addEventListener('change', loadUsedItems);
+
+async function loadDailyPuzzles() {
+  if (!puzzlesList) return;
+  puzzlesList.innerHTML = `<p style="color:var(--mute);font-size:.9rem">Loading daily puzzles from Firestore...</p>`;
+  const puzzles = await getDailyPuzzlesList();
+  if (!puzzles || puzzles.length === 0) {
+    puzzlesList.innerHTML = `<p style="color:var(--mute);font-size:.9rem">No daily puzzles stored in Firestore yet. Click "Sync Backlogs" to initialize.</p>`;
+    return;
+  }
+  puzzlesList.innerHTML = puzzles.map(p => `
+    <div style="padding:12px 14px;background:var(--bg);border-radius:8px;border:1px solid var(--line)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span style="font-weight:800;color:var(--ink)">${p.gameId?.toUpperCase()} — ${p.puzzleDate}</span>
+        <span class="mono" style="font-size:.8rem;color:var(--mute)">Plate #${p.plate || 0}</span>
+      </div>
+      <pre class="mono" style="font-size:.75rem;color:var(--mute);overflow-x:auto;max-height:100px;background:var(--card);padding:8px;border-radius:6px">${JSON.stringify(p.payload, null, 2)}</pre>
+    </div>
+  `).join('');
+}
+
+refreshPuzzlesBtn?.addEventListener('click', loadDailyPuzzles);
+
+// Auto-trigger load when switching to Firebase tab
+document.querySelector('.tab-btn[data-tab="tab-firebase"]')?.addEventListener('click', () => {
+  loadUsedItems();
+  loadDailyPuzzles();
+});
 </script>
 </body>
 </html>
