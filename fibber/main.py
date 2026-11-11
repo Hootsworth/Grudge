@@ -208,6 +208,7 @@ def fallback_puzzle(
     backlog_dir: str = "backlog",
     public_path: str = "public/today.json",
     root_path: Optional[str] = "today.json",
+    pending_path: Optional[str] = "pending/today.json",
 ) -> None:
     """Select a pre-approved puzzle from backlog/, stamp with date_str, and deploy."""
     if not os.path.exists(backlog_dir):
@@ -235,6 +236,12 @@ def fallback_puzzle(
         with open(root_path, "w", encoding="utf-8") as f:
             json.dump(puzzle, f, indent=2, ensure_ascii=False)
         logger.info("Also synced fallback puzzle to %s", root_path)
+
+    if pending_path:
+        os.makedirs(os.path.dirname(os.path.abspath(pending_path)), exist_ok=True)
+        with open(pending_path, "w", encoding="utf-8") as f:
+            json.dump(puzzle, f, indent=2, ensure_ascii=False)
+        logger.info("Also synced fallback puzzle to pending %s", pending_path)
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -305,7 +312,12 @@ def main() -> None:
     except Exception as e:
         logger.exception("Pipeline failed: %s. Deploying emergency fallback puzzle from backlog.", e)
         try:
-            fallback_puzzle(date_str=date_str, backlog_dir=args.backlog_dir, public_path=args.public_path)
+            fallback_puzzle(
+                date_str=date_str,
+                backlog_dir=args.backlog_dir,
+                public_path=args.public_path,
+                pending_path=args.pending_path,
+            )
             print(f"Successfully deployed emergency fallback puzzle for {date_str} to {args.public_path}")
         except Exception as fb_err:
             logger.exception("Emergency fallback failed: %s", fb_err)

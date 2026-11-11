@@ -116,8 +116,8 @@ if(n===N)S.over="win";else if(S.att>=MAXA){S.over="lose";S.ord=truth.slice()}
 $("say").textContent=S.over==="win"?"Fine. Correct. History is in order.":S.over==="lose"?"Out of digs. The earth keeps its secrets.":SN[n];
 save();ui()};
 function finish(){const ys=EV.map(e=>e.y).sort((a,b)=>a-b),adj=ys[0]<0&&ys[N-1]>0?-1:0,span=ys[N-1]-ys[0]+adj;
-let gi=0,gm=0;for(let i=1;i<N;i++){const g=ys[i]-ys[i-1]+(ys[i-1]<0&&ys[i]>0?-1:0);if(g>gm){gm=g;gi=i}}
-const A=EV.find(e=>e.y===ys[gi-1]),B=EV.find(e=>e.y===ys[gi]),w=S.over==="win",
+let gi=1,gm=ys[1]-ys[0]+(ys[0]<0&&ys[1]>0?-1:0);for(let i=2;i<N;i++){const g=ys[i]-ys[i-1]+(ys[i-1]<0&&ys[i]>0?-1:0);if(g>gm){gm=g;gi=i}}
+const A=EV.find(e=>e.y===ys[gi-1])||EV[0],B=EV.find(e=>e.y===ys[gi])||EV[1],w=S.over==="win",
 ttl=!w?"Buried alive":["Time lord","Historian","Archivist","Dug it up"][S.att-1],
 sh="Strata #"+num+"  "+(w?S.att:"X")+"/"+MAXA+"\n"+S.hist.map(r=>r.map(x=>x?"■":"□").join("")).join("\n");
 $("end").innerHTML=`<div class="end"><p class="mono" style="margin:0;color:var(--mute)">${w?"Solved in "+S.att+(S.att===1?" dig":" digs"):"Not this time"}</p><div class="big">${ttl}.</div>

@@ -1,4 +1,6 @@
 // Nightly generation pipeline for Ballpark (04:00 UTC)
+import * as fs from 'fs';
+import * as path from 'path';
 import { BACKLOG_SETS } from './backlog.ts';
 import { verifyCandidate } from './verification.ts';
 import { checkFermiDerivation } from './fermi.ts';
@@ -62,6 +64,33 @@ export async function runGenerationPipeline(options: GenerationOptions = {}) {
   );
 
   console.log(`[Ballpark Generator] Review email generated: "${email.subject}"`);
+
+  // 4. Generate public static fallback JSON
+  const publicPayload = {
+    plate: backlogDay.plate,
+    date,
+    questions: backlogDay.questions.slice(0, 5).map((q, idx) => ({
+      id: `q_${date.replace(/-/g, '')}_${idx + 1}`,
+      question: q.question,
+      unit: q.unit,
+    })),
+  };
+
+  const candidatePaths = [
+    path.resolve(process.cwd(), 'ballpark_today.json'),
+    path.resolve(process.cwd(), 'public/ballpark_today.json'),
+    path.resolve(process.cwd(), '../ballpark_today.json'),
+    path.resolve(process.cwd(), '../public/ballpark_today.json'),
+  ].filter(p => !p.includes('/ballpark/ballpark_today.json'));
+  for (const p of candidatePaths) {
+    try {
+      if (fs.existsSync(path.dirname(p))) {
+        fs.writeFileSync(p, JSON.stringify(publicPayload, null, 2), 'utf-8');
+        console.log(`[Ballpark Generator] Synced static fallback to ${p}`);
+      }
+    } catch (e) {}
+  }
+
   return {
     date,
     plate: backlogDay.plate,

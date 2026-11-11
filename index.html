@@ -229,7 +229,7 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <div class="play">Estimate the scale<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
 
 <!-- Game 7: Rungs -->
-<a class="g" href="rungs-word-ladder.html" style="--bgc:#4a95ee">
+<a class="g" href="rungs.html" style="--bgc:#4a95ee">
 <div class="art"><div class="rungs-art">
 <svg viewBox="0 0 100 100" style="width:100px;height:100px">
   <!-- Ladder Vertical Rails -->
@@ -253,7 +253,7 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <div class="play">Climb the ladder<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
 
 <!-- Game 8: Sprint -->
-<a class="g" href="sprint-anagram.html" style="--bgc:#ff5d4e">
+<a class="g" href="sprint.html" style="--bgc:#ff5d4e">
 <div class="art"><div class="sprint-art">
 <svg viewBox="0 0 100 100" style="width:100px;height:100px">
   <!-- Stopwatch / Timer dial -->
@@ -301,6 +301,31 @@ footer{margin-top:56px;display:flex;justify-content:space-between;flex-wrap:wrap
 <div class="tag"><span>Declassified</span><span>Redacted</span></div>
 <h2>Blackout</h2><p>A top-secret historical dossier is blacked out. Probe words, test hypotheses, and declassify the file.</p>
 <div class="play">Declassify the file<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div></a>
+
+<!-- Game 10: Quipher -->
+<a class="g" href="quipher.html" style="--bgc:#2b4743;color:#fffaf0">
+<div class="art"><div class="quipher-art">
+<svg viewBox="0 0 100 100" style="width:100px;height:100px">
+  <rect x="14" y="14" width="72" height="72" rx="10" fill="#f4ecd8" stroke="#14131a" stroke-width="4"/>
+  <!-- Cipher tile 1 -->
+  <rect x="22" y="24" width="24" height="26" rx="4" fill="#e8453c" stroke="#14131a" stroke-width="2.5"/>
+  <text x="34" y="42" font-family="'Courier New',monospace" font-weight="900" font-size="16" fill="#fffaf0" text-anchor="middle">Z</text>
+  <!-- Arrow -->
+  <path d="M49 37 L57 37 M54 33 L58 37 L54 41" stroke="#14131a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Decoded tile 1 -->
+  <rect x="61" y="24" width="20" height="26" rx="4" fill="#14131a"/>
+  <text x="71" y="42" font-family="'Courier New',monospace" font-weight="900" font-size="16" fill="#e2a93b" text-anchor="middle">E</text>
+  <!-- Underline dashes for secret quote -->
+  <line x1="22" y1="62" x2="38" y2="62" stroke="#14131a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="42" y1="62" x2="58" y2="62" stroke="#14131a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="62" y1="62" x2="78" y2="62" stroke="#14131a" stroke-width="3" stroke-linecap="round"/>
+  <!-- Secret stamp -->
+  <text x="50" y="78" font-family="'Courier New',monospace" font-weight="800" font-size="8" fill="#e8453c" text-anchor="middle" letter-spacing="1">TOP SECRET</text>
+</svg>
+</div></div>
+<div class="tag"><span style="border-color:#fffaf0;color:#fffaf0">Cryptogram</span><span style="border-color:#fffaf0;color:#fffaf0">Daily Quip</span></div>
+<h2 style="color:#fffaf0">Quipher</h2><p style="color:#d4e0dc">An encrypted public-domain quote. Crack the monoalphabetic substitution cipher letter by letter.</p>
+<div class="play" style="background:#fffaf0;color:#14131a">Decode the quip<i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke="#14131a"/></svg></i></div></a>
 </section>
 
 <section class="soon">
@@ -321,7 +346,7 @@ const loadGames=()=>{
     if(!manifest||!manifest.live)return;
     const liveSec=document.querySelector(".live");
     if(!liveSec)return;
-    const known={"fibber":1,"strata":1,"kin":1,"passphew":1,"pinpoint":1,"ballpark":1,"rungs":1,"sprint":1,"blackout":1};
+    const known={"fibber":1,"strata":1,"kin":1,"passphew":1,"pinpoint":1,"ballpark":1,"rungs":1,"sprint":1,"blackout":1,"quipher":1};
     const custom=manifest.live.filter(g=>!known[g.id]&&!rendered[g.id]);
     custom.forEach((g,idx)=>{
       rendered[g.id]=true;

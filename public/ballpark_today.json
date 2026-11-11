@@ -1,31 +1,31 @@
 {
-  "plate": 2,
-  "date": "2026-11-10",
+  "plate": 3,
+  "date": "2026-11-11",
   "questions": [
     {
-      "id": "q_20261110_1",
-      "question": "How many finished oil paintings did Vincent van Gogh produce during his entire decade-long artistic career?",
-      "unit": "oil paintings"
+      "id": "q_20261111_1",
+      "question": "How many independent sovereign countries are recognized members of the United Nations?",
+      "unit": "member states"
     },
     {
-      "id": "q_20261110_2",
-      "question": "How many commercial passenger flights take off worldwide on a typical single day?",
-      "unit": "flights per day"
+      "id": "q_20261111_2",
+      "question": "How many cups of brewed coffee are consumed worldwide each single day?",
+      "unit": "cups per day"
     },
     {
-      "id": "q_20261110_3",
-      "question": "How many cells make up an average adult human body?",
-      "unit": "human cells"
+      "id": "q_20261111_3",
+      "question": "How many individual grains of sand exist across all the beaches and deserts of Earth?",
+      "unit": "grains of sand"
     },
     {
-      "id": "q_20261110_4",
-      "question": "How many living trees stand on planet Earth according to satellite and ground surveys?",
-      "unit": "trees"
+      "id": "q_20261111_4",
+      "question": "How many total query searches does Google handle on a single typical day worldwide?",
+      "unit": "searches per day"
     },
     {
-      "id": "q_20261110_5",
-      "question": "How many kilograms does the planet Earth weigh in total mass?",
-      "unit": "kilograms"
+      "id": "q_20261111_5",
+      "question": "How many stars are estimated to exist in the observable universe?",
+      "unit": "stars"
     }
   ]
 }

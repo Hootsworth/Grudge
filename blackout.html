@@ -811,6 +811,7 @@
     let isSolved = false;
     let totalGuesses = 0;
     let finalShareText = "";
+    let lastSolvedPayload = null;
 
     // DOM Elements
     const $ = id => document.getElementById(id);
@@ -846,6 +847,7 @@
           revealedTokenIndices = new Set(parsed.revealedTokenIndices || []);
           isSolved = !!parsed.isSolved;
           totalGuesses = parsed.totalGuesses || 0;
+          if (parsed.solvedPayload) lastSolvedPayload = parsed.solvedPayload;
         } catch(e){}
       }
 
@@ -863,7 +865,7 @@
 
       renderDossierView();
       if (isSolved) {
-        triggerSolvedUI({
+        triggerSolvedUI(lastSolvedPayload || {
           title: localDossier.title,
           category: localDossier.category,
           year: localDossier.year,
@@ -1157,7 +1159,7 @@
         renderDossierView();
 
         const rank = getRank(totalGuesses, true);
-        triggerSolvedUI({
+        const solvedData = {
           title: solveData?.title || localDossier.title,
           category: solveData?.category || localDossier.category,
           year: solveData?.year || localDossier.year,
@@ -1166,7 +1168,9 @@
           totalGuesses,
           rankTitle: rank,
           shareCard: solveData?.shareCard
-        });
+        };
+        lastSolvedPayload = solvedData;
+        triggerSolvedUI(solvedData);
         saveGameState();
       } else {
         msg.className = "status-msg danger";
@@ -1267,7 +1271,8 @@
         probedWords,
         revealedTokenIndices: Array.from(revealedTokenIndices),
         isSolved,
-        totalGuesses
+        totalGuesses,
+        solvedPayload: lastSolvedPayload
       };
       localStorage.setItem("blackout_state_" + todayStr, JSON.stringify(state));
     }

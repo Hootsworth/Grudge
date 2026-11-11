@@ -104,6 +104,20 @@ $("rv").innerHTML=Array.from({length:24},(_,i)=>`<circle cx="120" cy="120" r="3"
 $("ticks").innerHTML=Array.from({length:24},(_,i)=>`<rect x="119" y="68" width="2" height="${i%6?5:9}" fill="var(--ink)" transform="rotate(${i*15} 120 120)"/>`).join("");
 $("ht").textContent=Z.c;$("us").textContent=Z.u;
 
+// Hydrate today's clue & username from backend API if available
+fetch(`${API_BASE}/api/today?date=${localDateStr}`)
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (data && data.clue && data.username) {
+      Z = { ...Z, c: data.clue, u: data.username };
+      if (data.plate) num = data.plate;
+      $("ht").textContent = Z.c;
+      $("us").textContent = Z.u;
+      head();
+    }
+  })
+  .catch(() => {});
+
 const R=[..."1234567890".split(""),..."QWERTYUIOP".split(""),..."ASDFGHJKL".split(""),..."ZXCVBNM".split("")];
 $("kb").innerHTML=[R.slice(0,10),R.slice(10,20),R.slice(20,29)].map(r=>`<div class="kr">${r.map(k=>`<button class="k" data-k="${k}">${k}</button>`).join("")}</div>`).join("")+`<div class="kr">${R.slice(29).map(k=>`<button class="k" data-k="${k}">${k}</button>`).join("")}<button class="k w dl" data-k="DEL">DEL</button><button class="k w en" data-k="ENTER">ENTER</button></div>`;
 

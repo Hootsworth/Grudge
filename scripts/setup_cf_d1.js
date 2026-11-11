@@ -123,7 +123,7 @@ async function main() {
     }
 
     // If we have a valid UUID, replace the dummy database_id in the wrangler.toml
-    if (uuid && uuid !== 'local-strata-db-id' && uuid !== 'local-kin-db-id' && uuid !== 'local-passphew-db-id' && uuid !== 'local-pinpoint-db-id' && uuid !== 'local-ballpark-db-id' && uuid !== 'local-rungs-db-id' && uuid !== 'local-sprint-db-id' && uuid !== 'local-blackout-db-id') {
+    if (uuid && !uuid.startsWith('local-')) {
       let content = fs.readFileSync(configPath, 'utf-8');
       content = content.replace(/database_id\s*=\s*["'][^"']+["']/, `database_id = "${uuid}"`);
       fs.writeFileSync(configPath, content, 'utf-8');

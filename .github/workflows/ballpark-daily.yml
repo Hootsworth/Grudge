@@ -58,6 +58,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore(ballpark): update daily candidate and backlog fixtures [skip ci]"
+            git commit -m "chore(ballpark): update daily candidate and backlog fixtures"
+            git pull --rebase origin main
             git push origin main
           fi

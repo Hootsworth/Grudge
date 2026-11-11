@@ -23,7 +23,8 @@ export async function handleTodayRoute(
 
   // Fallback to backlog if DB questions not yet seeded for today
   if (!questions || questions.length === 0) {
-    const backlogDay = BACKLOG_SETS.find((s) => s.date === targetDate) || BACKLOG_SETS[0];
+    const dayIdx = Math.abs(Math.floor((curDate - baseDate) / 864e5)) % BACKLOG_SETS.length;
+    const backlogDay = BACKLOG_SETS.find((s) => s.date === targetDate) || BACKLOG_SETS[dayIdx];
     questions = backlogDay.questions.map((q, idx) => ({
       id: `q_${targetDate.replace(/-/g, '')}_${idx + 1}`,
       puzzle_date: targetDate,
