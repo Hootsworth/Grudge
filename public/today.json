@@ -1,68 +1,68 @@
 {
-  "date": "2026-11-10",
+  "date": "2026-11-11",
   "rounds": [
     [
       {
-        "t": "Inflatable festival moon breaks free and rolls down busy city streets",
+        "t": "Japanese town builds dedicated crosswalk for wandering ducks with miniature traffic lights",
         "real": true,
-        "s": "Fuzhou, China, 2016. Typhoon Meranti."
+        "s": "Osaka, Japan, 2018."
       },
       {
-        "t": "Swedish post office trains badgers to sort international packages by scent",
+        "t": "Swedish library trains badgers to sort returns by scent",
         "real": false,
         "s": "Invented for this puzzle."
       },
       {
-        "t": "Icelandic road builders divert highway around boulder believed to house elves",
+        "t": "Man survives fifty hours adrift in ocean on broken refrigerator door",
         "real": true,
-        "s": "Galgahraun lava field, Iceland, 2014."
+        "s": "Gulf of Mexico, 2021."
       },
       {
-        "t": "Zoo monkey steals visitor’s phone and accidentally orders grocery delivery",
+        "t": "Zoo monkey steals visitor phone and orders grocery delivery through app",
         "real": true,
         "s": "Yancheng Safari Park, China, 2021."
       }
     ],
     [
       {
-        "t": "Bank robber hands teller a note written on his own birth certificate",
+        "t": "Bank robber hands teller note written on his own birth certificate",
         "real": true,
         "s": "Pittsburgh, Pennsylvania, 2019."
       },
       {
-        "t": "Italian village issues noise complaints against church rooster crowing off-key",
+        "t": "Italian village bans off-key roosters after noise complaints from tourists",
         "real": false,
         "s": "Invented for this puzzle."
       },
       {
-        "t": "Canadian police rescue man trapped inside claw machine while trying to steal toy",
+        "t": "Canadian police rescue man stuck inside arcade claw machine trying to reach plush toy",
         "real": true,
         "s": "Edmonton, Alberta, 2019."
       },
       {
-        "t": "Escaped cow evades police in Polish forest for months by living with wild bisons",
+        "t": "Escaped cow lives peacefully with herd of wild bison in Polish primeval forest for months",
         "real": true,
-        "s": "Bialowieza Primeval Forest, Poland, 2018."
+        "s": "Bialowieza, Poland, 2018."
       }
     ],
     [
       {
-        "t": "Man legally changes name to match randomly generated password to prove point",
+        "t": "Man legally changes surname to match password generator to protest security rules",
         "real": false,
         "s": "Invented for this puzzle."
       },
       {
-        "t": "Airport security stops traveler trying to smuggle twenty live pigeons in pants",
+        "t": "Customs officers seize twenty live pigeons taped inside passenger trousers",
         "real": true,
-        "s": "Melbourne Airport, Australia, 2009."
+        "s": "Melbourne Airport, 2009."
       },
       {
-        "t": "City council declares official state of emergency after pigeon enters building",
+        "t": "City hall calls emergency session after rogue pigeon nests inside ceiling fan",
         "real": true,
         "s": "Rathaus, Germany, 2017."
       },
       {
-        "t": "Missing tortoise turns up safely at neighbor’s patio thirty years later",
+        "t": "Pet tortoise missing for thirty years discovered living safely in neighbor backyard",
         "real": true,
         "s": "Rio de Janeiro, Brazil, 2013."
       }
