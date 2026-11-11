@@ -86,16 +86,28 @@ let s=T*2654435761%2147483647||7;const rnd=()=>(s=(s*16807)%2147483647)/21474836
 let ord0=EV.map(e=>e.id);for(let i=N-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[ord0[i],ord0[j]]=[ord0[j],ord0[i]]}
 if(ord0.every((x,i)=>x===truth[i]))[ord0[0],ord0[1]]=[ord0[1],ord0[0]];
 let S={ord:ord0,locked:[],att:0,hist:[],over:null};
-try{const x=localStorage.getItem(KEY);if(x)S=JSON.parse(x)}catch(e){}
+const validOrd = a => Array.isArray(a) && a.length === N && a.every(x => typeof x === "number" && x >= 0 && x < N) && new Set(a).size === N;
+try{
+  const x=localStorage.getItem(KEY);
+  if(x){
+    const p=JSON.parse(x);
+    if(p && validOrd(p.ord)){
+      S=p;
+      if(!Array.isArray(S.locked)) S.locked=[];
+      if(!Array.isArray(S.hist)) S.hist=[];
+      S.locked=S.locked.filter(id=>typeof id==="number"&&id>=0&&id<N);
+    }
+  }
+}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const list=$("list");list.style.height=((N-1)*STEP+H)+"px";
 const el={};
 EV.forEach((e,k)=>{const c=document.createElement("div");c.className="card";c.style.setProperty("--i",k);
 c.innerHTML=`<div class="c" style="--bc:${COL[e.id]};clip-path:${CP[e.id%4]}"><span class="grip" tabindex="0" role="button" aria-label="Reorder: ${e.t}"></span><span class="t">${e.t}</span><span class="tg">Set</span><b class="yr">${fmt(e)}</b></div>`;
 list.appendChild(c);el[e.id]=c});
-function place(skip){S.ord.forEach((id,i)=>{if(id!==skip)el[id].style.transform=`translateY(${i*STEP}px)`})}
+function place(skip){S.ord.forEach((id,i)=>{if(id!==skip && el[id])el[id].style.transform=`translateY(${i*STEP}px)`})}
 function reorder(id,p){const L=S.ord.map(x=>S.locked.includes(x)?x:null),unl=S.ord.filter(x=>!S.locked.includes(x));
-const cur=unl.indexOf(id);if(p<0||p>=unl.length||p===cur)return false;unl.splice(cur,1);unl.splice(p,0,id);let k=0;S.ord=L.map(x=>x||unl[k++]);return true}
+const cur=unl.indexOf(id);if(p<0||p>=unl.length||p===cur)return false;unl.splice(cur,1);unl.splice(p,0,id);let k=0;S.ord=L.map(x=>x!==null?x:unl[k++]);return true}
 let dr=null;
 list.addEventListener("pointerdown",e=>{const g=e.target.closest(".grip");if(!g||S.over)return;const c=g.closest(".card"),id=+Object.keys(el).find(k=>el[k]===c);if(S.locked.includes(id))return;
 dr={id,c,sy:e.clientY,b:S.ord.indexOf(id)*STEP};c.classList.add("drag");g.setPointerCapture(e.pointerId);e.preventDefault()});
@@ -108,10 +120,10 @@ list.addEventListener("keydown",e=>{const g=e.target.closest(".grip");if(!g||S.o
 const unl=S.ord.filter(x=>!S.locked.includes(x));if(reorder(id,unl.indexOf(id)+(e.key==="ArrowUp"?-1:1))){place();save()}e.preventDefault()});
 const SN=["Zero. Truly a bold strategy.","One in place. The rest are tourists.","Two. The timeline is weeping.","Half right. Half is a lot of wrong.","Four. So close it hurts.","Five. One swap from glory."];
 function ui(){for(let i=0;i<MAXA;i++)$("p"+i).className=i<S.att?"u":"";
-EV.forEach(e=>{el[e.id].classList.toggle("lock",S.locked.includes(e.id));el[e.id].classList.toggle("rev",!!S.over)});place();
+EV.forEach(e=>{if(el[e.id]){el[e.id].classList.toggle("lock",S.locked.includes(e.id));el[e.id].classList.toggle("rev",!!S.over)}});place();
 $("lk").disabled=!!S.over;$("ctl").style.display=S.over?"none":"flex";$("n").textContent=S.over?"":(MAXA-S.att)+" digs left";if(S.over)finish()}
 $("lk").onclick=()=>{if(S.over)return;const row=S.ord.map((id,i)=>id===truth[i]);S.hist.push(row);S.att++;const n=row.filter(Boolean).length;
-S.ord.forEach((id,i)=>{const c=el[id];c.classList.remove("ok","no");void c.offsetWidth;if(row[i]){if(!S.locked.includes(id))S.locked.push(id);c.classList.add("ok")}else c.classList.add("no")});
+S.ord.forEach((id,i)=>{const c=el[id];if(!c)return;c.classList.remove("ok","no");void c.offsetWidth;if(row[i]){if(!S.locked.includes(id))S.locked.push(id);c.classList.add("ok")}else c.classList.add("no")});
 if(n===N)S.over="win";else if(S.att>=MAXA){S.over="lose";S.ord=truth.slice()}
 $("say").textContent=S.over==="win"?"Fine. Correct. History is in order.":S.over==="lose"?"Out of digs. The earth keeps its secrets.":SN[n];
 save();ui()};
