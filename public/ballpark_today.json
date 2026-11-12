@@ -1,31 +1,31 @@
 {
-  "plate": 3,
-  "date": "2026-11-11",
+  "plate": 4,
+  "date": "2026-11-12",
   "questions": [
     {
-      "id": "q_20261111_1",
-      "question": "How many independent sovereign countries are recognized members of the United Nations?",
-      "unit": "member states"
+      "id": "q_20261112_1",
+      "question": "How many living languages are spoken around the world today as of 2024?",
+      "unit": "languages"
     },
     {
-      "id": "q_20261111_2",
-      "question": "How many cups of brewed coffee are consumed worldwide each single day?",
-      "unit": "cups per day"
+      "id": "q_20261112_2",
+      "question": "How many total registered motorized vehicles are in operation worldwide?",
+      "unit": "motor vehicles"
     },
     {
-      "id": "q_20261111_3",
-      "question": "How many individual grains of sand exist across all the beaches and deserts of Earth?",
-      "unit": "grains of sand"
+      "id": "q_20261112_3",
+      "question": "How many bacterial cells reside in and on a single human body?",
+      "unit": "bacteria cells"
     },
     {
-      "id": "q_20261111_4",
-      "question": "How many total query searches does Google handle on a single typical day worldwide?",
-      "unit": "searches per day"
+      "id": "q_20261112_4",
+      "question": "How many seconds have elapsed since the Big Bang began 13.8 billion years ago?",
+      "unit": "seconds"
     },
     {
-      "id": "q_20261111_5",
-      "question": "How many stars are estimated to exist in the observable universe?",
-      "unit": "stars"
+      "id": "q_20261112_5",
+      "question": "How many chickens are slaughtered globally for food each single year?",
+      "unit": "chickens per year"
     }
   ]
 }
