@@ -1,31 +1,31 @@
 {
-  "plate": 4,
-  "date": "2026-11-12",
+  "plate": 5,
+  "date": "2026-11-13",
   "questions": [
     {
-      "id": "q_20261112_1",
-      "question": "How many living languages are spoken around the world today as of 2024?",
-      "unit": "languages"
+      "id": "q_20261113_1",
+      "question": "How many days of food does a single honeybee colony consume in honey across a harsh winter?",
+      "unit": "days of honey stores"
     },
     {
-      "id": "q_20261112_2",
-      "question": "How many total registered motorized vehicles are in operation worldwide?",
-      "unit": "motor vehicles"
+      "id": "q_20261113_2",
+      "question": "How many individual birds are estimated to inhabit Earth at any given time?",
+      "unit": "wild birds"
     },
     {
-      "id": "q_20261112_3",
-      "question": "How many bacterial cells reside in and on a single human body?",
-      "unit": "bacteria cells"
+      "id": "q_20261113_3",
+      "question": "How many pieces of Lego bricks have been manufactured since 1958?",
+      "unit": "Lego bricks"
     },
     {
-      "id": "q_20261112_4",
-      "question": "How many seconds have elapsed since the Big Bang began 13.8 billion years ago?",
-      "unit": "seconds"
+      "id": "q_20261113_4",
+      "question": "How many total transistors were fabricated worldwide in the single year 2020?",
+      "unit": "transistors per year"
     },
     {
-      "id": "q_20261112_5",
-      "question": "How many chickens are slaughtered globally for food each single year?",
-      "unit": "chickens per year"
+      "id": "q_20261113_5",
+      "question": "How many steps does a climber take to ascend from base camp to the summit of Mount Everest?",
+      "unit": "footsteps"
     }
   ]
 }
