@@ -1,31 +1,31 @@
 {
-  "plate": 5,
-  "date": "2026-11-13",
+  "plate": 6,
+  "date": "2026-11-14",
   "questions": [
     {
-      "id": "q_20261113_1",
-      "question": "How many days of food does a single honeybee colony consume in honey across a harsh winter?",
-      "unit": "days of honey stores"
+      "id": "q_20261114_1",
+      "question": "How many active volcanoes have erupted on Earth during the Holocene epoch (past 11,700 years)?",
+      "unit": "volcanoes"
     },
     {
-      "id": "q_20261113_2",
-      "question": "How many individual birds are estimated to inhabit Earth at any given time?",
-      "unit": "wild birds"
+      "id": "q_20261114_2",
+      "question": "How many emails are sent and received across the globe each day as of 2024?",
+      "unit": "emails per day"
     },
     {
-      "id": "q_20261113_3",
-      "question": "How many pieces of Lego bricks have been manufactured since 1958?",
-      "unit": "Lego bricks"
+      "id": "q_20261114_3",
+      "question": "How many living humans currently occupy the planet Earth as of 2024?",
+      "unit": "living humans"
     },
     {
-      "id": "q_20261113_4",
-      "question": "How many total transistors were fabricated worldwide in the single year 2020?",
-      "unit": "transistors per year"
+      "id": "q_20261114_4",
+      "question": "How many individual viruses are estimated to exist on Earth?",
+      "unit": "viruses on Earth"
     },
     {
-      "id": "q_20261113_5",
-      "question": "How many steps does a climber take to ascend from base camp to the summit of Mount Everest?",
-      "unit": "footsteps"
+      "id": "q_20261114_5",
+      "question": "How many metric tons of plastic waste are generated globally in a single year?",
+      "unit": "metric tons of plastic"
     }
   ]
 }
