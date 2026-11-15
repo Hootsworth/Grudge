@@ -1,31 +1,31 @@
 {
-  "plate": 6,
-  "date": "2026-11-14",
+  "plate": 7,
+  "date": "2026-11-15",
   "questions": [
     {
-      "id": "q_20261114_1",
-      "question": "How many active volcanoes have erupted on Earth during the Holocene epoch (past 11,700 years)?",
-      "unit": "volcanoes"
+      "id": "q_20261115_1",
+      "question": "How many distinct species of mammals are recognized by taxonomists today?",
+      "unit": "mammal species"
     },
     {
-      "id": "q_20261114_2",
-      "question": "How many emails are sent and received across the globe each day as of 2024?",
-      "unit": "emails per day"
+      "id": "q_20261115_2",
+      "question": "How many barrels of crude oil does humanity consume worldwide in a single day?",
+      "unit": "barrels per day"
     },
     {
-      "id": "q_20261114_3",
-      "question": "How many living humans currently occupy the planet Earth as of 2024?",
-      "unit": "living humans"
+      "id": "q_20261115_3",
+      "question": "How many synapses connect neurons inside an average adult human brain?",
+      "unit": "synaptic connections"
     },
     {
-      "id": "q_20261114_4",
-      "question": "How many individual viruses are estimated to exist on Earth?",
-      "unit": "viruses on Earth"
+      "id": "q_20261115_4",
+      "question": "How many joules of energy does the Sun radiate into space in a single second?",
+      "unit": "joules per second"
     },
     {
-      "id": "q_20261114_5",
-      "question": "How many metric tons of plastic waste are generated globally in a single year?",
-      "unit": "metric tons of plastic"
+      "id": "q_20261115_5",
+      "question": "How many years ago was the Great Pyramid of Giza completed?",
+      "unit": "years ago"
     }
   ]
 }
