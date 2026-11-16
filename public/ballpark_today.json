@@ -1,31 +1,31 @@
 {
-  "plate": 7,
-  "date": "2026-11-15",
+  "plate": 8,
+  "date": "2026-11-16",
   "questions": [
     {
-      "id": "q_20261115_1",
-      "question": "How many distinct species of mammals are recognized by taxonomists today?",
-      "unit": "mammal species"
+      "id": "q_20261116_1",
+      "question": "How many total bones are in an adult human skeleton?",
+      "unit": "bones"
     },
     {
-      "id": "q_20261115_2",
-      "question": "How many barrels of crude oil does humanity consume worldwide in a single day?",
-      "unit": "barrels per day"
+      "id": "q_20261116_2",
+      "question": "How many passenger cars cross the Golden Gate Bridge in San Francisco on a typical day?",
+      "unit": "vehicles per day"
     },
     {
-      "id": "q_20261115_3",
-      "question": "How many synapses connect neurons inside an average adult human brain?",
-      "unit": "synaptic connections"
+      "id": "q_20261116_3",
+      "question": "How many photos are uploaded or shared across Instagram every single day?",
+      "unit": "photos per day"
     },
     {
-      "id": "q_20261115_4",
-      "question": "How many joules of energy does the Sun radiate into space in a single second?",
-      "unit": "joules per second"
+      "id": "q_20261116_4",
+      "question": "How many joules of kinetic energy were released by the Chicxulub asteroid impact that ended the Cretaceous period?",
+      "unit": "joules"
     },
     {
-      "id": "q_20261115_5",
-      "question": "How many years ago was the Great Pyramid of Giza completed?",
-      "unit": "years ago"
+      "id": "q_20261116_5",
+      "question": "How many distinct base pairs make up the haploid human genome?",
+      "unit": "DNA base pairs"
     }
   ]
 }
