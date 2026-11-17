@@ -1,31 +1,31 @@
 {
-  "plate": 8,
-  "date": "2026-11-16",
+  "plate": 9,
+  "date": "2026-11-17",
   "questions": [
     {
-      "id": "q_20261116_1",
-      "question": "How many total bones are in an adult human skeleton?",
-      "unit": "bones"
+      "id": "q_20261117_1",
+      "question": "How many islands make up the full geographic archipelago of the Philippines?",
+      "unit": "islands"
     },
     {
-      "id": "q_20261116_2",
-      "question": "How many passenger cars cross the Golden Gate Bridge in San Francisco on a typical day?",
-      "unit": "vehicles per day"
+      "id": "q_20261117_2",
+      "question": "How many text messages (SMS and RCS) are sent globally in a single day?",
+      "unit": "texts per day"
     },
     {
-      "id": "q_20261116_3",
-      "question": "How many photos are uploaded or shared across Instagram every single day?",
-      "unit": "photos per day"
+      "id": "q_20261117_3",
+      "question": "How many total books are catalogued in the Library of Congress in Washington, D.C.?",
+      "unit": "catalogued books"
     },
     {
-      "id": "q_20261116_4",
-      "question": "How many joules of kinetic energy were released by the Chicxulub asteroid impact that ended the Cretaceous period?",
-      "unit": "joules"
+      "id": "q_20261117_4",
+      "question": "How many total lightning strikes hit Earth across an entire year?",
+      "unit": "lightning strikes per year"
     },
     {
-      "id": "q_20261116_5",
-      "question": "How many distinct base pairs make up the haploid human genome?",
-      "unit": "DNA base pairs"
+      "id": "q_20261117_5",
+      "question": "How many water molecules are present in a single standard 8-ounce glass of water (approx 237 ml)?",
+      "unit": "water molecules"
     }
   ]
 }
