@@ -87,11 +87,12 @@ let num = T - Math.floor(Date.UTC(2026, 0, 1) / 864e5) + 1;
 let Z = P[((T % P.length) + P.length) % P.length];
 let S={n:0,over:false},deg=0,buf="",lock=false;
 
-// Anonymous session UUID for API tracking
-let sessionId=localStorage.getItem("passphew:session_id");
+// Anonymous session UUID for API tracking (scoped per date so each day starts fresh)
+const sessionKey = "passphew:session:" + localDateStr;
+let sessionId = localStorage.getItem(sessionKey);
 if(!sessionId){
-  sessionId=([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
-  try{localStorage.setItem("passphew:session_id",sessionId)}catch(e){}
+  sessionId = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+  try{localStorage.setItem(sessionKey, sessionId)}catch(e){}
 }
 
 try{const x=localStorage.getItem(KEY);if(x)S=JSON.parse(x)}catch(e){}

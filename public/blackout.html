@@ -739,7 +739,11 @@
   <script>
     // Blackout Client Engine
     const API_BASE = "https://blackout-backend.adityapdixit.workers.dev";
-    const SESSION_KEY = "blackout_session_uuid";
+    function getTodayString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    const SESSION_KEY = "blackout_session_" + getTodayString();
     let sessionUUID = localStorage.getItem(SESSION_KEY);
     if (!sessionUUID) {
       sessionUUID = (crypto.randomUUID ? crypto.randomUUID() : "blk_" + Math.random().toString(36).slice(2) + Date.now().toString(36));

@@ -75,7 +75,31 @@ export async function createOrGetSession(
     .bind(sessionId)
     .first<SessionRecord>();
 
-  if (existing) return existing;
+  if (existing) {
+    if (existing.puzzle_date !== dateStr) {
+      await db
+        .prepare(
+          `UPDATE sessions 
+           SET puzzle_date = ?, total_guesses = 0, words_guessed_json = '[]', tokens_revealed_json = '[]', is_solved = 0, solved_at = NULL, started_at = ?, finished_at = NULL
+           WHERE id = ?`
+        )
+        .bind(dateStr, nowMs, sessionId)
+        .run();
+
+      return {
+        ...existing,
+        puzzle_date: dateStr,
+        total_guesses: 0,
+        words_guessed_json: '[]',
+        tokens_revealed_json: '[]',
+        is_solved: 0,
+        solved_at: null,
+        started_at: nowMs,
+        finished_at: null,
+      };
+    }
+    return existing;
+  }
 
   const newSession: SessionRecord = {
     id: sessionId,

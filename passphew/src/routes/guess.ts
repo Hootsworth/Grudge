@@ -75,24 +75,39 @@ export async function handleGuessRoute(
   // 3. Create or retrieve session record
   const session = await createOrGetSession(env.DB, sessionId, todayStr, puzzle.id, ipHash, now);
 
-  // If already solved in this session, return victory payload
+  // 4. Normalize submitted guess
+  const normGuess = normalizeGuess(rawGuess);
+  const isMatch = await constantTimeEqual(normGuess, puzzle.answer);
+
+  // If already solved in this session, only return victory if guess matches; otherwise reject
   if (session.status === 'solved') {
-    const solveSecs = session.solve_seconds || 1;
-    const percentile = await calculatePercentile(env.DB, todayStr, session.failed_count, solveSecs);
-    return new Response(
-      JSON.stringify({
-        correct: true,
-        answer: puzzle.answer,
-        explanation: puzzle.explanation,
-        failedBeforeCrack: session.failed_count,
-        solveSeconds: solveSecs,
-        percentile,
-      }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
+    if (isMatch) {
+      const solveSecs = session.solve_seconds || 1;
+      const percentile = await calculatePercentile(env.DB, todayStr, session.failed_count, solveSecs);
+      return new Response(
+        JSON.stringify({
+          correct: true,
+          answer: puzzle.answer,
+          explanation: puzzle.explanation,
+          failedBeforeCrack: session.failed_count,
+          solveSeconds: solveSecs,
+          percentile,
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    } else {
+      return new Response(
+        JSON.stringify({
+          correct: false,
+          failed: session.failed_count,
+          message: 'Incorrect guess. Vault remains locked.',
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
   }
 
-  // 4. Check Anti-Brute-Force & Throttling
+  // 5. Check Anti-Brute-Force & Throttling
   const ipLimit = await getIpLimit(env.DB, ipHash, todayStr);
   const throttleCheck = checkThrottle(session, ipLimit, now);
 
@@ -145,9 +160,6 @@ export async function handleGuessRoute(
       );
     }
   }
-
-  // 5. Normalize submitted guess
-  const normGuess = normalizeGuess(rawGuess);
 
   // 6. Check Caching for Repeating previously tried wrong guesses
   // "Repeating a previously tried wrong guess counts as a failure but costs the server nothing (cache it)"

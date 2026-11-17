@@ -17,10 +17,8 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-)
+DEFAULT_USER_AGENT = "OddlyFeedCollector/1.0 (+https://singulr.tech; news aggregator)"
+REDDIT_USER_AGENT = "web:oddly-game-collector:v1.0 (by /u/OddlyDailyBot)"
 MAX_AGE_DAYS = 14
 DEFAULT_SIMILARITY_THRESHOLD = 0.65
 
@@ -136,12 +134,14 @@ def parse_pub_date(raw_date: Any) -> Optional[datetime.datetime]:
 
 def fetch_url_with_retry(
     url: str,
-    user_agent: str = DEFAULT_USER_AGENT,
+    user_agent: Optional[str] = None,
     max_retries: int = 3,
     backoff_seconds: float = 1.5,
     timeout: float = 12.0,
 ) -> Optional[str]:
     """Fetch URL with exponential backoff on transient errors and respectful headers."""
+    if not user_agent:
+        user_agent = REDDIT_USER_AGENT if "reddit.com" in url else DEFAULT_USER_AGENT
     headers = {
         "User-Agent": user_agent,
         "Accept": "application/json, application/rss+xml, application/xml, text/xml, */*",

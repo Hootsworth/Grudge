@@ -18,7 +18,7 @@ export const DEFAULT_MODELS: Record<string, string> = {
   google: 'gemini-2.0-flash',
   openai: 'gpt-4o',
   anthropic: 'claude-3-5-sonnet-20241022',
-  meta: 'llama-3.3-70b-versatile',
+  meta: 'llama-3.3-70b-instruct',
   groq: 'llama-3.3-70b-versatile',
   together: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
 };
@@ -70,7 +70,8 @@ export async function callAiCompletion(options: AiRequestOptions, env?: Record<s
   } else if (provider === 'openai') {
     return callOpenAi(options.systemPrompt, options.userPrompt, model, apiKey, temperature, maxTokens);
   } else if (provider === 'meta' || provider === 'groq' || provider === 'together') {
-    return callMetaOpenAiCompat(provider, options.systemPrompt, options.userPrompt, model, apiKey, temperature, maxTokens);
+    const metaApiBase = getEnv('META_API_BASE');
+    return callMetaOpenAiCompat(provider, options.systemPrompt, options.userPrompt, model, apiKey, temperature, maxTokens, metaApiBase);
   } else {
     return callAnthropic(options.systemPrompt, options.userPrompt, model, apiKey, temperature, maxTokens);
   }
@@ -158,10 +159,19 @@ async function callMetaOpenAiCompat(
   model: string,
   apiKey: string,
   temperature: number,
-  maxTokens: number
+  maxTokens: number,
+  metaApiBase?: string
 ): Promise<string> {
-  let url = 'https://api.groq.com/openai/v1/chat/completions';
-  if (provider === 'together') url = 'https://api.together.xyz/v1/chat/completions';
+  let url = 'https://api.meta.ai/v1/chat/completions';
+  if (apiKey.startsWith('gsk_') || provider === 'groq') {
+    url = 'https://api.groq.com/openai/v1/chat/completions';
+  } else if (provider === 'together' || apiKey.startsWith('together_')) {
+    url = 'https://api.together.xyz/v1/chat/completions';
+  } else if (metaApiBase) {
+    url = metaApiBase.includes('/v1')
+      ? `${metaApiBase.replace(/\/+$/, '')}/chat/completions`
+      : `${metaApiBase.replace(/\/+$/, '')}/v1/chat/completions`;
+  }
 
   const messages: any[] = [];
   if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
@@ -171,6 +181,7 @@ async function callMetaOpenAiCompat(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'User-Agent': 'OddlyAI/1.0 (Meta-Client; contact: dev@singulr.tech)',
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
@@ -229,7 +240,7 @@ async function callAnthropic(
 export function cleanJson(text: string): string {
   let cleaned = text.trim().replace(/^```(?:json)?\s*/g, '').replace(/```\s*$/g, '').trim();
   if (!cleaned.startsWith('{') && !cleaned.startsWith('[')) {
-    const match = cleaned.match(/(\[.*\]|\{.*\})/s);
+    const match = cleaned.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
     if (match) cleaned = match[1].trim();
   }
   return cleaned;

@@ -42,6 +42,29 @@ export async function createOrGetSession(
     .first<SessionRecord>();
 
   if (existing) {
+    if (existing.date !== dateStr || existing.puzzle_id !== puzzleId) {
+      await db
+        .prepare(
+          `UPDATE sessions 
+           SET date = ?, puzzle_id = ?, ip_hash = ?, started_at = ?, solved_at = NULL, failed_count = 0, solve_seconds = NULL, is_bot = 0, status = 'active'
+           WHERE id = ?`
+        )
+        .bind(dateStr, puzzleId, ipHash, nowMs, sessionId)
+        .run();
+
+      return {
+        ...existing,
+        date: dateStr,
+        puzzle_id: puzzleId,
+        ip_hash: ipHash,
+        started_at: nowMs,
+        solved_at: null,
+        failed_count: 0,
+        solve_seconds: null,
+        is_bot: 0,
+        status: 'active',
+      };
+    }
     return existing;
   }
 

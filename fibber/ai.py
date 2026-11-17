@@ -16,10 +16,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-)
+API_USER_AGENT = "OddlyAI/1.0 (Fibber-Pipeline; contact: dev@singulr.tech)"
 
 # Default model per provider
 DEFAULT_MODELS: Dict[str, str] = {
@@ -27,7 +24,7 @@ DEFAULT_MODELS: Dict[str, str] = {
     "google": "gemini-2.0-flash",
     "openai": "gpt-4o",
     "anthropic": "claude-3-5-sonnet-20241022",
-    "meta": "llama-3.3-70b-versatile",
+    "meta": "llama-3.3-70b-instruct",
     "groq": "llama-3.3-70b-versatile",
     "together": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
 }
@@ -152,7 +149,7 @@ def _call_gemini(
         data=json.dumps(payload).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "User-Agent": DEFAULT_USER_AGENT,
+            "User-Agent": API_USER_AGENT,
             "Accept": "application/json",
         },
         method="POST"
@@ -198,7 +195,7 @@ def _call_openai(
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",
-            "User-Agent": DEFAULT_USER_AGENT,
+            "User-Agent": API_USER_AGENT,
             "Accept": "application/json",
         },
         method="POST"
@@ -222,17 +219,30 @@ def _call_meta_openai_compat(
     temperature: float,
     max_tokens: int,
 ) -> str:
-    """Call Meta Llama via Groq or Together AI endpoints."""
-    if provider in ("groq", "meta"):
+    """Call Meta Llama via official Meta Model API, Groq, or Together AI endpoints."""
+    meta_base = (os.getenv("META_API_BASE") or "").strip().rstrip("/")
+
+    if api_key.startswith("gsk_") or provider == "groq":
         url = "https://api.groq.com/openai/v1/chat/completions"
         if not model or model == "default":
             model = "llama-3.3-70b-versatile"
-    elif provider == "together":
+    elif provider == "together" or api_key.startswith("together_"):
         url = "https://api.together.xyz/v1/chat/completions"
         if not model or model == "default":
             model = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+    elif meta_base:
+        url = f"{meta_base}/chat/completions" if "/v1" in meta_base else f"{meta_base}/v1/chat/completions"
+        if not model or model == "default":
+            model = "llama-3.3-70b-instruct"
+    elif provider == "meta" or os.getenv("META_API_KEY"):
+        # Official Meta Model API (api.meta.ai/v1)
+        url = "https://api.meta.ai/v1/chat/completions"
+        if not model or model == "default":
+            model = "llama-3.3-70b-instruct"
     else:
         url = "https://api.groq.com/openai/v1/chat/completions"
+        if not model or model == "default":
+            model = "llama-3.3-70b-versatile"
 
     payload = {
         "model": model,
@@ -249,7 +259,7 @@ def _call_meta_openai_compat(
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",
-            "User-Agent": DEFAULT_USER_AGENT,
+            "User-Agent": API_USER_AGENT,
             "Accept": "application/json",
         },
         method="POST"
@@ -260,8 +270,8 @@ def _call_meta_openai_compat(
             return data["choices"][0]["message"]["content"]
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8")
-        logger.error("Meta/Groq API Error (%d): %s", e.code, error_body)
-        raise RuntimeError(f"Meta/Groq API returned error {e.code}: {error_body}") from e
+        logger.error("Meta API Error (%d) at %s: %s", e.code, url, error_body)
+        raise RuntimeError(f"Meta API ({url}) returned error {e.code}: {error_body}") from e
 
 
 def _call_anthropic(
@@ -288,7 +298,7 @@ def _call_anthropic(
             "Content-Type": "application/json",
             "x-api-key": api_key,
             "anthropic-version": "2023-06-01",
-            "User-Agent": DEFAULT_USER_AGENT,
+            "User-Agent": API_USER_AGENT,
             "Accept": "application/json",
         },
         method="POST"

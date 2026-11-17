@@ -46,29 +46,40 @@ export async function handleSolveRoute(request: Request, env: Env): Promise<Resp
 
   const dossier = await ensurePuzzle(env.DB, todayStr);
   const session = await createOrGetSession(env.DB, sessionId, todayStr, now);
+  const matches = isTitleMatch(titleGuess, dossier);
 
   if (session.is_solved === 1) {
-    const rankTitle = getBlackoutRank(session.total_guesses, true);
-    const shareCard = generateShareCard(dossier.plate, true, session.total_guesses, rankTitle);
-    return new Response(
-      JSON.stringify({
-        correct: true,
-        titleGuess,
-        totalGuesses: session.total_guesses,
-        title: dossier.title,
-        year: dossier.year,
-        category: dossier.category,
-        fullExcerpt: dossier.excerpt,
-        citation: dossier.citation,
-        rankTitle,
-        shareCard,
-        message: 'Dossier already declassified',
-      } satisfies SolveResponse),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
-    );
+    if (matches) {
+      const rankTitle = getBlackoutRank(session.total_guesses, true);
+      const shareCard = generateShareCard(dossier.plate, true, session.total_guesses, rankTitle);
+      return new Response(
+        JSON.stringify({
+          correct: true,
+          titleGuess,
+          totalGuesses: session.total_guesses,
+          title: dossier.title,
+          year: dossier.year,
+          category: dossier.category,
+          fullExcerpt: dossier.excerpt,
+          citation: dossier.citation,
+          rankTitle,
+          shareCard,
+          message: 'Dossier already declassified',
+        } satisfies SolveResponse),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    } else {
+      return new Response(
+        JSON.stringify({
+          correct: false,
+          titleGuess,
+          totalGuesses: session.total_guesses,
+          message: 'Incorrect title guess.',
+        } satisfies SolveResponse),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
   }
-
-  const matches = isTitleMatch(titleGuess, dossier);
 
   if (matches) {
     await recordSolve(env.DB, sessionId, now);
