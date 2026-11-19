@@ -1,31 +1,31 @@
 {
-  "plate": 10,
-  "date": "2026-11-18",
+  "plate": 11,
+  "date": "2026-11-19",
   "questions": [
     {
-      "id": "q_20261118_1",
-      "question": "How many commercial passenger flights land and take off at London Heathrow Airport on a typical single day?",
-      "unit": "flights per day"
+      "id": "q_20261119_1",
+      "question": "How many commercial passenger airports operate scheduled airline services in the United States?",
+      "unit": "commercial airports"
     },
     {
-      "id": "q_20261118_2",
-      "question": "How many total words does an average English speaker speak aloud in a lifetime?",
-      "unit": "spoken words"
+      "id": "q_20261119_2",
+      "question": "How many days did the Apollo 11 mission take from launch at Cape Kennedy to splashdown in the Pacific Ocean?",
+      "unit": "mission days"
     },
     {
-      "id": "q_20261118_3",
-      "question": "How many living domestic cattle populate farms across Earth as of 2024?",
-      "unit": "cattle"
+      "id": "q_20261119_3",
+      "question": "How many connected smartphone and cellular computing devices are currently active worldwide?",
+      "unit": "active mobile devices"
     },
     {
-      "id": "q_20261118_4",
-      "question": "How many meters is the distance between planet Earth and the Moon at average apogee/perigee orbit?",
-      "unit": "meters"
+      "id": "q_20261119_4",
+      "question": "How many red blood cells does a human body produce every single second to maintain equilibrium?",
+      "unit": "red blood cells per second"
     },
     {
-      "id": "q_20261118_5",
-      "question": "How many total atoms make up a standard 1-carat cut diamond?",
-      "unit": "carbon atoms"
+      "id": "q_20261119_5",
+      "question": "How many total protons and neutrons exist in the planet Saturn?",
+      "unit": "nucleons"
     }
   ]
 }
