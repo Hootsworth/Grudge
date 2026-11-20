@@ -1,31 +1,31 @@
 {
-  "plate": 11,
-  "date": "2026-11-19",
+  "plate": 12,
+  "date": "2026-11-20",
   "questions": [
     {
-      "id": "q_20261119_1",
-      "question": "How many commercial passenger airports operate scheduled airline services in the United States?",
-      "unit": "commercial airports"
+      "id": "q_20261120_1",
+      "question": "How many subway stations are on the New York City Subway system?",
+      "unit": "subway stations"
     },
     {
-      "id": "q_20261119_2",
-      "question": "How many days did the Apollo 11 mission take from launch at Cape Kennedy to splashdown in the Pacific Ocean?",
-      "unit": "mission days"
+      "id": "q_20261120_2",
+      "question": "How many hamburgers does McDonald’s sell worldwide in a single day?",
+      "unit": "burgers per day"
     },
     {
-      "id": "q_20261119_3",
-      "question": "How many connected smartphone and cellular computing devices are currently active worldwide?",
-      "unit": "active mobile devices"
+      "id": "q_20261120_3",
+      "question": "How many total bicycles are estimated to be in use around the world?",
+      "unit": "bicycles"
     },
     {
-      "id": "q_20261119_4",
-      "question": "How many red blood cells does a human body produce every single second to maintain equilibrium?",
-      "unit": "red blood cells per second"
+      "id": "q_20261120_4",
+      "question": "How many individual krill swim in the Southern Ocean around Antarctica?",
+      "unit": "Antarctic krill"
     },
     {
-      "id": "q_20261119_5",
-      "question": "How many total protons and neutrons exist in the planet Saturn?",
-      "unit": "nucleons"
+      "id": "q_20261120_5",
+      "question": "How many joules of energy were released by the largest nuclear explosion in history (the Tsar Bomba)?",
+      "unit": "joules"
     }
   ]
 }
