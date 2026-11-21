@@ -1,31 +1,31 @@
 {
-  "plate": 12,
-  "date": "2026-11-20",
+  "plate": 13,
+  "date": "2026-11-21",
   "questions": [
     {
-      "id": "q_20261120_1",
-      "question": "How many subway stations are on the New York City Subway system?",
-      "unit": "subway stations"
+      "id": "q_20261121_1",
+      "question": "How many commercial passenger ships are in the worldwide cruise ship fleet?",
+      "unit": "cruise ships"
     },
     {
-      "id": "q_20261120_2",
-      "question": "How many hamburgers does McDonald’s sell worldwide in a single day?",
-      "unit": "burgers per day"
+      "id": "q_20261121_2",
+      "question": "How many total words are contained in the English language edition of Wikipedia as of 2024?",
+      "unit": "words on English Wikipedia"
     },
     {
-      "id": "q_20261120_3",
-      "question": "How many total bicycles are estimated to be in use around the world?",
-      "unit": "bicycles"
+      "id": "q_20261121_3",
+      "question": "How many total honeybees live in an average healthy commercial beehive at midsummer peak?",
+      "unit": "honeybees"
     },
     {
-      "id": "q_20261120_4",
-      "question": "How many individual krill swim in the Southern Ocean around Antarctica?",
-      "unit": "Antarctic krill"
+      "id": "q_20261121_4",
+      "question": "How many kilograms of carbon dioxide are emitted by all human activity annually worldwide as of 2023?",
+      "unit": "kilograms of CO2"
     },
     {
-      "id": "q_20261120_5",
-      "question": "How many joules of energy were released by the largest nuclear explosion in history (the Tsar Bomba)?",
-      "unit": "joules"
+      "id": "q_20261121_5",
+      "question": "How many kilograms does the supermassive black hole Sagittarius A* at the centre of our galaxy weigh?",
+      "unit": "kilograms"
     }
   ]
 }
