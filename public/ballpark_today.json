@@ -1,31 +1,31 @@
 {
-  "plate": 13,
-  "date": "2026-11-21",
+  "plate": 14,
+  "date": "2026-11-22",
   "questions": [
     {
-      "id": "q_20261121_1",
-      "question": "How many commercial passenger ships are in the worldwide cruise ship fleet?",
-      "unit": "cruise ships"
+      "id": "q_20261122_1",
+      "question": "How many distinct physical keys are on a standard full-size modern computer keyboard?",
+      "unit": "keys"
     },
     {
-      "id": "q_20261121_2",
-      "question": "How many total words are contained in the English language edition of Wikipedia as of 2024?",
-      "unit": "words on English Wikipedia"
+      "id": "q_20261122_2",
+      "question": "How many total passenger trips are taken on public transit buses worldwide each day?",
+      "unit": "bus trips per day"
     },
     {
-      "id": "q_20261121_3",
-      "question": "How many total honeybees live in an average healthy commercial beehive at midsummer peak?",
-      "unit": "honeybees"
+      "id": "q_20261122_3",
+      "question": "How many total litres of beer are brewed and consumed worldwide each year?",
+      "unit": "litres of beer per year"
     },
     {
-      "id": "q_20261121_4",
-      "question": "How many kilograms of carbon dioxide are emitted by all human activity annually worldwide as of 2023?",
-      "unit": "kilograms of CO2"
+      "id": "q_20261122_4",
+      "question": "How many total atoms of iron make up the metallic framework of the Eiffel Tower in Paris?",
+      "unit": "iron atoms"
     },
     {
-      "id": "q_20261121_5",
-      "question": "How many kilograms does the supermassive black hole Sagittarius A* at the centre of our galaxy weigh?",
-      "unit": "kilograms"
+      "id": "q_20261122_5",
+      "question": "How many living individuals make up the global domestic cat population as of 2024?",
+      "unit": "domestic cats"
     }
   ]
 }
