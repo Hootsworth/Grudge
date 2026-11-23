@@ -1,31 +1,31 @@
 {
-  "plate": 14,
-  "date": "2026-11-22",
+  "plate": 1,
+  "date": "2026-11-23",
   "questions": [
     {
-      "id": "q_20261122_1",
-      "question": "How many distinct physical keys are on a standard full-size modern computer keyboard?",
-      "unit": "keys"
+      "id": "q_20261123_1",
+      "question": "How many operable commercial nuclear reactors exist worldwide as of 2024?",
+      "unit": "operable reactors"
     },
     {
-      "id": "q_20261122_2",
-      "question": "How many total passenger trips are taken on public transit buses worldwide each day?",
-      "unit": "bus trips per day"
+      "id": "q_20261123_2",
+      "question": "How many times does an average human heart beat across an 80-year lifespan?",
+      "unit": "heartbeats"
     },
     {
-      "id": "q_20261122_3",
-      "question": "How many total litres of beer are brewed and consumed worldwide each year?",
-      "unit": "litres of beer per year"
+      "id": "q_20261123_3",
+      "question": "How many individual ants are alive on Earth at any given time according to global ecological surveys?",
+      "unit": "ants"
     },
     {
-      "id": "q_20261122_4",
-      "question": "How many total atoms of iron make up the metallic framework of the Eiffel Tower in Paris?",
-      "unit": "iron atoms"
+      "id": "q_20261123_4",
+      "question": "How many total humans are estimated to have ever been born throughout human history?",
+      "unit": "people ever born"
     },
     {
-      "id": "q_20261122_5",
-      "question": "How many living individuals make up the global domestic cat population as of 2024?",
-      "unit": "domestic cats"
+      "id": "q_20261123_5",
+      "question": "How many total litres of water are held in all of Earth’s oceans combined?",
+      "unit": "litres of ocean water"
     }
   ]
 }
