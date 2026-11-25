@@ -1,29 +1,29 @@
 {
   "plate": 1,
-  "date": "2026-11-24",
+  "date": "2026-11-25",
   "questions": [
     {
-      "id": "q_20261124_1",
+      "id": "q_20261125_1",
       "question": "How many operable commercial nuclear reactors exist worldwide as of 2024?",
       "unit": "operable reactors"
     },
     {
-      "id": "q_20261124_2",
+      "id": "q_20261125_2",
       "question": "How many times does an average human heart beat across an 80-year lifespan?",
       "unit": "heartbeats"
     },
     {
-      "id": "q_20261124_3",
+      "id": "q_20261125_3",
       "question": "How many individual ants are alive on Earth at any given time according to global ecological surveys?",
       "unit": "ants"
     },
     {
-      "id": "q_20261124_4",
+      "id": "q_20261125_4",
       "question": "How many total humans are estimated to have ever been born throughout human history?",
       "unit": "people ever born"
     },
     {
-      "id": "q_20261124_5",
+      "id": "q_20261125_5",
       "question": "How many total litres of water are held in all of Earth’s oceans combined?",
       "unit": "litres of ocean water"
     }
